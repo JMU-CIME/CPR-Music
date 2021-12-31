@@ -34,10 +34,30 @@ const timerReducer = (state = initialTimerState, { type, payload }) => {
   }
 }
 
+const initialCourses = [
+  {
+    id: 1,
+    name: "This Old Band",
+    level: "primary",
+  },
+  {
+    id: 2,
+    name: "It played Air...",
+    level: "secondary",
+  },
+]
+
+const coursesReducer = (state = initialCourses, {type, payload}) => {
+  return state;
+}
+
 // COMBINED REDUCERS
 const reducers = {
   counter: counterReducer,
   timer: timerReducer,
+  courses: coursesReducer,
 }
+
+
 
 export default combineReducers(reducers)
