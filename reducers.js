@@ -34,20 +34,23 @@ const timerReducer = (state = initialTimerState, { type, payload }) => {
   }
 };
 
-const initialCourses = [
+const mockCourses = [
   {
-    id: 1,
-    name: "This Old Band",
-    level: "primary",
+    id: 0,
+    name: "7th Grade Band",
   },
   {
-    id: 2,
-    name: "It played Air...",
-    level: "secondary",
+    id: 1,
+    name: "8th Grade Orchestra",
   },
 ];
 
-const coursesReducer = (state = initialCourses, { type, payload }) => {
+const coursesReducer = (state = mockCourses, { type, payload }) => {
+  switch (type) {
+    case types.ADDED_COURSE:
+      console.log('payload', payload)
+      return [...state, { id: state.length, name: payload.name }];
+  }
   return state;
 };
 
@@ -110,28 +113,35 @@ const piecesReducer = (state = initialPieces, { type, payload }) => {
 const initialActivityTypes = [
   {
     id: 1,
-    name: 'Melody'
+    name: "Melody",
+    category: "perform"
   },
   {
-    id: 1,
-    name: 'Bass Line'
+    id: 2,
+    name: "Bass Line",
+    category: "perform"
   },
   {
-    id: 1,
-    name: 'Creativity'
+    id: 3,
+    name: "Creativity",
+    category: "create"
   },
   {
-    id: 1,
-    name: 'Reflection'
+    id: 4,
+    name: "Reflection",
+    category: "reflect"
   },
-]
+];
 
-const activityTypesReducer = (state=initialActivityTypes, { type, payload }) => {
+const activityTypesReducer = (
+  state = initialActivityTypes,
+  { type, payload }
+) => {
   return state;
 };
 
 // stubbing out pages
-// ✅ Login user 
+// ✅ Login user
 // ✅ Logout user
 // ✅ Teacher creates course
 // ✅ Teacher uploads csv to bulk create students for given course (just an option on the add/edit course)
@@ -147,13 +157,27 @@ const activityTypesReducer = (state=initialActivityTypes, { type, payload }) => 
 // ✅ Student submit assignment (create submission?)
 // ✅ Student re-submit assignment (just create another submission? Edit existing?)
 
-const userReducer = (state={}, {type, payload}) => {
-  switch(type) {
-    case types.LOGGED_IN:
-      console.log(types.LOGGED_IN, payload)
+const selectedCourseInfo = {}
+
+const selectedCourseReducer = (state = selectedCourseInfo, { type, payload }) => {
+  switch (type) {
+    case types.SELECT_COURSE:
+      console.log(types.LOGGED_IN, payload);
+      return {
+        ...selectedCourseInfo,
+        selectedCourseId: payload
+      }
   }
-  return state
-}
+  return state;
+};
+
+const userReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+    case types.LOGGED_IN:
+      console.log(types.LOGGED_IN, payload);
+  }
+  return state;
+};
 
 // COMBINED REDUCERS
 const reducers = {

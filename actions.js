@@ -40,6 +40,8 @@ export const rememberLogin = ({ isTeacher, isStudent, isLoggedOut }) => {
 
 export const loggedIn = (data) => ({ type: types.LOGGED_IN, payload: data });
 
+export const newCourse = (data) => ({ type: types.ADDED_COURSE, payload: data });
+
 export const attemptLogin = (loginInfo) => {
   let loginMessageBody = {};
   if (loginInfo && "email" in loginInfo && "password" in loginInfo) {
