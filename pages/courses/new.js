@@ -17,9 +17,15 @@ const NewCourse = () => {
 
   const addCourse = (ev) => {
     console.log("ev", ev);
+
+    // don't refresh the page
     ev.preventDefault();
     ev.stopPropagation();
+    
+    // tell redux we have changed data
     dispatch(newCourse({ name }));
+
+    // navigate back to the course list
     router.push("/courses");
   };
 
