@@ -48,6 +48,10 @@ const mockAssignments = [
   },
 ]
 
+const assignmentsReducer = (state = mockAssignments, {type, payload}) => {
+  return state
+}
+
 const mockActivities = [
   {
     id: 0,
@@ -62,6 +66,10 @@ const mockActivities = [
     body: "body1"
   }
 ]
+
+const activitiesReducer = (state = mockActivities, {type, payload}) => {
+  return state
+}
 
 const mockActivityTypes = [
   {
@@ -204,6 +212,10 @@ const mockComposers = [
   }
 ]
 
+const composersReducer = (state = mockComposers, {type, payload}) => {
+  return state
+}
+
 const mockUsers = [
   {
     id: 0,
@@ -216,6 +228,14 @@ const mockUsers = [
     grade: "grade1",
   },
 ]
+
+const usersReducer = (state = mockUsers, { type, payload }) => {
+  switch (type) {
+    case types.LOGGED_IN:
+      console.log(types.LOGGED_IN, payload);
+  }
+  return state;
+};
 
 const mockCourses = [
   {
@@ -260,6 +280,10 @@ const mockEnrollments = [
   }
 ]
 
+const enrollmentsReducer = (state = mockEnrollments, {type, payload}) => {
+  return state
+}
+
 const mockSubmissions = [
   {
     userId: 0,
@@ -273,6 +297,10 @@ const mockSubmissions = [
   }
 ]
 
+const submissionsReducer = (state = mockSubmissions, {type, payload}) => {
+  return state
+}
+
 const mockSubmissionAttachments = [
   {
     userId: 0,
@@ -283,6 +311,10 @@ const mockSubmissionAttachments = [
     contentS3Key: "content/1",
   },
 ]
+
+const submissionAttachmentsReducer = (state = mockSubmissionAttachments, {type, payload}) => {
+  return state
+}
 
 const loginStatus = {
   isStudent: false,
@@ -297,8 +329,6 @@ const loginReducer = (state = loginStatus, { type, payload }) => {
   }
   return state;
 };
-
-
 
 // stubbing out pages
 // ✅ Login user
@@ -331,23 +361,22 @@ const selectedCourseReducer = (state = selectedCourseInfo, { type, payload }) =>
   return state;
 };
 
-const userReducer = (state = {}, { type, payload }) => {
-  switch (type) {
-    case types.LOGGED_IN:
-      console.log(types.LOGGED_IN, payload);
-  }
-  return state;
-};
-
 // COMBINED REDUCERS
 const reducers = {
   counter: counterReducer,
   timer: timerReducer,
-  courses: coursesReducer,
-  loginStatus: loginReducer,
-  pieces: piecesReducer,
+  assignments: assignmentsReducer,
+  activities: activitiesReducer,
   activityTypes: activityTypesReducer,
-  user: userReducer,
+  pieces: piecesReducer,
+  composers: composersReducer,
+  users: usersReducer,
+  courses: coursesReducer,
+  enrollments: enrollmentsReducer,
+  subissions: submissionsReducer,
+  submissionAttachments: submissionAttachmentsReducer,
+  loginStatus: loginReducer,
+  selectedCourse: selectedCourseReducer,
 };
 
 export default combineReducers(reducers);
