@@ -8,10 +8,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <h1>Home</h1>
-      <Link href="/show-redux-state">
-        <a>Click to see current Redux State</a>
-      </Link>
+      <h1>Welcome to Music CPR</h1>
     </Layout>
   );
 };

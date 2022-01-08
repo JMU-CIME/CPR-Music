@@ -1,11 +1,11 @@
 import { useSelector } from "react-redux";
-import Layout from "../../components/layout";
+import Authorized from "../../components/authorized"
 
 const EditCourse = () => {
   const pieces = useSelector((state) => {
     return state.pieces
   })
-  return <Layout>
+  return <Authorized>
     <h1>Edit Course</h1>
     <h2>People</h2>
     <p>Need to be able to upload roster here...</p>
@@ -17,7 +17,7 @@ const EditCourse = () => {
         pieces.map((piece) => <li key={piece.id}>{piece.name}</li>)
       }
     </ul>
-  </Layout>;
+  </Authorized>;
 };
 
 export default EditCourse;

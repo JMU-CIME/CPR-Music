@@ -1,12 +1,12 @@
 import dynamic from "next/dynamic";
-import Layout from "../../components/layout";
+import Authorized from "../../components/authorized"
 const FlatEditor = dynamic(() => import("../../components/flatEditor"), {
   ssr: false,
 });
 
 const CreativityAssignment = () => {
   return (
-    <Layout>
+    <Authorized>
 
       <h1>Creativity Assignment</h1>
       <p>Path here should maybe be like course/slug/piece/slug/Creativity?</p>
@@ -15,7 +15,7 @@ const CreativityAssignment = () => {
         for the specific piece
       </p>
       <FlatEditor />      
-    </Layout>
+    </Authorized>
   );
 };
 
