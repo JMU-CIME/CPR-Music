@@ -8,9 +8,7 @@ export default function Layout({ children }) {
     <>
       <Head>
         <link rel="icon" href="/teleband_logo.png" />
-        <meta
-          name="description"
-          content="Music CPR" />
+        <meta name="description" content="Music CPR" />
       </Head>
       <Navigation />
       <Container>

@@ -5,12 +5,12 @@ import Button from "react-bootstrap/Button";
 import Embed from "flat-embed";
 
 const FlatEditor = (props) => {
-  const [json, setJson] = useState("")
+  const [json, setJson] = useState("");
   const editorRef = React.createRef();
   let embed;
   const refreshJSON = () => {
-    embed.getJSON().then((jsonData) => setJson(JSON.stringify(jsonData)))
-  }
+    embed.getJSON().then((jsonData) => setJson(JSON.stringify(jsonData)));
+  };
   useEffect(() => {
     embed = new Embed(editorRef.current, {
       score: "617052dca7f3100012392bb6",
@@ -30,7 +30,10 @@ const FlatEditor = (props) => {
       <Col>
         <div ref={editorRef}></div>
       </Col>
-      <Col style={{maxWidth: "40%", whiteSpace: "pre-wrap"}}><Button onClick={refreshJSON}>Refresh JSON</Button><pre style={{whiteSpace: "pre-wrap"}}>{json}</pre></Col>
+      <Col style={{ maxWidth: "40%", whiteSpace: "pre-wrap" }}>
+        <Button onClick={refreshJSON}>Refresh JSON</Button>
+        <pre style={{ whiteSpace: "pre-wrap" }}>{json}</pre>
+      </Col>
     </Row>
   );
 };

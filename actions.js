@@ -9,28 +9,6 @@ function assertResponse(response) {
   }
 }
 
-// INITIALIZES CLOCK ON SERVER
-export const serverRenderClock = () => (dispatch) =>
-  dispatch({
-    type: types.TICK,
-    payload: { light: false, ts: Date.now() },
-  });
-
-// INITIALIZES CLOCK ON CLIENT
-export const startClock = () => (dispatch) =>
-  setInterval(() => {
-    dispatch({ type: types.TICK, payload: { light: true, ts: Date.now() } });
-  }, 1000);
-
-// INCREMENT COUNTER BY 1
-export const incrementCount = () => ({ type: types.INCREMENT });
-
-// DECREMENT COUNTER BY 1
-export const decrementCount = () => ({ type: types.DECREMENT });
-
-// RESET COUNTER
-export const resetCount = () => ({ type: types.RESET });
-
 export const rememberLogin = ({ isTeacher, isStudent, isLoggedOut }) => {
   return {
     type: types.REMEMBER_LOGIN,
@@ -40,7 +18,10 @@ export const rememberLogin = ({ isTeacher, isStudent, isLoggedOut }) => {
 
 export const loggedIn = (data) => ({ type: types.LOGGED_IN, payload: data });
 
-export const newCourse = (data) => ({ type: types.ADDED_COURSE, payload: data });
+export const newCourse = (data) => ({
+  type: types.ADDED_COURSE,
+  payload: data,
+});
 
 export const attemptLogin = (loginInfo) => {
   let loginMessageBody = {};
