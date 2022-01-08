@@ -4,7 +4,7 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useDispatch } from "react-redux";
-import Layout from "../../components/layout";
+import Authorized from "../../components/authorized"
 import { useRouter } from "next/router";
 import { newCourse } from "../../actions";
 
@@ -30,7 +30,7 @@ const NewCourse = () => {
   };
 
   return (
-    <Layout>
+    <Authorized>
       <h1>Add Course</h1>
       <Form onSubmit={addCourse}>
         <Form.Group as={Row} className="mb-3" controlId="formCourseName">
@@ -45,7 +45,7 @@ const NewCourse = () => {
       </Form>
       {/* <p>Form with details...</p> */}
       {/* <p>Need to be able to upload roster here?</p> */}
-    </Layout>
+    </Authorized>
   );
 };
 

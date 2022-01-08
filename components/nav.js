@@ -94,49 +94,6 @@ const Navigation = () => {
             </NavDropdown>
           </Nav>
           <Nav>
-            <Form>
-              <Form.Group as={Row}>
-                <Col className="d-flex align-items-center">
-                  <Form.Check
-                    name="loggedin"
-                    type="radio"
-                    id="studentloggedin"
-                    label="studentloggedin"
-                    onChange={changedStudentloggedin}
-                    checked={isStudent}
-                  />
-                </Col>
-                <Col className="d-flex align-items-center">
-                  <Form.Check
-                    name="loggedin"
-                    type="radio"
-                    id="teacherloggedin"
-                    label="teacherloggedin"
-                    onChange={changedTeacherloggedin}
-                    checked={isTeacher}
-                  />
-                </Col>
-                <Col className="d-flex align-items-center">
-                  <Form.Check
-                    name="loggedin"
-                    type="radio"
-                    id="loggedout"
-                    label="loggedout"
-                    onChange={changedLoggedout}
-                    checked={isLoggedOut}
-                  />
-                </Col>
-                <Col className="d-flex align-items-center">
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={persistLogin}
-                  >
-                    Remember
-                  </Button>
-                </Col>
-              </Form.Group>
-            </Form>
             <LoginOut/>
           </Nav>
         </Navbar.Collapse>
