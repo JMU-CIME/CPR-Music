@@ -46,65 +46,62 @@ const mockAssignments = [
     activityId: 1,
     userId: 1,
   },
-]
+];
 
-const assignmentsReducer = (state = mockAssignments, {type, payload}) => {
-  return state
-}
+const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
+  return state;
+};
 
 const mockActivities = [
   {
     id: 0,
     typeId: 1,
     pieceId: 0,
-    body: "body0"
+    body: "body0",
   },
   {
     id: 1,
     typeId: 2,
     pieceId: 1,
-    body: "body1"
-  }
-]
+    body: "body1",
+  },
+];
 
-const activitiesReducer = (state = mockActivities, {type, payload}) => {
-  return state
-}
+const activitiesReducer = (state = mockActivities, { type, payload }) => {
+  return state;
+};
 
 const mockActivityTypes = [
   {
     id: 1,
     name: "Melody",
-    category: "perform"
+    category: "perform",
   },
   {
     id: 2,
     name: "Bass Line",
-    category: "perform"
+    category: "perform",
   },
   {
     id: 3,
     name: "Creativity",
-    category: "create"
+    category: "create",
   },
   {
     id: 4,
     name: "Reflection",
-    category: "reflect"
+    category: "reflect",
   },
 ];
 
-const activityTypesReducer = (
-  state = mockActivityTypes,
-  { type, payload }
-) => {
+const activityTypesReducer = (state = mockActivityTypes, { type, payload }) => {
   return state;
 };
 
 const Level = {
-  Primary: 'Primary',
-  Secondary: 'Secondary'
-}
+  Primary: "Primary",
+  Secondary: "Secondary",
+};
 
 const mockPieces = [
   {
@@ -112,10 +109,10 @@ const mockPieces = [
     slug: "piece-with-id-0",
     name: "Piece with id 0",
     composerId: 0,
-    videoS3Key: 'video/0',
-    audioS3Key: 'audio/0',
-    notationS3Key: 'notation/0',
-    date: 'timestamp0',
+    videoS3Key: "video/0",
+    audioS3Key: "audio/0",
+    notationS3Key: "notation/0",
+    date: "timestamp0",
     level: Level.Primary,
   },
   {
@@ -123,10 +120,10 @@ const mockPieces = [
     slug: "celebration-for-a-new-day",
     name: "Celebration for a New Day",
     composerId: 0,
-    videoS3Key: 'video/1',
-    audioS3Key: 'audio/1',
-    notationS3Key: 'notation/1',
-    date: 'timestamp1',
+    videoS3Key: "video/1",
+    audioS3Key: "audio/1",
+    notationS3Key: "notation/1",
+    date: "timestamp1",
     level: Level.Primary,
   },
   {
@@ -134,10 +131,10 @@ const mockPieces = [
     slug: "air-for-band",
     name: "Air for Band",
     composerId: 0,
-    videoS3Key: 'video/2',
-    audioS3Key: 'audio/2',
-    notationS3Key: 'notation/2',
-    date: 'timestamp2',
+    videoS3Key: "video/2",
+    audioS3Key: "audio/2",
+    notationS3Key: "notation/2",
+    date: "timestamp2",
     level: Level.Primary,
   },
   {
@@ -145,10 +142,10 @@ const mockPieces = [
     slug: "america-the-beautiful",
     name: "America the Beautiful",
     composerId: 0,
-    videoS3Key: 'video/3',
-    audioS3Key: 'audio/3',
-    notationS3Key: 'notation/3',
-    date: 'timestamp3',
+    videoS3Key: "video/3",
+    audioS3Key: "audio/3",
+    notationS3Key: "notation/3",
+    date: "timestamp3",
     level: Level.Primary,
   },
   {
@@ -156,10 +153,10 @@ const mockPieces = [
     slug: "chant",
     name: "Chant",
     composerId: 1,
-    videoS3Key: 'video/4',
-    audioS3Key: 'audio/4',
-    notationS3Key: 'notation/4',
-    date: 'timestamp4',
+    videoS3Key: "video/4",
+    audioS3Key: "audio/4",
+    notationS3Key: "notation/4",
+    date: "timestamp4",
     level: Level.Primary,
   },
   {
@@ -167,10 +164,10 @@ const mockPieces = [
     slug: "danny-boy",
     name: "Danny Boy",
     composerId: 1,
-    videoS3Key: 'video/5',
-    audioS3Key: 'audio/5',
-    notationS3Key: 'notation/5',
-    date: 'timestamp5',
+    videoS3Key: "video/5",
+    audioS3Key: "audio/5",
+    notationS3Key: "notation/5",
+    date: "timestamp5",
     level: Level.Primary,
   },
   {
@@ -178,10 +175,10 @@ const mockPieces = [
     slug: "jubilo",
     name: "Jubilo",
     composerId: 1,
-    videoS3Key: 'video/6',
-    audioS3Key: 'audio/6',
-    notationS3Key: 'notation/6',
-    date: 'timestamp6',
+    videoS3Key: "video/6",
+    audioS3Key: "audio/6",
+    notationS3Key: "notation/6",
+    date: "timestamp6",
     level: Level.Secondary,
   },
   {
@@ -189,10 +186,10 @@ const mockPieces = [
     slug: "portamento",
     name: "Portamento",
     composerId: 1,
-    videoS3Key: 'video/7',
-    audioS3Key: 'audio/7',
-    notationS3Key: 'notation/7',
-    date: 'timestamp7',
+    videoS3Key: "video/7",
+    audioS3Key: "audio/7",
+    notationS3Key: "notation/7",
+    date: "timestamp7",
     level: Level.Secondary,
   },
 ];
@@ -208,13 +205,13 @@ const mockComposers = [
   },
   {
     id: 1,
-    name: "name1"
-  }
-]
+    name: "name1",
+  },
+];
 
-const composersReducer = (state = mockComposers, {type, payload}) => {
-  return state
-}
+const composersReducer = (state = mockComposers, { type, payload }) => {
+  return state;
+};
 
 const mockUsers = [
   {
@@ -227,7 +224,7 @@ const mockUsers = [
     name: "name1",
     grade: "grade1",
   },
-]
+];
 
 const usersReducer = (state = mockUsers, { type, payload }) => {
   switch (type) {
@@ -238,24 +235,27 @@ const usersReducer = (state = mockUsers, { type, payload }) => {
 };
 
 const mockCourses = [
-  {
-    id: 0,
-    name: "7th Grade Band",
-    ownerId: 0,
-    level: Level.Secondary,
-  },
-  {
-    id: 1,
-    name: "8th Grade Orchestra",
-    ownerId: 1,
-    level: Level.Primary,
-  },
+  // {
+  //   id: 0,
+  //   name: "7th Grade Band",
+  //   ownerId: 0,
+  //   level: Level.Secondary,
+  // },
+  // {
+  //   id: 1,
+  //   name: "8th Grade Orchestra",
+  //   ownerId: 1,
+  //   level: Level.Primary,
+  // },
 ];
 
 const coursesReducer = (state = mockCourses, { type, payload }) => {
   switch (type) {
+    case types.Action.GotCourses:
+      console.log("gotcourses", payload);
+      return payload;
     case types.ADDED_COURSE:
-      console.log('payload', payload)
+      console.log("payload", payload);
       return [...state, { id: state.length, name: payload.name }];
   }
   return state;
@@ -263,43 +263,43 @@ const coursesReducer = (state = mockCourses, { type, payload }) => {
 
 const Role = {
   student: "Student",
-  teacher: "Teacher"
-}
+  teacher: "Teacher",
+};
 const mockEnrollments = [
   {
     id: 0,
     userId: 0,
     courseId: 0,
-    role: Role.student
+    role: Role.student,
   },
   {
     id: 1,
     userId: 1,
     courseId: 1,
-    role: Role.teacher
-  }
-]
+    role: Role.teacher,
+  },
+];
 
-const enrollmentsReducer = (state = mockEnrollments, {type, payload}) => {
-  return state
-}
+const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
+  return state;
+};
 
 const mockSubmissions = [
   {
     userId: 0,
     asignmentId: 0,
-    content: "content0"
+    content: "content0",
   },
   {
     userId: 1,
     asignmentId: 1,
-    content: "content1"
-  }
-]
+    content: "content1",
+  },
+];
 
-const submissionsReducer = (state = mockSubmissions, {type, payload}) => {
-  return state
-}
+const submissionsReducer = (state = mockSubmissions, { type, payload }) => {
+  return state;
+};
 
 const mockSubmissionAttachments = [
   {
@@ -310,11 +310,14 @@ const mockSubmissionAttachments = [
     userId: 1,
     contentS3Key: "content/1",
   },
-]
+];
 
-const submissionAttachmentsReducer = (state = mockSubmissionAttachments, {type, payload}) => {
-  return state
-}
+const submissionAttachmentsReducer = (
+  state = mockSubmissionAttachments,
+  { type, payload }
+) => {
+  return state;
+};
 
 const loginStatus = {
   isStudent: false,
@@ -347,16 +350,19 @@ const loginReducer = (state = loginStatus, { type, payload }) => {
 // ✅ Student submit assignment (create submission?)
 // ✅ Student re-submit assignment (just create another submission? Edit existing?)
 
-const selectedCourseInfo = {}
+const selectedCourseInfo = {};
 
-const selectedCourseReducer = (state = selectedCourseInfo, { type, payload }) => {
+const selectedCourseReducer = (
+  state = selectedCourseInfo,
+  { type, payload }
+) => {
   switch (type) {
     case types.SELECT_COURSE:
       console.log(types.LOGGED_IN, payload);
       return {
         ...selectedCourseInfo,
-        selectedCourseId: payload
-      }
+        selectedCourseId: payload,
+      };
   }
   return state;
 };
@@ -373,7 +379,7 @@ const reducers = {
   users: usersReducer,
   courses: coursesReducer,
   enrollments: enrollmentsReducer,
-  subissions: submissionsReducer,
+  submissions: submissionsReducer,
   submissionAttachments: submissionAttachmentsReducer,
   loginStatus: loginReducer,
   selectedCourse: selectedCourseReducer,

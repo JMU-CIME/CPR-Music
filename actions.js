@@ -86,3 +86,37 @@ export const attemptLogin = (loginInfo) => {
 //       if (json.error) {
 //           alert(json.message)
 //       } else {
+
+export function gotCourses(courses) {
+  return {
+    type: types.Action.GotCourses,
+    payload: courses,
+  };
+}
+
+export function fetchCourses(djangoToken) {
+  return (dispatch) => {
+    fetch("http://0.0.0.0:8000/api/enrollments/", {
+      // fetch("http://localhost:3000/backend/api/enrollments/", {
+      headers: {
+        Authorization: `Token ${djangoToken}`,
+        "Content-Type": "application/json",
+      },
+    })
+      // return fetch("http://localhost:8000/api/enrollments/")
+      .then((response, ...rest) => {
+        // console.log("response");
+        // console.log(response);
+        // console.log("\n\nrest");
+        // console.log(rest);
+        const results = response.json();
+        // console.log(results);
+        return results;
+      })
+      .then((courses) => dispatch(gotCourses(courses)))
+      .catch((...rest) => {
+        console.log("catch rest");
+        console.log(rest);
+      });
+  };
+}

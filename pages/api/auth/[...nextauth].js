@@ -3,19 +3,19 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 const config = {
   django: {
-    url: 'http://0.0.0.0:8000/auth-token/',
-    user: 'username',
-    pw: 'password'
+    url: "http://0.0.0.0:8000/auth-token/",
+    user: "username",
+    pw: "password",
   },
   rails: {
-    url: 'https://teleband.cs.jmu.edu/login',
-    user: 'email',
-    pw: 'password'
-  }
-}
+    url: "https://teleband.cs.jmu.edu/login",
+    user: "email",
+    pw: "password",
+  },
+};
 
 // const backend = 'rails'
-const backend = 'django'
+const backend = "django";
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -36,7 +36,12 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize({ csrfToken, username, password }, req) {
-        console.log("called credentialsprovider.authorize!", username, password, req);
+        console.log(
+          "called credentialsprovider.authorize!",
+          username,
+          password,
+          req
+        );
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -48,15 +53,19 @@ export default NextAuth({
           method: "POST",
           body: JSON.stringify({
             [config[backend].user]: username,
-            [config[backend].pw]: password
+            [config[backend].pw]: password,
           }),
           headers: { "Content-Type": "application/json" },
         });
-        const user = await res.json();
-        console.log(res, user);
+        const userToken = await res.json();
+        console.log("\n\n\n\nuserToken from server");
+        console.log(userToken);
         // If no error and we have user data, return it
-        if (res.ok && !user.error) {
-          return user;
+        if (res.ok && !userToken.error) {
+          return {
+            username: username,
+            djangoToken: userToken.token,
+          };
         }
         // Return null if user data could not be retrieved
         return null;
@@ -97,7 +106,7 @@ export default NextAuth({
   // pages is not specified for that route.
   // https://next-auth.js.org/configuration/pages
   pages: {
-    signIn: '/auth/signin',  // Displays signin buttons
+    signIn: "/auth/signin", // Displays signin buttons
     // signOut: '/auth/signout', // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
@@ -108,29 +117,61 @@ export default NextAuth({
   // when an action is performed.
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
-    // async signIn({ user, account, profile, email, credentials }) {
-    //   console.log(
-    //     "signin callback",
-    //     user,
-    //     account,
-    //     profile,
-    //     email,
-    //     credentials
-    //   );
-    //   return user !== null;
-    // },
-    // async redirect({ url, baseUrl }) {
-    //   console.log("called callbacks.redirect");
-    //   return baseUrl;
-    // },
-    // async session({ session, token, user }) {
-    //   console.log("called callbacks.session");
-    //   return session;
-    // },
-    // async jwt({ token, user, account, profile, isNewUser }) {
-    //   console.log("called callbacks.jwt");
-    //   return token;
-    // },
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log(
+        "===========================\n",
+        "signin callback",
+        user,
+        account,
+        profile,
+        email,
+        credentials
+      );
+      return user !== null;
+    },
+    async redirect({ url, baseUrl }) {
+      console.log(
+        "===========================\n",
+        "called callbacks.redirect",
+        url,
+        baseUrl
+      );
+
+      if (url.startsWith(baseUrl)) return url;
+      // Allows relative callback URLs
+      else if (url.startsWith("/")) {
+        console.log("relative");
+        const absUrl = new URL(url, baseUrl).toString();
+        return absUrl;
+      }
+      return baseUrl;
+    },
+    async session({ session, token, user }) {
+      console.log(
+        "===========================\n",
+        "called callbacks.session",
+        session,
+        token,
+        user
+      );
+      return session;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      console.log(
+        "===========================\n",
+        "called callbacks.jwt",
+        token,
+        user,
+        account,
+        profile,
+        isNewUser
+      );
+      if (user) {
+        token.name = user.username;
+        token.djangoToken = user.djangoToken;
+      }
+      return token;
+    },
   },
 
   // Events are useful for logging
