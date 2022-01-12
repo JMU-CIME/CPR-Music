@@ -100,8 +100,8 @@ export function gotEnrollments(courses) {
   };
 }
 
-export function fetchEnrollments(djangoToken) {
-  return (dispatch) => {
+export function retrieveEnrollments(djangoToken) {
+  return (
     fetch("http://0.0.0.0:8000/api/enrollments/", {
       // fetch("http://localhost:3000/backend/api/enrollments/", {
       headers: {
@@ -118,10 +118,18 @@ export function fetchEnrollments(djangoToken) {
         const results = response.json();
         return results;
       })
-      .then((courses) => dispatch(gotEnrollments(courses)))
-      .catch((...rest) => {
-        console.log("catch rest");
-        console.log(rest);
-      });
+  );
+}
+
+export function fetchEnrollments(djangoToken) {
+  return (dispatch) => {
+    return djangoToken
+      ? retrieveEnrollments(djangoToken)
+          .then((courses) => dispatch(gotEnrollments(courses)))
+          .catch((...rest) => {
+            console.log("catch rest");
+            console.log(rest);
+          })
+      : null;
   };
 }

@@ -272,13 +272,13 @@ const Role = {
   student: "Student",
   teacher: "Teacher",
 };
-const mockEnrollments = [];
+const mockEnrollments = { loaded: false, items: [] };
 
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
     case types.Action.GotEnrollments:
       console.log("GotEnrollments", payload);
-      return payload;
+      return { loaded: true, items: payload };
   }
   return state;
 };

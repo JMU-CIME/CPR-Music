@@ -13,7 +13,7 @@ const Courses = ({ myCourses }) => {
     required: true,
   });
   const dispatch = useDispatch();
-  const enrollments = useSelector((state) => state.enrollments);
+  const enrollments = useSelector((state) => state.enrollments.items);
   useEffect(() => {
     if (session) {
       dispatch(fetchEnrollments(session.djangoToken));
