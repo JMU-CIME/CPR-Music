@@ -3,52 +3,52 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Container from "react-bootstrap/Container";
 import Link from "next/link";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+// import Button from "react-bootstrap/Button";
+// import Form from "react-bootstrap/Form";
+// import Row from "react-bootstrap/Row";
+// import Col from "react-bootstrap/Col";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { rememberLogin } from "../actions";
+// import { rememberLogin } from "../actions";
 import LoginOut from "./loginout";
 
 const Navigation = () => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
-  const loginStatus = useSelector(state => state.loginStatus);
+  const loginStatus = useSelector((state) => state.loginStatus);
 
-  const [isTeacher, setIsTeacher] = useState(loginStatus.isTeacher);
-  const [isStudent, setIsStudent] = useState(loginStatus.isStudent);
-  const [isLoggedOut, setIsLoggedOut] = useState(loginStatus.isLoggedOut);
+  // const [isTeacher, setIsTeacher] = useState(loginStatus.isTeacher);
+  // const [isStudent, setIsStudent] = useState(loginStatus.isStudent);
+  // const [isLoggedOut, setIsLoggedOut] = useState(loginStatus.isLoggedOut);
 
-  const persistLogin = (ev) => {
-    ev.preventDefault();
-    console.log("persist logged in");
-    dispatch(rememberLogin({
-      isTeacher,
-      isStudent,
-      isLoggedOut
-    }))
-  };
+  // const persistLogin = (ev) => {
+  //   ev.preventDefault();
+  //   console.log("persist logged in");
+  //   dispatch(rememberLogin({
+  //     isTeacher,
+  //     isStudent,
+  //     isLoggedOut
+  //   }))
+  // };
 
-  const changedStudentloggedin = (ev) => {
-    console.log("changedStudentloggedin", ev);
-    setIsTeacher(false);
-    setIsLoggedOut(false);
-    setIsStudent(true);
-  };
-  const changedTeacherloggedin = (ev) => {
-    console.log("changedTeacherloggedin", ev);
-    setIsStudent(false);
-    setIsLoggedOut(false);
-    setIsTeacher(true);
-  };
-  const changedLoggedout = (ev) => {
-    console.log("changedLoggedout", ev);
-    setIsTeacher(false);
-    setIsStudent(false);
-    setIsLoggedOut(true);
-  };
+  // const changedStudentloggedin = (ev) => {
+  //   console.log("changedStudentloggedin", ev);
+  //   setIsTeacher(false);
+  //   setIsLoggedOut(false);
+  //   setIsStudent(true);
+  // };
+  // const changedTeacherloggedin = (ev) => {
+  //   console.log("changedTeacherloggedin", ev);
+  //   setIsStudent(false);
+  //   setIsLoggedOut(false);
+  //   setIsTeacher(true);
+  // };
+  // const changedLoggedout = (ev) => {
+  //   console.log("changedLoggedout", ev);
+  //   setIsTeacher(false);
+  //   setIsStudent(false);
+  //   setIsLoggedOut(true);
+  // };
 
   return (
     <Navbar bg="light" expand="lg">
@@ -94,7 +94,7 @@ const Navigation = () => {
             </NavDropdown>
           </Nav>
           <Nav>
-            <LoginOut/>
+            <LoginOut />
           </Nav>
         </Navbar.Collapse>
       </Container>

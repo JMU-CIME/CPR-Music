@@ -18,10 +18,16 @@ export const rememberLogin = ({ isTeacher, isStudent, isLoggedOut }) => {
 
 export const loggedIn = (data) => ({ type: types.LOGGED_IN, payload: data });
 
-export const newCourse = (data) => ({
-  type: types.ADDED_COURSE,
-  payload: data,
-});
+export const newCourse = (data) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(loginMessageBody),
+  };
+  fetch(`https://teleband.cs.jmu.edu/login`, options);
+};
 
 export const attemptLogin = (loginInfo) => {
   let loginMessageBody = {};
@@ -87,14 +93,14 @@ export const attemptLogin = (loginInfo) => {
 //           alert(json.message)
 //       } else {
 
-export function gotCourses(courses) {
+export function gotEnrollments(courses) {
   return {
-    type: types.Action.GotCourses,
+    type: types.Action.GotEnrollments,
     payload: courses,
   };
 }
 
-export function fetchCourses(djangoToken) {
+export function fetchEnrollments(djangoToken) {
   return (dispatch) => {
     fetch("http://0.0.0.0:8000/api/enrollments/", {
       // fetch("http://localhost:3000/backend/api/enrollments/", {
@@ -110,10 +116,9 @@ export function fetchCourses(djangoToken) {
         // console.log("\n\nrest");
         // console.log(rest);
         const results = response.json();
-        // console.log(results);
         return results;
       })
-      .then((courses) => dispatch(gotCourses(courses)))
+      .then((courses) => dispatch(gotEnrollments(courses)))
       .catch((...rest) => {
         console.log("catch rest");
         console.log(rest);

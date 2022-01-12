@@ -107,7 +107,7 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/pages
   pages: {
     signIn: "/auth/signin", // Displays signin buttons
-    // signOut: '/auth/signout', // Displays form with sign out button
+    signOut: "/auth/signout", // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
     // newUser: null // If set, new users will be directed here on first sign in
@@ -154,7 +154,7 @@ export default NextAuth({
         token,
         user
       );
-      return session;
+      return { ...session, djangoToken: token.djangoToken };
     },
     async jwt({ token, user, account, profile, isNewUser }) {
       console.log(

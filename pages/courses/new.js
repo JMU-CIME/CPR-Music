@@ -4,48 +4,19 @@ import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { useDispatch } from "react-redux";
-import Authorized from "../../components/authorized"
+import Layout from "../../components/layout";
 import { useRouter } from "next/router";
 import { newCourse } from "../../actions";
+import AddEditCourse from "../../components/forms/addeditCourse";
 
 const NewCourse = () => {
-  const router = useRouter();
-
-  const dispatch = useDispatch();
-
-  const [name, setName] = useState("");
-
-  const addCourse = (ev) => {
-    console.log("ev", ev);
-
-    // don't refresh the page
-    ev.preventDefault();
-    ev.stopPropagation();
-    
-    // tell redux we have changed data
-    dispatch(newCourse({ name }));
-
-    // navigate back to the course list
-    router.push("/courses");
-  };
-
   return (
-    <Authorized>
+    <Layout>
       <h1>Add Course</h1>
-      <Form onSubmit={addCourse}>
-        <Form.Group as={Row} className="mb-3" controlId="formCourseName">
-          <Form.Label column sm={2}>
-            Course Name
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control type="text" placeholder="Course name" value={name} onChange={(ev) => setName(ev.target.value)} />
-          </Col>
-        </Form.Group>
-        <Button type="submit">Submit</Button>
-      </Form>
+      <AddEditCourse />
       {/* <p>Form with details...</p> */}
       {/* <p>Need to be able to upload roster here?</p> */}
-    </Authorized>
+    </Layout>
   );
 };
 

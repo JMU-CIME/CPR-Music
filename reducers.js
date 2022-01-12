@@ -1,3 +1,4 @@
+import { HYDRATE } from "next-redux-wrapper";
 import { combineReducers } from "redux";
 import * as types from "./types";
 
@@ -227,37 +228,43 @@ const mockUsers = [
 ];
 
 const usersReducer = (state = mockUsers, { type, payload }) => {
-  switch (type) {
-    case types.LOGGED_IN:
-      console.log(types.LOGGED_IN, payload);
-  }
+  // switch (type) {
+  //   case types.LOGGED_IN:
+  //     console.log(types.LOGGED_IN, payload);
+  // }
   return state;
 };
 
-const mockCourses = [
-  // {
-  //   id: 0,
-  //   name: "7th Grade Band",
-  //   ownerId: 0,
-  //   level: Level.Secondary,
-  // },
-  // {
-  //   id: 1,
-  //   name: "8th Grade Orchestra",
-  //   ownerId: 1,
-  //   level: Level.Primary,
-  // },
-];
+const mockCourses = {
+  courses: [
+    // {
+    //   id: 0,
+    //   name: "7th Grade Band",
+    //   ownerId: 0,
+    //   level: Level.Secondary,
+    // },
+    // {
+    //   id: 1,
+    //   name: "8th Grade Orchestra",
+    //   ownerId: 1,
+    //   level: Level.Primary,
+    // },
+  ],
+};
 
 const coursesReducer = (state = mockCourses, { type, payload }) => {
-  switch (type) {
-    case types.Action.GotCourses:
-      console.log("gotcourses", payload);
-      return payload;
-    case types.ADDED_COURSE:
-      console.log("payload", payload);
-      return [...state, { id: state.length, name: payload.name }];
-  }
+  // switch (type) {
+  //   // case HYDRATE:
+  //   //   console.log("got HYDRATE");
+  //   //   console.log(payload);
+  //   //   return { ...state, courses: payload.courses };
+  //   case types.Action.GotCourses:
+  //     console.log("gotcourses", payload);
+  //     return payload;
+  //   case types.ADDED_COURSE:
+  //     console.log("payload", payload);
+  //     return [...state, { id: state.length, name: payload.name }];
+  // }
   return state;
 };
 
@@ -265,22 +272,14 @@ const Role = {
   student: "Student",
   teacher: "Teacher",
 };
-const mockEnrollments = [
-  {
-    id: 0,
-    userId: 0,
-    courseId: 0,
-    role: Role.student,
-  },
-  {
-    id: 1,
-    userId: 1,
-    courseId: 1,
-    role: Role.teacher,
-  },
-];
+const mockEnrollments = [];
 
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotEnrollments:
+      console.log("GotEnrollments", payload);
+      return payload;
+  }
   return state;
 };
 
@@ -358,7 +357,7 @@ const selectedCourseReducer = (
 ) => {
   switch (type) {
     case types.SELECT_COURSE:
-      console.log(types.LOGGED_IN, payload);
+      // console.log(types.LOGGED_IN, payload);
       return {
         ...selectedCourseInfo,
         selectedCourseId: payload,
@@ -369,20 +368,20 @@ const selectedCourseReducer = (
 
 // COMBINED REDUCERS
 const reducers = {
-  counter: counterReducer,
-  timer: timerReducer,
-  assignments: assignmentsReducer,
-  activities: activitiesReducer,
-  activityTypes: activityTypesReducer,
-  pieces: piecesReducer,
-  composers: composersReducer,
-  users: usersReducer,
-  courses: coursesReducer,
+  // counter: counterReducer,
+  // timer: timerReducer,
+  // assignments: assignmentsReducer,
+  // activities: activitiesReducer,
+  // activityTypes: activityTypesReducer,
+  // pieces: piecesReducer,
+  // composers: composersReducer,
+  // users: usersReducer,
+  // courses: coursesReducer,
   enrollments: enrollmentsReducer,
-  submissions: submissionsReducer,
-  submissionAttachments: submissionAttachmentsReducer,
-  loginStatus: loginReducer,
-  selectedCourse: selectedCourseReducer,
+  // submissions: submissionsReducer,
+  // submissionAttachments: submissionAttachmentsReducer,
+  // loginStatus: loginReducer,
+  // selectedCourse: selectedCourseReducer,
 };
 
 export default combineReducers(reducers);

@@ -9,5 +9,5 @@ export const ADDED_COURSE = "ADDED_COURSE";
 export const SELECT_COURSE = "SELECT_COURSE";
 
 export const Action = Object.freeze({
-  GotCourses: "GotCourses",
+  GotEnrollments: "GotEnrollments",
 });
