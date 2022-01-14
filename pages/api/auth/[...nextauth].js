@@ -144,7 +144,8 @@ export default NextAuth({
         const absUrl = new URL(url, baseUrl).toString();
         return absUrl;
       }
-      return baseUrl;
+      // maybe this was blocking me from reaching auth??
+      return url;
     },
     async session({ session, token, user }) {
       console.log(
