@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 const config = {
   django: {
-    url: "http://0.0.0.0:8000/auth-token/",
+    url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token/`,
     user: "username",
     pw: "password",
   },
