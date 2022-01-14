@@ -102,7 +102,7 @@ export function gotEnrollments(courses) {
 
 export function retrieveEnrollments(djangoToken) {
   return (
-    fetch("http://0.0.0.0:8000/api/enrollments/", {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
       // fetch("http://localhost:3000/backend/api/enrollments/", {
       headers: {
         Authorization: `Token ${djangoToken}`,
