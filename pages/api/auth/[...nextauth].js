@@ -132,6 +132,7 @@ export default NextAuth({
       return user !== null;
     },
     async redirect({ url, baseUrl }) {
+      let returnVal = url;
       console.log(
         "===========================\n",
         "called callbacks.redirect",
@@ -139,15 +140,19 @@ export default NextAuth({
         baseUrl
       );
 
-      if (url.startsWith(baseUrl)) return url;
+      if (url.startsWith(baseUrl)) {
+        //something
+      }
       // Allows relative callback URLs
       else if (url.startsWith("/")) {
         console.log("relative");
         const absUrl = new URL(url, baseUrl).toString();
-        return absUrl;
+        returnVal = absUrl;
       }
       // maybe this was blocking me from reaching auth??
-      return url;
+      console.log("returning from redirect:");
+      console.log(returnVal);
+      return returnVal;
     },
     async session({ session, token, user }) {
       console.log(
