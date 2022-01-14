@@ -49,6 +49,8 @@ export default NextAuth({
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
 
+        console.log("url to fetch credentials:");
+        console.log(config[backend].url);
         const res = await fetch(config[backend].url, {
           method: "POST",
           body: JSON.stringify({
