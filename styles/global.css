@@ -1,0 +1,19 @@
+.course-item {
+  width: 18rem;
+  margin-left: 1rem;
+}
+
+.course-item:first-child {
+  margin-left: 0;
+}
+
+.course-list {
+  display: flex;
+  flex-direction: row;
+  /* align-items: space; */
+}
+
+.form-control.date-field {
+  display: inline-block;
+  width: 4rem;
+}

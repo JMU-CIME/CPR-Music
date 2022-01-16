@@ -1,0 +1,35 @@
+name: Deploy To Dev
+on: [push]
+jobs:
+  deploy-files-with-rsync-over-ssh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sourcecode
+        uses: actions/checkout@v2
+      - name: ls
+        run: ls -al
+      - name: Install SSH key of fac
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SHH_PIV }}
+          name: id_rsa-bastion
+          known_hosts: ${{ secrets.FAC }}
+          config: |
+            Host fac
+              HostName 134.126.137.45
+              User stewarmc
+              IdentityFile ~/.ssh/id_rsa-bastion
+      - name: Install SSH key of w3
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SHH_PIV }}
+          name: id_rsa-target
+          known_hosts: ${{ secrets.TB }} # will be appended to existing .ssh/known_hosts
+          config: | # will be appended to existing .ssh/config
+            Host tb
+              HostName teleband.cs.jmu.edu
+              User deploy
+              IdentityFile ~/.ssh/id_rsa-target
+              ProxyCommand ssh -W %h:%p fac
+      - name: Deploy via rsync with port-forwarding
+        run: rsync -avz ./ tb:CPR-Music

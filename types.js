@@ -10,4 +10,5 @@ export const SELECT_COURSE = "SELECT_COURSE";
 
 export const Action = Object.freeze({
   GotEnrollments: "GotEnrollments",
+  NewEnrollment: "NewEnrollment",
 });

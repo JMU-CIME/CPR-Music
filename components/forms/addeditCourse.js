@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { newCourse } from "../../actions";
+import { useSession } from "next-auth/react";
 
 export default function AddEditCourse({}) {
   const router = useRouter();
@@ -18,6 +19,11 @@ export default function AddEditCourse({}) {
   const [startDate, setStartDate] = useState(selectedCourse?.startDate);
   const [endDate, setEndDate] = useState(selectedCourse?.endDate);
   const [rosterCSV, setRosterCSV] = useState(selectedCourse?.rosterCSV);
+  const {
+    data: { djangoToken: token },
+  } = useSession();
+
+  console.log("session token in adEdit", token);
 
   const addCourse = (ev) => {
     console.log("ev", ev);
@@ -27,7 +33,7 @@ export default function AddEditCourse({}) {
     ev.stopPropagation();
 
     // tell redux we have changed data
-    dispatch(newCourse({ name }));
+    dispatch(newCourse({ name, startDate, endDate, token }));
 
     // navigate back to the course list
     router.push("/courses");
@@ -43,7 +49,10 @@ export default function AddEditCourse({}) {
             type="text"
             placeholder="Course name"
             value={name}
-            onChange={(ev) => setName(ev.target.value)}
+            onChange={(ev) => {
+              console.log("setName");
+              setName(ev.target.value);
+            }}
           />
         </Col>
       </Form.Group>
@@ -54,9 +63,12 @@ export default function AddEditCourse({}) {
         <Col sm={10}>
           <Form.Control
             type="date"
-            placeholder="End Date"
+            placeholder="Start Date"
             value={startDate}
-            onChange={(ev) => setStartDate(ev.target.value)}
+            onChange={(ev) => {
+              console.log("setStartDate");
+              setStartDate(ev.target.value);
+            }}
           />
         </Col>
       </Form.Group>
@@ -69,7 +81,10 @@ export default function AddEditCourse({}) {
             type="date"
             placeholder="End Date"
             value={endDate}
-            onChange={(ev) => setEndDate(ev.target.value)}
+            onChange={(ev) => {
+              console.log("setEndDate");
+              setEndDate(ev.target.value);
+            }}
           />
         </Col>
       </Form.Group>

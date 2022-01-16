@@ -276,6 +276,11 @@ const mockEnrollments = { loaded: false, items: [] };
 
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
+    // case types.Action.NewEnrollment:
+    //   return {
+    //     ...state,
+    //     items: [...state.items],
+    //   };
     case types.Action.GotEnrollments:
       console.log("GotEnrollments", payload);
       return { loaded: true, items: payload };

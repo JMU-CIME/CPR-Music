@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import Layout from "../../components/layout";
 import { useRouter } from "next/router";
 import { newCourse } from "../../actions";
-import AddEditCourse from "../../components/forms/addeditCourse";
+import AddEditCourse from "../../components/forms/addEditCourse";
 
 const NewCourse = () => {
   return (
