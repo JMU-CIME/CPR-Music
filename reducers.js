@@ -35,40 +35,30 @@ const timerReducer = (state = initialTimerState, { type, payload }) => {
   }
 };
 
-const mockAssignments = [
-  {
-    id: 0,
-    activityId: 0,
-    userId: 0,
-    deadline: "exists",
-  },
-  {
-    id: 1,
-    activityId: 1,
-    userId: 1,
-  },
-];
+const mockAssignments = {
+  loaded: false,
+  items: [],
+};
 
 const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotAssignments:
+      console.log("got assignments", payload);
+      return state;
+  }
   return state;
 };
 
-const mockActivities = [
-  {
-    id: 0,
-    typeId: 1,
-    pieceId: 0,
-    body: "body0",
-  },
-  {
-    id: 1,
-    typeId: 2,
-    pieceId: 1,
-    body: "body1",
-  },
-];
+const initialActivities = {
+  loaded: false,
+  items: [],
+};
 
-const activitiesReducer = (state = mockActivities, { type, payload }) => {
+const activitiesReducer = (state = initialActivities, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotActivities:
+      console.log("got activities", payload);
+  }
   return state;
 };
 
@@ -104,98 +94,103 @@ const Level = {
   Secondary: "Secondary",
 };
 
-const mockPieces = [
-  {
-    id: 0,
-    slug: "piece-with-id-0",
-    name: "Piece with id 0",
-    composerId: 0,
-    videoS3Key: "video/0",
-    audioS3Key: "audio/0",
-    notationS3Key: "notation/0",
-    date: "timestamp0",
-    level: Level.Primary,
-  },
-  {
-    id: 1,
-    slug: "celebration-for-a-new-day",
-    name: "Celebration for a New Day",
-    composerId: 0,
-    videoS3Key: "video/1",
-    audioS3Key: "audio/1",
-    notationS3Key: "notation/1",
-    date: "timestamp1",
-    level: Level.Primary,
-  },
-  {
-    id: 2,
-    slug: "air-for-band",
-    name: "Air for Band",
-    composerId: 0,
-    videoS3Key: "video/2",
-    audioS3Key: "audio/2",
-    notationS3Key: "notation/2",
-    date: "timestamp2",
-    level: Level.Primary,
-  },
-  {
-    id: 3,
-    slug: "america-the-beautiful",
-    name: "America the Beautiful",
-    composerId: 0,
-    videoS3Key: "video/3",
-    audioS3Key: "audio/3",
-    notationS3Key: "notation/3",
-    date: "timestamp3",
-    level: Level.Primary,
-  },
-  {
-    id: 4,
-    slug: "chant",
-    name: "Chant",
-    composerId: 1,
-    videoS3Key: "video/4",
-    audioS3Key: "audio/4",
-    notationS3Key: "notation/4",
-    date: "timestamp4",
-    level: Level.Primary,
-  },
-  {
-    id: 5,
-    slug: "danny-boy",
-    name: "Danny Boy",
-    composerId: 1,
-    videoS3Key: "video/5",
-    audioS3Key: "audio/5",
-    notationS3Key: "notation/5",
-    date: "timestamp5",
-    level: Level.Primary,
-  },
-  {
-    id: 6,
-    slug: "jubilo",
-    name: "Jubilo",
-    composerId: 1,
-    videoS3Key: "video/6",
-    audioS3Key: "audio/6",
-    notationS3Key: "notation/6",
-    date: "timestamp6",
-    level: Level.Secondary,
-  },
-  {
-    id: 7,
-    slug: "portamento",
-    name: "Portamento",
-    composerId: 1,
-    videoS3Key: "video/7",
-    audioS3Key: "audio/7",
-    notationS3Key: "notation/7",
-    date: "timestamp7",
-    level: Level.Secondary,
-  },
-];
+const initialPieces = { loaded: false, items: [] };
+// {
+//   id: 0,
+//   slug: "piece-with-id-0",
+//   name: "Piece with id 0",
+//   composerId: 0,
+//   videoS3Key: "video/0",
+//   audioS3Key: "audio/0",
+//   notationS3Key: "notation/0",
+//   date: "timestamp0",
+//   level: Level.Primary,
+// },
+// {
+//   id: 1,
+//   slug: "celebration-for-a-new-day",
+//   name: "Celebration for a New Day",
+//   composerId: 0,
+//   videoS3Key: "video/1",
+//   audioS3Key: "audio/1",
+//   notationS3Key: "notation/1",
+//   date: "timestamp1",
+//   level: Level.Primary,
+// },
+// {
+//   id: 2,
+//   slug: "air-for-band",
+//   name: "Air for Band",
+//   composerId: 0,
+//   videoS3Key: "video/2",
+//   audioS3Key: "audio/2",
+//   notationS3Key: "notation/2",
+//   date: "timestamp2",
+//   level: Level.Primary,
+// },
+// {
+//   id: 3,
+//   slug: "america-the-beautiful",
+//   name: "America the Beautiful",
+//   composerId: 0,
+//   videoS3Key: "video/3",
+//   audioS3Key: "audio/3",
+//   notationS3Key: "notation/3",
+//   date: "timestamp3",
+//   level: Level.Primary,
+// },
+// {
+//   id: 4,
+//   slug: "chant",
+//   name: "Chant",
+//   composerId: 1,
+//   videoS3Key: "video/4",
+//   audioS3Key: "audio/4",
+//   notationS3Key: "notation/4",
+//   date: "timestamp4",
+//   level: Level.Primary,
+// },
+// {
+//   id: 5,
+//   slug: "danny-boy",
+//   name: "Danny Boy",
+//   composerId: 1,
+//   videoS3Key: "video/5",
+//   audioS3Key: "audio/5",
+//   notationS3Key: "notation/5",
+//   date: "timestamp5",
+//   level: Level.Primary,
+// },
+// {
+//   id: 6,
+//   slug: "jubilo",
+//   name: "Jubilo",
+//   composerId: 1,
+//   videoS3Key: "video/6",
+//   audioS3Key: "audio/6",
+//   notationS3Key: "notation/6",
+//   date: "timestamp6",
+//   level: Level.Secondary,
+// },
+// {
+//   id: 7,
+//   slug: "portamento",
+//   name: "Portamento",
+//   composerId: 1,
+//   videoS3Key: "video/7",
+//   audioS3Key: "audio/7",
+//   notationS3Key: "notation/7",
+//   date: "timestamp7",
+//   level: Level.Secondary,
+// },
+// ];
 
-const piecesReducer = (state = mockPieces, { type, payload }) => {
+const piecesReducer = (state = initialPieces, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotPieces:
+      console.log("got pieces", payload);
+      return { loaded: true, items: payload };
+  }
   return state;
 };
 
@@ -276,13 +271,53 @@ const mockEnrollments = { loaded: false, items: [] };
 
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
-    // case types.Action.NewEnrollment:
-    //   return {
-    //     ...state,
-    //     items: [...state.items],
-    //   };
+    case types.Action.AddedRoster:
+      console.log("addedRoster", payload);
+      return state;
     case types.Action.GotEnrollments:
       console.log("GotEnrollments", payload);
+      return { loaded: true, items: payload };
+  }
+  return state;
+};
+
+const mockRoster = { loaded: false, items: [] };
+
+const rosterReducer = (state = mockRoster, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotRoster:
+      console.log("GotRoster", payload);
+      return { loaded: true, items: payload };
+    case types.Action.UpdatedEnrollmentInstrument:
+      console.log("UpdatedEnrollmentInstrument", payload);
+      const items = state.items;
+      items.filter(
+        (enrollment) => enrollment.id === payload.enrollment.id
+      )[0].instrument = {
+        id: payload.enrollment.id,
+      };
+      return { ...state, items };
+  }
+  return state;
+};
+
+const initialCurrentUser = { loaded: false, items: [] };
+
+const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
+  switch (type) {
+    case types.Action.LoggedOut:
+      console.log("LoggedOut", payload);
+      return { loaded: true, items: payload };
+  }
+  return state;
+};
+
+const mockInstruments = { loaded: false, items: [] };
+
+const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotInstruments:
+      console.log("GotInstruments", payload);
       return { loaded: true, items: payload };
   }
   return state;
@@ -375,14 +410,17 @@ const selectedCourseReducer = (
 const reducers = {
   // counter: counterReducer,
   // timer: timerReducer,
-  // assignments: assignmentsReducer,
-  // activities: activitiesReducer,
+  assignments: assignmentsReducer,
+  activities: activitiesReducer,
   // activityTypes: activityTypesReducer,
-  // pieces: piecesReducer,
+  pieces: piecesReducer,
   // composers: composersReducer,
   // users: usersReducer,
   // courses: coursesReducer,
   enrollments: enrollmentsReducer,
+  instruments: instrumentsReducer,
+  roster: rosterReducer,
+  currentUser: currentUserReducer,
   // submissions: submissionsReducer,
   // submissionAttachments: submissionAttachmentsReducer,
   // loginStatus: loginReducer,

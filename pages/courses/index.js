@@ -23,9 +23,11 @@ const Courses = ({ myCourses }) => {
 
   const { data: session } = useSession();
   const dispatch = useDispatch();
-  const enrollments = useSelector((state) => state.enrollments.items);
+  const { items: enrollments, loaded } = useSelector(
+    (state) => state.enrollments
+  );
   useEffect(() => {
-    if (session) {
+    if (session && !loaded) {
       dispatch(fetchEnrollments(session.djangoToken));
     }
   }, [session, dispatch]);
