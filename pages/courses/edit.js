@@ -1,10 +1,8 @@
-import { useSelector } from "react-redux";
-import Layout from "../../components/layout";
+import { useSelector } from 'react-redux';
+import Layout from '../../components/layout';
 
-const EditCourse = () => {
-  const pieces = useSelector((state) => {
-    return state.pieces;
-  });
+function EditCourse() {
+  const pieces = useSelector((state) => state.pieces);
   return (
     <Layout>
       <h1>Edit Course</h1>
@@ -17,10 +15,12 @@ const EditCourse = () => {
         available to add)
       </p>
       <ul>
-        {pieces && pieces.map((piece) => <li key={piece.id}>{piece.name}</li>)}
+        {pieces.loaded &&
+          pieces.items &&
+          pieces.map((piece) => <li key={piece.id}>{piece.name}</li>)}
       </ul>
     </Layout>
   );
-};
+}
 
 export default EditCourse;

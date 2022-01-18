@@ -1,15 +1,7 @@
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { useDispatch } from "react-redux";
-import Layout from "../../components/layout";
-import { useRouter } from "next/router";
-import { newCourse } from "../../actions";
-import AddEditCourse from "../../components/forms/addEditCourse";
+import Layout from '../../components/layout';
+import AddEditCourse from '../../components/forms/addEditCourse';
 
-const NewCourse = () => {
+export default function NewCourse() {
   return (
     <Layout>
       <h1>Add Course</h1>
@@ -18,6 +10,4 @@ const NewCourse = () => {
       {/* <p>Need to be able to upload roster here?</p> */}
     </Layout>
   );
-};
-
-export default NewCourse;
+}

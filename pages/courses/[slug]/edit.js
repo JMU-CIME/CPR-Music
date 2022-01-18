@@ -1,20 +1,20 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { Button, Col, ListGroupItem, Row } from "react-bootstrap";
-import ListGroup from "react-bootstrap/ListGroup";
-import { FaPlus } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { Button, Col, ListGroupItem, Row } from 'react-bootstrap';
+import ListGroup from 'react-bootstrap/ListGroup';
+import { FaPlus } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   assignPiece,
   fetchActivities,
   fetchEnrollments,
   fetchPieces,
-} from "../../../actions";
-import AddEditCourse from "../../../components/forms/addEditCourse";
-import AddEditStudent from "../../../components/forms/addEditStudent";
-import UploadStudents from "../../../components/forms/uploadStudents";
-import Layout from "../../../components/layout";
+} from '../../../actions';
+import AddEditCourse from '../../../components/forms/addEditCourse';
+import AddEditStudent from '../../../components/forms/addEditStudent';
+import UploadStudents from '../../../components/forms/uploadStudents';
+import Layout from '../../../components/layout';
 
 export default function EditCourse() {
   const enrollments = useSelector((state) => state.enrollments);
@@ -27,33 +27,29 @@ export default function EditCourse() {
   const djangoToken = session?.djangoToken;
   useEffect(() => {
     if (!enrollments.loaded) {
-      console.log("djangoToken", djangoToken);
+      console.log('djangoToken', djangoToken);
       dispatch(fetchEnrollments(djangoToken));
     }
     if (!activities.loaded) {
-      console.log("djangoToken", djangoToken);
+      console.log('djangoToken', djangoToken);
       dispatch(fetchActivities({ token: djangoToken, slug }));
     }
     if (!pieces.loaded) {
-      console.log("djangoToken", djangoToken);
+      console.log('djangoToken', djangoToken);
       dispatch(fetchPieces(djangoToken));
     }
   }, [slug, djangoToken]);
 
   const selectedEnrollment = enrollments.items.filter((enrollment) => {
-    console.log("enrollment in filter", enrollment, slug);
+    console.log('enrollment in filter', enrollment, slug);
     console.log(enrollment.course.slug === slug);
     return enrollment.course.slug === slug;
   })[0];
-  console.log("pieces", pieces);
-  console.log("pieces.items", pieces.items);
+  console.log('pieces', pieces);
+  console.log('pieces.items', pieces.items);
 
-  const postAssignPiece = (piece_id) => {
-    return (ev) =>
-      dispatch(
-        assignPiece({ djangoToken: djangoToken, slug, piece: piece_id })
-      );
-  };
+  const postAssignPiece = (pieceId) => (ev) =>
+    dispatch(assignPiece({ djangoToken, slug, piece: pieceId }));
   return (
     <Layout>
       <h1>Edit {selectedEnrollment?.course?.name}</h1>

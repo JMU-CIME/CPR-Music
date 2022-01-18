@@ -1,20 +1,6 @@
-import { HYDRATE } from "next-redux-wrapper";
-import { combineReducers } from "redux";
-import * as types from "./types";
-
-// COUNTER REDUCER
-const counterReducer = (state = 0, { type }) => {
-  switch (type) {
-    case types.INCREMENT:
-      return state + 1;
-    case types.DECREMENT:
-      return state - 1;
-    case types.RESET:
-      return 0;
-    default:
-      return state;
-  }
-};
+import { HYDRATE } from 'next-redux-wrapper';
+import { combineReducers } from 'redux';
+import * as types from './types';
 
 // INITIAL TIMER STATE
 const initialTimerState = {
@@ -43,7 +29,7 @@ const mockAssignments = {
 const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
   switch (type) {
     case types.Action.GotAssignments:
-      console.log("got assignments", payload);
+      console.log('got assignments', payload);
       return state;
   }
   return state;
@@ -57,7 +43,7 @@ const initialActivities = {
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
     case types.Action.GotActivities:
-      console.log("got activities", payload);
+      console.log('got activities', payload);
   }
   return state;
 };
@@ -65,23 +51,23 @@ const activitiesReducer = (state = initialActivities, { type, payload }) => {
 const mockActivityTypes = [
   {
     id: 1,
-    name: "Melody",
-    category: "perform",
+    name: 'Melody',
+    category: 'perform',
   },
   {
     id: 2,
-    name: "Bass Line",
-    category: "perform",
+    name: 'Bass Line',
+    category: 'perform',
   },
   {
     id: 3,
-    name: "Creativity",
-    category: "create",
+    name: 'Creativity',
+    category: 'create',
   },
   {
     id: 4,
-    name: "Reflection",
-    category: "reflect",
+    name: 'Reflection',
+    category: 'reflect',
   },
 ];
 
@@ -90,8 +76,8 @@ const activityTypesReducer = (state = mockActivityTypes, { type, payload }) => {
 };
 
 const Level = {
-  Primary: "Primary",
-  Secondary: "Secondary",
+  Primary: 'Primary',
+  Secondary: 'Secondary',
 };
 
 const initialPieces = { loaded: false, items: [] };
@@ -162,17 +148,6 @@ const initialPieces = { loaded: false, items: [] };
 //   level: Level.Primary,
 // },
 // {
-//   id: 6,
-//   slug: "jubilo",
-//   name: "Jubilo",
-//   composerId: 1,
-//   videoS3Key: "video/6",
-//   audioS3Key: "audio/6",
-//   notationS3Key: "notation/6",
-//   date: "timestamp6",
-//   level: Level.Secondary,
-// },
-// {
 //   id: 7,
 //   slug: "portamento",
 //   name: "Portamento",
@@ -188,7 +163,7 @@ const initialPieces = { loaded: false, items: [] };
 const piecesReducer = (state = initialPieces, { type, payload }) => {
   switch (type) {
     case types.Action.GotPieces:
-      console.log("got pieces", payload);
+      console.log('got pieces', payload);
       return { loaded: true, items: payload };
   }
   return state;
@@ -197,11 +172,11 @@ const piecesReducer = (state = initialPieces, { type, payload }) => {
 const mockComposers = [
   {
     id: 0,
-    name: "name0",
+    name: 'name0',
   },
   {
     id: 1,
-    name: "name1",
+    name: 'name1',
   },
 ];
 
@@ -212,13 +187,13 @@ const composersReducer = (state = mockComposers, { type, payload }) => {
 const mockUsers = [
   {
     id: 0,
-    name: "name0",
-    grade: "grade0",
+    name: 'name0',
+    grade: 'grade0',
   },
   {
     id: 1,
-    name: "name1",
-    grade: "grade1",
+    name: 'name1',
+    grade: 'grade1',
   },
 ];
 
@@ -254,7 +229,7 @@ const coursesReducer = (state = mockCourses, { type, payload }) => {
   //   //   console.log(payload);
   //   //   return { ...state, courses: payload.courses };
   //   case types.Action.GotCourses:
-  //     console.log("gotcourses", payload);
+  //     console.log("gotCourses", payload);
   //     return payload;
   //   case types.ADDED_COURSE:
   //     console.log("payload", payload);
@@ -264,18 +239,18 @@ const coursesReducer = (state = mockCourses, { type, payload }) => {
 };
 
 const Role = {
-  student: "Student",
-  teacher: "Teacher",
+  student: 'Student',
+  teacher: 'Teacher',
 };
 const mockEnrollments = { loaded: false, items: [] };
 
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
     case types.Action.AddedRoster:
-      console.log("addedRoster", payload);
+      console.log('addedRoster', payload);
       return state;
     case types.Action.GotEnrollments:
-      console.log("GotEnrollments", payload);
+      console.log('GotEnrollments', payload);
       return { loaded: true, items: payload };
   }
   return state;
@@ -286,10 +261,10 @@ const mockRoster = { loaded: false, items: [] };
 const rosterReducer = (state = mockRoster, { type, payload }) => {
   switch (type) {
     case types.Action.GotRoster:
-      console.log("GotRoster", payload);
+      console.log('GotRoster', payload);
       return { loaded: true, items: payload };
     case types.Action.UpdatedEnrollmentInstrument:
-      console.log("UpdatedEnrollmentInstrument", payload);
+      console.log('UpdatedEnrollmentInstrument', payload);
       const items = state.items;
       items.filter(
         (enrollment) => enrollment.id === payload.enrollment.id
@@ -306,7 +281,7 @@ const initialCurrentUser = { loaded: false, items: [] };
 const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   switch (type) {
     case types.Action.LoggedOut:
-      console.log("LoggedOut", payload);
+      console.log('LoggedOut', payload);
       return { loaded: true, items: payload };
   }
   return state;
@@ -317,24 +292,13 @@ const mockInstruments = { loaded: false, items: [] };
 const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
   switch (type) {
     case types.Action.GotInstruments:
-      console.log("GotInstruments", payload);
+      console.log('GotInstruments', payload);
       return { loaded: true, items: payload };
   }
   return state;
 };
 
-const mockSubmissions = [
-  {
-    userId: 0,
-    asignmentId: 0,
-    content: "content0",
-  },
-  {
-    userId: 1,
-    asignmentId: 1,
-    content: "content1",
-  },
-];
+const mockSubmissions = [];
 
 const submissionsReducer = (state = mockSubmissions, { type, payload }) => {
   return state;
@@ -343,11 +307,11 @@ const submissionsReducer = (state = mockSubmissions, { type, payload }) => {
 const mockSubmissionAttachments = [
   {
     userId: 0,
-    contentS3Key: "content/0",
+    contentS3Key: 'content/0',
   },
   {
     userId: 1,
-    contentS3Key: "content/1",
+    contentS3Key: 'content/1',
   },
 ];
 

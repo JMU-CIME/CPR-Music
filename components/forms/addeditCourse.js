@@ -1,30 +1,28 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Form from "react-bootstrap/Form";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { newCourse } from "../../actions";
-import { useSession } from "next-auth/react";
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSession } from 'next-auth/react';
+import { newCourse } from '../../actions';
 
-export default function AddEditCourse({}) {
+export default function AddEditCourse() {
   const router = useRouter();
 
   const dispatch = useDispatch();
   const selectedCourse = useSelector((state) => state.selectedCourse);
 
-  const [name, setName] = useState(selectedCourse?.name ?? "");
+  const [name, setName] = useState(selectedCourse?.name ?? '');
   const [startDate, setStartDate] = useState(selectedCourse?.startDate);
   const [endDate, setEndDate] = useState(selectedCourse?.endDate);
-  const [rosterCSV, setRosterCSV] = useState(selectedCourse?.rosterCSV);
   const { data: session } = useSession();
 
-  console.log("session token in addEdit course", session.djangoToken);
+  console.log('session token in addEdit course', session.djangoToken);
 
   const addCourse = (ev) => {
-    console.log("addCourse ev", ev);
+    console.log('addCourse ev', ev);
 
     // don't refresh the page
     ev.preventDefault();
@@ -36,7 +34,7 @@ export default function AddEditCourse({}) {
     );
 
     // navigate back to the course list
-    router.push("/courses");
+    router.push('/courses');
   };
   return (
     <div className="my-5">
@@ -51,7 +49,7 @@ export default function AddEditCourse({}) {
               placeholder="Course name"
               value={name}
               onChange={(ev) => {
-                console.log("setName");
+                console.log('setName');
                 setName(ev.target.value);
               }}
             />
@@ -67,7 +65,7 @@ export default function AddEditCourse({}) {
               placeholder="Start Date"
               value={startDate}
               onChange={(ev) => {
-                console.log("setStartDate");
+                console.log('setStartDate');
                 setStartDate(ev.target.value);
               }}
             />
@@ -83,7 +81,7 @@ export default function AddEditCourse({}) {
               placeholder="End Date"
               value={endDate}
               onChange={(ev) => {
-                console.log("setEndDate");
+                console.log('setEndDate');
                 setEndDate(ev.target.value);
               }}
             />
