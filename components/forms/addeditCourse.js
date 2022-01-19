@@ -27,7 +27,12 @@ export default function AddEditCourse({ session }) {
     if (session) {
       // tell redux we have changed data
       dispatch(
-        newCourse({ name, startDate, endDate, token: session.djangoToken })
+        newCourse({
+          name,
+          startDate,
+          endDate,
+          token: session?.djangoToken ?? '',
+        })
       );
     }
 

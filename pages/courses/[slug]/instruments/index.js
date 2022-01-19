@@ -10,7 +10,7 @@ import { fetchInstruments, fetchRoster } from '../../../../actions';
 import StudentInstrument from '../../../../components/forms/studentInstrument';
 import Layout from '../../../../components/layout';
 
-const Instruments = () => {
+function Instruments() {
   const { data: session } = useSession();
   const { items: instruments, loaded: instrumentsLoaded } = useSelector(
     (state) => state.instruments
@@ -58,6 +58,6 @@ const Instruments = () => {
       </Form>
     </Layout>
   );
-};
+}
 
 export default Instruments;
