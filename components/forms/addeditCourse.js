@@ -25,13 +25,17 @@ export default function AddEditCourse({ session }) {
     ev.stopPropagation();
 
     if (session) {
+      let token = '';
+      if (session && 'djangoToken' in session) {
+        token = session.djangoToken;
+      }
       // tell redux we have changed data
       dispatch(
         newCourse({
           name,
           startDate,
           endDate,
-          token: session?.djangoToken ?? '',
+          token,
         })
       );
     }
