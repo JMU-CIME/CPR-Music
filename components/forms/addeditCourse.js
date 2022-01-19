@@ -5,10 +5,9 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSession } from 'next-auth/react';
 import { newCourse } from '../../actions';
 
-export default function AddEditCourse() {
+export default function AddEditCourse({ session }) {
   const router = useRouter();
 
   const dispatch = useDispatch();
@@ -17,7 +16,6 @@ export default function AddEditCourse() {
   const [name, setName] = useState(selectedCourse?.name ?? '');
   const [startDate, setStartDate] = useState(selectedCourse?.startDate);
   const [endDate, setEndDate] = useState(selectedCourse?.endDate);
-  const { data: session } = useSession();
 
   const addCourse = (ev) => {
     console.log('addCourse ev', ev);

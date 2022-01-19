@@ -1,5 +1,5 @@
-import Layout from '../../components/layout';
 import AddEditCourse from '../../components/forms/addEditCourse';
+import Layout from '../../components/layout';
 
 export default function NewCourse() {
   return (

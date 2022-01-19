@@ -9,12 +9,6 @@ function AddEditStudent() {
   const [name, setName] = useState();
   const [grade, setGrade] = useState();
 
-  const {
-    data: { djangoToken: token = '' } = { djangoToken: '' }, // TODO don't just default to empty
-  } = useSession();
-
-  console.log('session token in addEdit student', token);
-
   const addStudent = (ev) => {
     console.log('add student ev', ev);
 

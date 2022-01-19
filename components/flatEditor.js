@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Embed from 'flat-embed';
 
-const FlatEditor = (props) => {
+function FlatEditor(props) {
   const [json, setJson] = useState('');
   const editorRef = React.createRef();
   let embed;
@@ -45,7 +45,7 @@ const FlatEditor = (props) => {
   return (
     <Row>
       <Col>
-        <div ref={editorRef}></div>
+        <div ref={editorRef} />
       </Col>
       <Col style={{ maxWidth: '40%', whiteSpace: 'pre-wrap' }}>
         <Button onClick={refreshJSON}>Refresh JSON</Button>
@@ -53,6 +53,6 @@ const FlatEditor = (props) => {
       </Col>
     </Row>
   );
-};
+}
 
 export default FlatEditor;

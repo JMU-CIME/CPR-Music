@@ -8,11 +8,9 @@ import Row from 'react-bootstrap/Row';
 import { useDispatch } from 'react-redux';
 import { uploadRoster } from '../../actions';
 
-function UploadStudents() {
+function UploadStudents({ session }) {
   const [file, setFile] = useState();
   const dispatch = useDispatch();
-
-  const { data: session } = useSession();
 
   const router = useRouter();
   const { slug } = router.query;

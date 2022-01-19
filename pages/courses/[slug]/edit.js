@@ -83,9 +83,9 @@ export default function EditCourse() {
         </Col>
       </Row>
 
-      <AddEditCourse />
-      <AddEditStudent />
-      <UploadStudents />
+      <AddEditCourse session={session} />
+      <AddEditStudent session={session} />
+      <UploadStudents session={session} />
     </Layout>
   );
 }
