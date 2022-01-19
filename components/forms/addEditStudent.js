@@ -1,22 +1,22 @@
-import { useSession } from "next-auth/react";
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
-const AddEditStudent = () => {
+function AddEditStudent() {
   const [name, setName] = useState();
   const [grade, setGrade] = useState();
 
   const {
-    data: { djangoToken: token },
+    data: { djangoToken: token = '' } = { djangoToken: '' }, // TODO don't just default to empty
   } = useSession();
 
-  console.log("session token in addEdit student", token);
+  console.log('session token in addEdit student', token);
 
   const addStudent = (ev) => {
-    console.log("add student ev", ev);
+    console.log('add student ev', ev);
 
     // don't refresh the page
     ev.preventDefault();
@@ -36,7 +36,7 @@ const AddEditStudent = () => {
               placeholder="James Madison"
               value={name}
               onChange={(ev) => {
-                console.log("setName");
+                console.log('setName');
                 setName(ev.target.value);
               }}
             />
@@ -52,7 +52,7 @@ const AddEditStudent = () => {
               placeholder="6"
               value={grade}
               onChange={(ev) => {
-                console.log("setGrade");
+                console.log('setGrade');
                 setName(ev.target.value);
               }}
             />
@@ -62,6 +62,6 @@ const AddEditStudent = () => {
       </Form>
     </div>
   );
-};
+}
 
 export default AddEditStudent;

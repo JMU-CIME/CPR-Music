@@ -30,6 +30,11 @@
         ],
         "no-console": "off",
         "no-unused-vars": "off",
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "indent": [
+            "warn",
+            2
+        ],
+        "react/prop-types": "off"
     }
 }

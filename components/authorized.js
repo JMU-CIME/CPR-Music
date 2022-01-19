@@ -20,9 +20,9 @@
 //   }
 // }
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { signIn } from "next-auth/react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 const AuthContext = createContext();
 
 function AuthProvider({ children }) {
@@ -43,9 +43,9 @@ function AuthProvider({ children }) {
     }
 
     // Monitor routes
-    events.on("routeChangeStart", handleRouteChange);
+    events.on('routeChangeStart', handleRouteChange);
     return () => {
-      events.off("routeChangeStart", handleRouteChange);
+      events.off('routeChangeStart', handleRouteChange);
     };
   }, [pathname]);
 

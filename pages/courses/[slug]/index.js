@@ -1,9 +1,9 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchStudentAssignments } from "../../../actions";
-import Layout from "../../../components/layout";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchStudentAssignments } from '../../../actions';
+import Layout from '../../../components/layout';
 
 export default function CourseDetails() {
   // get assignments/activities

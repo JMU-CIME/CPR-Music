@@ -1,43 +1,43 @@
-import NextAuth from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 const config = {
   django: {
     url: `${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token/`,
-    user: "username",
-    pw: "password",
+    user: 'username',
+    pw: 'password',
   },
   rails: {
-    url: "https://teleband.cs.jmu.edu/login",
-    user: "email",
-    pw: "password",
+    url: 'https://teleband.cs.jmu.edu/login',
+    user: 'email',
+    pw: 'password',
   },
 };
 
 // const backend = 'rails'
-const backend = "django";
+const backend = 'django';
 
 export default NextAuth({
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
-      name: "Credentials",
+      name: 'Credentials',
       // The credentials is used to generate a suitable form on the sign in page.
       // You can specify whatever fields you are expecting to be submitted.
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
         username: {
-          label: "Email",
-          type: "text",
-          placeholder: "michael@tele.band",
+          label: 'Email',
+          type: 'text',
+          placeholder: 'michael@tele.band',
         },
-        password: { label: "Password", type: "password" },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize({ csrfToken, username, password }, req) {
         console.log(
-          "called credentialsprovider.authorize!",
+          'called credentialsprovider.authorize!',
           username,
           password,
           req
@@ -49,18 +49,18 @@ export default NextAuth({
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
 
-        console.log("url to fetch credentials:");
+        console.log('url to fetch credentials:');
         console.log(config[backend].url);
         const res = await fetch(config[backend].url, {
-          method: "POST",
+          method: 'POST',
           body: JSON.stringify({
             [config[backend].user]: username,
             [config[backend].pw]: password,
           }),
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         });
         const userToken = await res.json();
-        console.log("\n\n\n\nuserToken from server");
+        console.log('\n\n\n\nuserToken from server');
         console.log(userToken);
         // If no error and we have user data, return it
         if (res.ok && !userToken.error) {
@@ -81,7 +81,7 @@ export default NextAuth({
     // Use JSON Web Tokens for session instead of database sessions.
     // This option can be used with or without a database for users/accounts.
     // Note: `strategy` should be set to 'jwt' if no database is used.
-    strategy: "jwt",
+    strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
     // maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -108,8 +108,8 @@ export default NextAuth({
   // pages is not specified for that route.
   // https://next-auth.js.org/configuration/pages
   pages: {
-    signIn: "/auth/signin", // Displays signin buttons
-    signOut: "/auth/signout", // Displays form with sign out button
+    signIn: '/auth/signin', // Displays signin buttons
+    signOut: '/auth/signout', // Displays form with sign out button
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // Used for check email page
     // newUser: null // If set, new users will be directed here on first sign in
@@ -121,8 +121,8 @@ export default NextAuth({
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       console.log(
-        "===========================\n",
-        "signin callback",
+        '===========================\n',
+        'signin callback',
         user,
         account,
         profile,
@@ -134,8 +134,8 @@ export default NextAuth({
     async redirect({ url, baseUrl }) {
       let returnVal = url;
       console.log(
-        "===========================\n",
-        "called callbacks.redirect",
+        '===========================\n',
+        'called callbacks.redirect',
         url,
         baseUrl
       );
@@ -144,20 +144,20 @@ export default NextAuth({
         //something
       }
       // Allows relative callback URLs
-      else if (url.startsWith("/")) {
-        console.log("relative");
+      else if (url.startsWith('/')) {
+        console.log('relative');
         const absUrl = new URL(url, baseUrl).toString();
         returnVal = absUrl;
       }
       // maybe this was blocking me from reaching auth??
-      console.log("returning from redirect:");
+      console.log('returning from redirect:');
       console.log(returnVal);
       return returnVal;
     },
     async session({ session, token, user }) {
       console.log(
-        "===========================\n",
-        "called callbacks.session",
+        '===========================\n',
+        'called callbacks.session',
         session,
         token,
         user
@@ -166,8 +166,8 @@ export default NextAuth({
     },
     async jwt({ token, user, account, profile, isNewUser }) {
       console.log(
-        "===========================\n",
-        "called callbacks.jwt",
+        '===========================\n',
+        'called callbacks.jwt',
         token,
         user,
         account,
@@ -189,7 +189,7 @@ export default NextAuth({
   // You can set the theme to 'light', 'dark' or use 'auto' to default to the
   // whatever prefers-color-scheme is set to in the browser. Default is 'auto'
   theme: {
-    colorScheme: "light",
+    colorScheme: 'light',
   },
 
   // Enable debug messages in the console if you are having problems

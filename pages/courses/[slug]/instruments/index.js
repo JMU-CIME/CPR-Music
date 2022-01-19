@@ -1,14 +1,14 @@
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchInstruments, fetchRoster } from "../../../../actions";
-import StudentInstrument from "../../../../components/forms/studentInstrument";
-import Layout from "../../../../components/layout";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchInstruments, fetchRoster } from '../../../../actions';
+import StudentInstrument from '../../../../components/forms/studentInstrument';
+import Layout from '../../../../components/layout';
 
 const Instruments = () => {
   const { data: session } = useSession();
@@ -19,10 +19,10 @@ const Instruments = () => {
   //   (state) => state.roster
   // );
   const roster = useSelector((state) => state.roster);
-  console.log("roster", roster);
+  console.log('roster', roster);
   const router = useRouter();
   const { slug } = router.query;
-  console.log("instruments", instruments);
+  console.log('instruments', instruments);
   const dispatch = useDispatch();
   useEffect(() => {
     if (session && !instrumentsLoaded) {

@@ -1,26 +1,21 @@
-import { useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+import { useSelector, useDispatch } from 'react-redux';
+import Button from 'react-bootstrap/Button';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 
-import { fetchEnrollments } from "../../actions";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import Layout from "../../components/layout";
-import ListGroup from "react-bootstrap/ListGroup";
-import Card from "react-bootstrap/Card";
+import { useEffect, useState } from 'react';
+import Card from 'react-bootstrap/Card';
 import {
   FaCalendar,
   FaExternalLinkAlt,
   FaFlagCheckered,
   FaLink,
-} from "react-icons/fa";
-import Form from "react-bootstrap/Form";
-const Courses = ({ myCourses }) => {
-  // const { data: session } = useSession({
-  //   required: true,
-  // });
+} from 'react-icons/fa';
+import Form from 'react-bootstrap/Form';
+import { fetchEnrollments } from '../../actions';
+import Layout from '../../components/layout';
 
+function Courses({ myCourses }) {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const { items: enrollments, loaded } = useSelector(
@@ -32,7 +27,7 @@ const Courses = ({ myCourses }) => {
     }
   }, [session, dispatch]);
 
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   return (
@@ -77,7 +72,7 @@ const Courses = ({ myCourses }) => {
                 placeholder="Course name"
                 value={name}
                 onChange={(ev) => {
-                  console.log("setName");
+                  console.log('setName');
                   setName(ev.target.value);
                 }}
               />
@@ -120,6 +115,6 @@ const Courses = ({ myCourses }) => {
       </div>
     </Layout>
   );
-};
+}
 
 export default Courses;

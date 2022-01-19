@@ -19,8 +19,6 @@ export default function AddEditCourse() {
   const [endDate, setEndDate] = useState(selectedCourse?.endDate);
   const { data: session } = useSession();
 
-  console.log('session token in addEdit course', session.djangoToken);
-
   const addCourse = (ev) => {
     console.log('addCourse ev', ev);
 
@@ -28,10 +26,12 @@ export default function AddEditCourse() {
     ev.preventDefault();
     ev.stopPropagation();
 
-    // tell redux we have changed data
-    dispatch(
-      newCourse({ name, startDate, endDate, token: session.djangoToken })
-    );
+    if (session) {
+      // tell redux we have changed data
+      dispatch(
+        newCourse({ name, startDate, endDate, token: session.djangoToken })
+      );
+    }
 
     // navigate back to the course list
     router.push('/courses');

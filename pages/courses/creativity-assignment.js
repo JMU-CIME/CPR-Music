@@ -1,6 +1,6 @@
-import dynamic from "next/dynamic";
-import Layout from "../../components/layout";
-const FlatEditor = dynamic(() => import("../../components/flatEditor"), {
+import dynamic from 'next/dynamic';
+import Layout from '../../components/layout';
+const FlatEditor = dynamic(() => import('../../components/flatEditor'), {
   ssr: false,
 });
 

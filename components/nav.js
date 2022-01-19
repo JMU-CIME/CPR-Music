@@ -1,15 +1,11 @@
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
-import Container from "react-bootstrap/Container";
-import Link from "next/link";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import LoginOut from "./loginout";
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import Container from 'react-bootstrap/Container';
+import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import LoginOut from './loginout';
 
-const Navigation = () => {
-  const loginStatus = useSelector((state) => state.loginStatus);
-
+function Navigation() {
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -60,6 +56,6 @@ const Navigation = () => {
       </Container>
     </Navbar>
   );
-};
+}
 
 export default Navigation;

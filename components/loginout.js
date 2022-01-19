@@ -1,9 +1,9 @@
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import Nav from "react-bootstrap/Nav";
+import { useSession } from 'next-auth/react';
+import Link from 'next/link';
+import Nav from 'react-bootstrap/Nav';
 // import { useSelector } from "react-redux";
 
-const LoginOut = () => {
+function LoginOut() {
   const { data: session } = useSession();
   // const loginStatus = useSelector((state) => state.loginStatus);
   return session ? (
@@ -15,6 +15,6 @@ const LoginOut = () => {
       <Nav.Link>Login</Nav.Link>
     </Link>
   );
-};
+}
 
 export default LoginOut;

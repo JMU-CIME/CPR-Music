@@ -24,21 +24,17 @@ export default function EditCourse() {
   const router = useRouter();
   const { slug } = router.query;
   const { data: session } = useSession();
-  const djangoToken = session?.djangoToken;
   useEffect(() => {
-    if (!enrollments.loaded) {
-      console.log('djangoToken', djangoToken);
-      dispatch(fetchEnrollments(djangoToken));
+    if (session && !enrollments.loaded) {
+      dispatch(fetchEnrollments(session.djangoToken));
     }
-    if (!activities.loaded) {
-      console.log('djangoToken', djangoToken);
-      dispatch(fetchActivities({ token: djangoToken, slug }));
+    if (session && !activities.loaded) {
+      dispatch(fetchActivities({ token: session.djangoToken, slug }));
     }
-    if (!pieces.loaded) {
-      console.log('djangoToken', djangoToken);
-      dispatch(fetchPieces(djangoToken));
+    if (session && !pieces.loaded) {
+      dispatch(fetchPieces(session.djangoToken));
     }
-  }, [slug, djangoToken]);
+  }, [slug, session, dispatch]);
 
   const selectedEnrollment = enrollments.items.filter((enrollment) => {
     console.log('enrollment in filter', enrollment, slug);
@@ -49,7 +45,9 @@ export default function EditCourse() {
   console.log('pieces.items', pieces.items);
 
   const postAssignPiece = (pieceId) => (ev) =>
-    dispatch(assignPiece({ djangoToken, slug, piece: pieceId }));
+    dispatch(
+      assignPiece({ djangoToken: session.djangoToken, slug, piece: pieceId })
+    );
   return (
     <Layout>
       <h1>Edit {selectedEnrollment?.course?.name}</h1>

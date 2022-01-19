@@ -1,18 +1,18 @@
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import { useDispatch, useSelector } from "react-redux";
-import { updateEnrollmentInstrument } from "../../actions";
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateEnrollmentInstrument } from '../../actions';
 
 const StudentInstrument = ({ enrollment, token, options: instruments }) => {
   const [instrument, setInstrument] = useState(
-    enrollment?.instrument?.id ?? ""
+    enrollment?.instrument?.id ?? ''
   );
   const dispatch = useDispatch();
   const updateInstrument = (ev) => {
-    console.log("update instrument to ", instrumentsMap[ev.target.value].name);
+    console.log('update instrument to ', instrumentsMap[ev.target.value].name);
 
     dispatch(
       updateEnrollmentInstrument({
@@ -33,7 +33,7 @@ const StudentInstrument = ({ enrollment, token, options: instruments }) => {
         Instrument for {enrollment.user.name}
       </Form.Label>
       <Col sm={10}>
-        <Form.Select value={instrument ?? ""} onChange={updateInstrument}>
+        <Form.Select value={instrument ?? ''} onChange={updateInstrument}>
           <option value="">None</option>
           {instruments &&
             instruments.map((instrumentOption) => (

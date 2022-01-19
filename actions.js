@@ -1,5 +1,5 @@
-import { useSession } from "next-auth/react";
-import * as types from "./types";
+import { useSession } from 'next-auth/react';
+import * as types from './types';
 
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
@@ -17,8 +17,8 @@ export const newCourse =
     name,
     startDate: start_date,
     endDate: end_date,
-    slug = "slug",
-    token = "",
+    slug = 'slug',
+    token = '',
   }) =>
   (dispatch) => {
     const params = {
@@ -28,9 +28,9 @@ export const newCourse =
       slug,
     };
     const options = {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Token ${token}`,
       },
       body: JSON.stringify(params),
@@ -51,7 +51,7 @@ export function retrieveEnrollments(djangoToken) {
   return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
     headers: {
       Authorization: `Token ${djangoToken}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   }).then((response, ...rest) => {
     const results = response.json();
@@ -65,7 +65,7 @@ export function fetchEnrollments(djangoToken) {
       ? retrieveEnrollments(djangoToken)
           .then((courses) => dispatch(gotEnrollments(courses)))
           .catch((...rest) => {
-            console.log("catch rest");
+            console.log('catch rest');
             console.log(rest);
           })
       : null;
@@ -90,14 +90,14 @@ export function uploadRoster({ body, djangoToken, courseSlug }) {
         headers: {
           Authorization: `Token ${djangoToken}`,
         },
-        method: "POST",
+        method: 'POST',
         body,
       }
     )
       .then(assertResponse)
       .then((response) => response.json())
       .then((res) => {
-        console.log("uploaded", res);
+        console.log('uploaded', res);
         dispatch(addedFromRoster(courseSlug, res));
       });
   };
@@ -115,7 +115,7 @@ export function fetchInstruments(djangoToken) {
     return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/instruments/`, {
       headers: {
         Authorization: `Token ${djangoToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
@@ -141,7 +141,7 @@ export function fetchRoster({ djangoToken, courseSlug }) {
       {
         headers: {
           Authorization: `Token ${djangoToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     )
@@ -170,9 +170,9 @@ export function updateEnrollmentInstrument({
       {
         headers: {
           Authorization: `Token ${djangoToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify({ instrument: instrumentId }),
       }
     )
@@ -195,7 +195,7 @@ export function fetchStudentAssignments({ token, slug }) {
       {
         headers: {
           Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     )
@@ -213,10 +213,10 @@ export function loggedOut() {
 export function logoutUser(token) {
   return (dispatch) =>
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token`, {
-      method: "DELETE",
+      method: 'DELETE',
       headers: {
         Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then(assertResponse)
@@ -238,7 +238,7 @@ export function fetchActivities({ token, slug }) {
       {
         headers: {
           Authorization: `Token ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     )
@@ -259,7 +259,7 @@ export function fetchPieces(djangoToken) {
     return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/pieces/`, {
       headers: {
         Authorization: `Token ${djangoToken}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     })
       .then((response) => response.json())
@@ -285,9 +285,9 @@ export function assignPiece({ djangoToken, slug, piece }) {
       {
         headers: {
           Authorization: `Token ${djangoToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify({ piece_id: piece }),
         // body: data,
       }
