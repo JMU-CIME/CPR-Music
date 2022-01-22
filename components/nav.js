@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import LoginOut from './loginout';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 function Navigation() {
   return (
@@ -33,7 +34,7 @@ function Navigation() {
                 <NavDropdown.Item>Edit</NavDropdown.Item>
               </Link>
             </NavDropdown> */}
-            {/* <NavDropdown title="Assignments" id="basic-nav-dropdown">
+            <NavDropdown title="Assignments" id="basic-nav-dropdown">
               <Link href="/courses/melody-assignment" passHref>
                 <NavDropdown.Item>Melody</NavDropdown.Item>
               </Link>
@@ -47,7 +48,7 @@ function Navigation() {
               <Link href="/courses/reflection-assignment" passHref>
                 <NavDropdown.Item>Reflection</NavDropdown.Item>
               </Link>
-            </NavDropdown> */}
+            </NavDropdown>
           </Nav>
           <Nav>
             <LoginOut />
