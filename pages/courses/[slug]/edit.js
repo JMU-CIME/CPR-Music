@@ -56,7 +56,8 @@ export default function EditCourse() {
           <h2>Assign New Piece</h2>
           <ListGroup>
             {pieces.items &&
-              pieces.items.map((piece) => (
+              pieces.items.filter((piece) => assignedPieces && assignedPieces.findIndex((assignedPiece) => assignedPiece.id == piece.id) == -1
+              ).map((piece) => (
                 <ListGroupItem
                   key={piece.id}
                   className="d-flex justify-content-between align-items-center"
