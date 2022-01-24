@@ -17,21 +17,21 @@ import UploadStudents from '../../../components/forms/uploadStudents';
 import Layout from '../../../components/layout';
 
 export default function EditCourse() {
-  const enrollments = useSelector((state) => state.enrollments);
-  const activities = useSelector((state) => state.activities);
-  const pieces = useSelector((state) => state.pieces);
-  const dispatch = useDispatch();
   const router = useRouter();
   const { slug } = router.query;
+  const enrollments = useSelector((state) => state.enrollments);
+  const assignedPieces = useSelector((state) => state.assignedPieces.items[slug]);
+  const pieces = useSelector((state) => state.pieces);
+  const dispatch = useDispatch();
   const { data: session } = useSession();
   useEffect(() => {
-    if (session && !enrollments.loaded) {
+    if (session) {// && !enrollments.loaded) {
       dispatch(fetchEnrollments(session.djangoToken));
     }
-    if (session && !activities.loaded) {
+    if (session) {// && !assignedPieces.loaded) {
       dispatch(fetchActivities({ token: session.djangoToken, slug }));
     }
-    if (session && !pieces.loaded) {
+    if (session) {// && !pieces.loaded) {
       dispatch(fetchPieces(session.djangoToken));
     }
   }, [slug, session, dispatch]);
@@ -70,14 +70,14 @@ export default function EditCourse() {
           </ListGroup>
         </Col>
         <Col>
-          <h2>Assignments</h2>
+          <h2>Assigned Pieces</h2>
           <ListGroup>
-            {activities.items && activities.items.length > 0 ? (
-              activities.items.map((activity) => (
-                <ListGroupItem key={activity.id}>{activity.name}</ListGroupItem>
+            {assignedPieces && assignedPieces.length > 0 ? (
+              assignedPieces.map((piece) => (
+                <ListGroupItem key={piece.id}>{piece.name}</ListGroupItem>
               ))
             ) : (
-              <p>There are no activities assigned for this course.</p>
+              <p>There are no pieces assigned to this course.</p>
             )}
           </ListGroup>
         </Col>

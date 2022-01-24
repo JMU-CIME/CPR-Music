@@ -224,10 +224,13 @@ export function logoutUser(token) {
       .then(loggedOut);
 }
 
-export function gotActivities(activities) {
+export function gotActivities({activities, slug}) {
   return {
     type: types.Action.GotActivities,
-    payload: activities,
+    payload: {
+      activities,
+      slug
+    }
   };
 }
 
@@ -243,7 +246,7 @@ export function fetchActivities({ token, slug }) {
       }
     )
       .then((response) => response.json())
-      .then((activities) => dispatch(gotActivities(activities)));
+      .then((activities) => dispatch(gotActivities({activities, slug})));
   };
 }
 

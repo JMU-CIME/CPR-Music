@@ -35,6 +35,27 @@ const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
   return state;
 };
 
+const initialAssignedPieces = {
+  loaded: false,
+  items: {},
+};
+
+const assignedPiecesReducer = (state = initialAssignedPieces, { type, payload }) => {
+  switch (type) {
+    case types.Action.GotActivities:
+      let pieces = payload.activities.map((assignment) => assignment.part.piece);
+      pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
+      pieces = pieces.filter((piece, i, arr) => {
+        return i == 0 ? true : piece.id != arr[i-1].id;
+      });
+      pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+      // return { loaded: true, items: pieces };
+      return {...state, items: {...state.items, [payload.slug]: pieces}};
+  }
+  return state;
+};
+
 const initialActivities = {
   loaded: false,
   items: [],
@@ -44,6 +65,7 @@ const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
     case types.Action.GotActivities:
       console.log('got activities', payload);
+      return { loaded: true, items: payload };
   }
   return state;
 };
@@ -376,6 +398,7 @@ const reducers = {
   // timer: timerReducer,
   assignments: assignmentsReducer,
   activities: activitiesReducer,
+  assignedPieces: assignedPiecesReducer,
   // activityTypes: activityTypesReducer,
   pieces: piecesReducer,
   // composers: composersReducer,
