@@ -46,7 +46,7 @@ function Instruments() {
       </p>
       <Form onSubmit={updateInstruments}>
         {roster.items &&
-          roster.items.map((enrollment) => (
+          roster.items.filter((e) => (e.role !== "Teacher")).map((enrollment) => (
             <StudentInstrument
               key={enrollment.id}
               enrollment={enrollment}
