@@ -46,14 +46,11 @@ function Courses({ myCourses }) {
               <Card.Body>
                 <Card.Title>{enrollment.course.name}</Card.Title>
                 <Card.Text>
-                <div>
                   <FaCalendar />
                   <span className="ml-3">{enrollment.course.start_date}</span>
-                </div>
-                <div>
+                  <br/>
                   <FaFlagCheckered />
                   <span className="ml-3">{enrollment.course.end_date}</span>
-                </div>
 
                 </Card.Text>
                 

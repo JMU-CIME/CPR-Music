@@ -35,8 +35,31 @@ export const newCourse =
       },
       body: JSON.stringify(params),
     };
+    const enrollParams = {
+      user: 1,
+      role: 1,
+    };
+    const enrollOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+    }
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
       .then(assertResponse)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("data from create course post", data);
+        const enrollParams = {
+          user: 1,
+          role: 1,
+          course: data.id,
+        };
+        enrollOptions.body = JSON.stringify(enrollParams);
+        console.log(enrollOptions);
+        return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, enrollOptions)
+      })
       .then(() => dispatch(fetchEnrollments(token)));
   };
 
