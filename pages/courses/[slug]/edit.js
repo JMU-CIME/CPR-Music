@@ -37,8 +37,8 @@ export default function EditCourse() {
   }, [slug, session, dispatch]);
 
   const selectedEnrollment = enrollments.items.filter((enrollment) => {
-    console.log('enrollment in filter', enrollment, slug);
-    console.log(enrollment.course.slug === slug);
+    // console.log('enrollment in filter', enrollment, slug);
+    // console.log(enrollment.course.slug === slug);
     return enrollment.course.slug === slug;
   })[0];
   console.log('pieces', pieces);

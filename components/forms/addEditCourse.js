@@ -9,13 +9,26 @@ import { newCourse } from '../../actions';
 
 export default function AddEditCourse({ session }) {
   const router = useRouter();
+  const { slug } = router.query;
 
   const dispatch = useDispatch();
-  const selectedCourse = useSelector((state) => state.selectedCourse);
 
-  const [name, setName] = useState(selectedCourse?.name ?? '');
-  const [startDate, setStartDate] = useState(selectedCourse?.startDate);
-  const [endDate, setEndDate] = useState(selectedCourse?.endDate);
+  const enrollments = useSelector((state) => state.enrollments);
+
+  const selectedEnrollment = enrollments.items.filter((enrollment) => {
+    return enrollment.course.slug === slug;
+  })[0];
+  const selectedCourse = selectedEnrollment?.course;
+  
+  const today = new Date();
+  const sampleEnd = new Date();
+  sampleEnd.setMonth(sampleEnd.getMonth() + 3);
+  sampleEnd.setDate(0);
+
+  const [name, setName] = useState(selectedCourse ? selectedCourse.name : '');
+  const [startDate, setStartDate] = useState(selectedCourse ? selectedCourse.start_date : today.toISOString().substring(0, 10));
+  const [endDate, setEndDate] = useState(selectedCourse ? selectedCourse.end_date : sampleEnd.toISOString().substring(0, 10));
+  const verb = selectedCourse ? "Edit" : "Create";
 
   const addCourse = (ev) => {
     console.log('addCourse ev', ev);
@@ -45,7 +58,7 @@ export default function AddEditCourse({ session }) {
   };
   return (
     <div className="my-5">
-      <h2>Edit Student</h2>
+      <h2>{verb} Course</h2>
       <Form onSubmit={addCourse}>
         <Form.Group as={Row} className="mb-3" controlId="formCourseName">
           <Form.Label column sm={2}>
