@@ -281,10 +281,12 @@ export function fetchPieces(djangoToken) {
         'Content-Type': 'application/json',
       },
     })
+      .then(assertResponse)
       .then((response) => response.json())
-      .then((pieces) =>
+      .then((pieces) =>{
+        console.log('pieces', pieces)
         dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))))
-      );
+      });
 }
 
 export function assignedPiece(piece) {
@@ -345,9 +347,16 @@ export function getUserProfile({token}) {
       .then((myProfile) => dispatch(gotMyProfile(myProfile)));
 }
 
-export function selectCourse(course) {
+export function selectEnrollment(enrollment) {
   return {
-    type: types.Action.SelectedCourse,
-    payload: course
+    type: types.Action.SelectedEnrollment,
+    payload: enrollment
   }
+}
+
+export function selectAssignment(assignment) {
+  return {
+    type: types.Action.SelectedAssignment,
+    payload: assignment,
+  };
 }

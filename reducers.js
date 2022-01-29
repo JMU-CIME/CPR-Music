@@ -12,7 +12,7 @@ const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
     console.log('got assignments', payload);
     return {
       loaded: true,
-      items: payload
+      items: payload,
     };
   }
   return state;
@@ -23,16 +23,23 @@ const initialAssignedPieces = {
   items: {},
 };
 
-const assignedPiecesReducer = (state = initialAssignedPieces, { type, payload }) => {
+const assignedPiecesReducer = (
+  state = initialAssignedPieces,
+  { type, payload }
+) => {
   switch (type) {
   case types.Action.GotActivities:
-    let pieces = payload.activities.map((assignment) => assignment.part.piece);
+    let pieces = payload.activities.map(
+      (assignment) => assignment.part.piece
+    );
     pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
-    pieces = pieces.filter((piece, i, arr) => i == 0 ? true : piece.id != arr[i-1].id);
+    pieces = pieces.filter((piece, i, arr) =>
+      i == 0 ? true : piece.id != arr[i - 1].id
+    );
     pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
 
     // return { loaded: true, items: pieces };
-    return {...state, items: {...state.items, [payload.slug]: pieces}};
+    return { ...state, items: { ...state.items, [payload.slug]: pieces } };
   }
   return state;
 };
@@ -82,9 +89,11 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
   switch (type) {
   case types.Action.GotRoster:
     console.log('GotRoster', payload);
-    const items = {}
-    payload.forEach((item) => {items[item.id] = item})
-    return { loaded: true, items};
+    const items = {};
+    payload.forEach((item) => {
+      items[item.id] = item;
+    });
+    return { loaded: true, items };
   case types.Action.UpdatedEnrollmentInstrument:
     console.log('UpdatedEnrollmentInstrument', payload);
     return {
@@ -93,7 +102,7 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
         ...state.items,
         [payload.enrollment.id]: {
           ...state.items[payload.enrollment.id],
-          instrument: payload.instrument
+          instrument: payload.instrument,
         },
       },
     };
@@ -106,19 +115,19 @@ const initialCurrentUser = { loaded: false };
 const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   switch (type) {
   case types.Action.HaveUser:
-    console.log('haveuser in reducer', payload)
+    console.log('haveuser in reducer', payload);
     return {
       ...state,
       loaded: true,
       username: payload.user.name,
-      token: payload.token
-    }
+      token: payload.token,
+    };
   case types.Action.GotProfile:
-    console.log('types.Action.GotProfile', payload)
+    console.log('types.Action.GotProfile', payload);
     return {
       ...state,
-      ...payload
-    }
+      ...payload,
+    };
   case types.Action.LoggedOut:
     console.log('LoggedOut', payload);
     return { loaded: false };
@@ -132,21 +141,32 @@ const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
   switch (type) {
   case types.Action.GotInstruments:
     console.log('GotInstruments', payload);
-    const items = {}
-    payload.forEach((instrument)=>{items[instrument.id]=instrument})
+    const items = {};
+    payload.forEach((instrument) => {
+      items[instrument.id] = instrument;
+    });
     return { loaded: true, items };
   }
   return state;
 };
 
-const selectedCourseReducer = (state={}, {type, payload}) => {
-  switch(type){
-  case types.Action.SelectedCourse:
-    console.log('SelectedCourse payload', payload);
-    return payload
+const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+  case types.Action.SelectedEnrollment:
+    console.log('SelectedEnrollment payload', payload);
+    return payload ?? state;
   }
-  return state
-}
+  return state;
+};
+
+const selectedAssignmentReducer = (state = {}, { type, payload }) => {
+  switch (type) {
+  case types.Action.SelectedAssignment:
+    console.log('SelectedAssignment payload', payload);
+    return payload;
+  }
+  return state;
+};
 
 // COMBINED REDUCERS
 const reducers = {
@@ -158,7 +178,8 @@ const reducers = {
   instruments: instrumentsReducer,
   roster: rosterReducer,
   currentUser: currentUserReducer,
-  selectedCourse: selectedCourseReducer,
+  selectedEnrollment: selectedEnrollmentReducer,
+  selectedAssignment: selectedAssignmentReducer,
 };
 
 export default combineReducers(reducers);
