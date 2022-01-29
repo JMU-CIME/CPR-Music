@@ -142,7 +142,7 @@ const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
 const selectedCourseReducer = (state={}, {type, payload}) => {
   switch(type){
   case types.Action.SelectedCourse:
-    console.log('payload', payload)
+    console.log('SelectedCourse payload', payload);
     return payload
   }
   return state
