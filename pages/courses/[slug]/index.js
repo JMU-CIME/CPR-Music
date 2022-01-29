@@ -25,7 +25,7 @@ export default function CourseDetails() {
 
   const enrollments = useSelector((state) => state.enrollments);
   console.log('enrollments', enrollments)
-  dispatch(selectCourse(enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0].course));
+
   const assignedPieces = useSelector((state) => state.assignedPieces.items[slug]);
   const pieces = useSelector((state) => state.pieces);
 
@@ -36,6 +36,13 @@ export default function CourseDetails() {
     dispatch(fetchStudentAssignments({ token: userInfo.token, slug }));
     dispatch(fetchActivities({ token: userInfo.token, slug }));
     dispatch(fetchPieces(userInfo.token));
+    dispatch(
+      selectCourse(
+        enrollments.items.filter(
+          (enrollment) => enrollment.course.slug === slug
+        )[0].course
+      )
+    );
   }, [slug, dispatch]);
 
   const postAssignPiece = (pieceId) => (ev) =>
