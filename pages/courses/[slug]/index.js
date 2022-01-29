@@ -24,7 +24,6 @@ export default function CourseDetails() {
   const { slug } = router.query;
 
   const enrollments = useSelector((state) => state.enrollments);
-  console.log('enrollments', enrollments)
 
   const assignedPieces = useSelector((state) => state.assignedPieces.items[slug]);
   const pieces = useSelector((state) => state.pieces);
