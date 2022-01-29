@@ -45,6 +45,7 @@ export default function AddEditCourse({ session }) {
   };
   return (
     <div className="my-5">
+      <h2>Edit Student</h2>
       <Form onSubmit={addCourse}>
         <Form.Group as={Row} className="mb-3" controlId="formCourseName">
           <Form.Label column sm={2}>

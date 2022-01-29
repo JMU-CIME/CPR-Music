@@ -10,6 +10,9 @@ import {
   FaExternalLinkAlt,
   FaFlagCheckered,
   FaLink,
+  FaLocationArrow,
+  FaEdit,
+  FaPlus,
 } from 'react-icons/fa';
 import Form from 'react-bootstrap/Form';
 import { fetchEnrollments } from '../../actions';
@@ -43,16 +46,6 @@ function Courses({ myCourses }) {
               <Card.Body>
                 <Card.Title>{enrollment.course.name}</Card.Title>
                 <Card.Text>
-                  With supporting text below as a natural lead-in to additional
-                  content.
-                </Card.Text>
-                <Link href={`/courses/${enrollment.course.slug}/edit`}>
-                  <Button variant="primary">
-                    Go <FaExternalLinkAlt />
-                  </Button>
-                </Link>
-              </Card.Body>
-              <Card.Footer className="text-muted d-flex justify-content-between">
                 <div>
                   <FaCalendar />
                   <span className="ml-3">{enrollment.course.start_date}</span>
@@ -61,55 +54,36 @@ function Courses({ myCourses }) {
                   <FaFlagCheckered />
                   <span className="ml-3">{enrollment.course.end_date}</span>
                 </div>
+
+                </Card.Text>
+                
+              </Card.Body>
+              <Card.Footer className="text-muted d-flex justify-content-between">
+              <Link href={`/courses/${enrollment.course.slug}`}>
+                  <Button variant="primary">
+                    View <FaLocationArrow/>
+                  </Button>
+                </Link>
+                <Link href={`/courses/${enrollment.course.slug}/edit`}>
+                  <Button variant="primary">
+                    Edit <FaEdit/>
+                  </Button>
+                </Link>
               </Card.Footer>
             </Card>
           ))}
         <Card className="course-item">
           <Card.Body>
-            <Card.Title>
-              <Form.Control
-                type="text"
-                placeholder="Course name"
-                value={name}
-                onChange={(ev) => {
-                  console.log('setName');
-                  setName(ev.target.value);
-                }}
-              />
-            </Card.Title>
             <Card.Text>
-              With supporting text below as a natural lead-in to additional
-              content.
+              <FaPlus/>
             </Card.Text>
-            <Button variant="primary">
-              Go <FaExternalLinkAlt />
-            </Button>
           </Card.Body>
           <Card.Footer className="text-muted d-flex justify-content-between">
-            <div>
-              <FaCalendar />
-              <Form.Control
-                type="date"
-                className="date-field"
-                placeholder="Start Date"
-                value={startDate}
-                onChange={(ev) => {
-                  setStartDate(ev.target.value);
-                }}
-              />
-            </div>
-            <div>
-              <FaFlagCheckered />
-              <Form.Control
-                type="date"
-                className="date-field"
-                placeholder="End Date"
-                value={endDate}
-                onChange={(ev) => {
-                  setEndDate(ev.target.value);
-                }}
-              />
-            </div>
+              <Link href={`/courses/create/`}>
+                <Button variant="primary">
+                  Create <FaPlus/>
+                </Button>
+              </Link>
           </Card.Footer>
         </Card>
       </div>

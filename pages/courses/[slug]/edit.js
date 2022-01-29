@@ -44,45 +44,9 @@ export default function EditCourse() {
   console.log('pieces', pieces);
   console.log('pieces.items', pieces.items);
 
-  const postAssignPiece = (pieceId) => (ev) =>
-    dispatch(
-      assignPiece({ djangoToken: session.djangoToken, slug, piece: pieceId })
-    );
   return (
     <Layout>
       <h1>Edit {selectedEnrollment?.course?.name}</h1>
-      <Row>
-        <Col>
-          <h2>Assign New Piece</h2>
-          <ListGroup>
-            {pieces.items &&
-              pieces.items.filter((piece) => assignedPieces && assignedPieces.findIndex((assignedPiece) => assignedPiece.id == piece.id) == -1
-              ).map((piece) => (
-                <ListGroupItem
-                  key={piece.id}
-                  className="d-flex justify-content-between align-items-center"
-                >
-                  <div>{piece.name}</div>
-                  <Button onClick={postAssignPiece(piece.id)}>
-                    Assign <FaPlus />
-                  </Button>
-                </ListGroupItem>
-              ))}
-          </ListGroup>
-        </Col>
-        <Col>
-          <h2>Assigned Pieces</h2>
-          <ListGroup>
-            {assignedPieces && assignedPieces.length > 0 ? (
-              assignedPieces.map((piece) => (
-                <ListGroupItem key={piece.id}>{piece.name}</ListGroupItem>
-              ))
-            ) : (
-              <p>There are no pieces assigned to this course.</p>
-            )}
-          </ListGroup>
-        </Col>
-      </Row>
 
       <AddEditCourse session={session} />
       <AddEditStudent session={session} />

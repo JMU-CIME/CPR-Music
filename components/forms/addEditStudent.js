@@ -18,7 +18,7 @@ function AddEditStudent() {
   };
   return (
     <div className="my-5">
-      <h2>AddEdit Student</h2>
+      <h2>Add or Edit Student</h2>
       <Form onSubmit={addStudent}>
         <Form.Group as={Row} className="mb-3" controlId="formCourseName">
           <Form.Label column sm={2}>
