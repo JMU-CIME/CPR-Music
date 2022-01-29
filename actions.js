@@ -33,11 +33,11 @@ export function fetchEnrollments(djangoToken) {
   return (dispatch) =>
     djangoToken
       ? retrieveEnrollments(djangoToken)
-          .then((courses) => dispatch(gotEnrollments(courses)))
-          .catch((...rest) => {
-            console.log('catch rest');
-            console.log(rest);
-          })
+        .then((courses) => dispatch(gotEnrollments(courses)))
+        .catch((...rest) => {
+          console.log('catch rest');
+          console.log(rest);
+        })
       : null;
 }
 
@@ -343,4 +343,11 @@ export function getUserProfile({token}) {
         return results;
       })
       .then((myProfile) => dispatch(gotMyProfile(myProfile)));
+}
+
+export function selectCourse(course) {
+  return {
+    type: types.Action.SelectedCourse,
+    payload: course
+  }
 }

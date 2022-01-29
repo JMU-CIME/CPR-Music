@@ -9,6 +9,7 @@ import { fetchStudentAssignments ,
   fetchActivities,
   fetchEnrollments,
   fetchPieces,
+  selectCourse,
 } from '../../../actions';
 import Layout from '../../../components/layout';
 
@@ -23,8 +24,13 @@ export default function CourseDetails() {
   const { slug } = router.query;
 
   const enrollments = useSelector((state) => state.enrollments);
+  console.log('enrollments', enrollments)
+  dispatch(selectCourse(enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0].course));
   const assignedPieces = useSelector((state) => state.assignedPieces.items[slug]);
   const pieces = useSelector((state) => state.pieces);
+
+  
+  const currentCourse = useSelector((state) => state.selectedCourse);
 
   useEffect(() => {
     dispatch(fetchStudentAssignments({ token: userInfo.token, slug }));
@@ -38,26 +44,34 @@ export default function CourseDetails() {
     );
 
   console.log('assignments', assignments, loadedAssignments)
+  console.log(currentCourse)
   return (
     <Layout>
-      <h1>Course Details</h1>
+      <h1>{currentCourse.name}</h1>
       <Row>
         <Col>
           <h2>Assign New Piece</h2>
           <ListGroup>
             {pieces.items &&
-              pieces.items.filter((piece) => assignedPieces && assignedPieces.findIndex((assignedPiece) => assignedPiece.id === piece.id) === -1
-              ).map((piece) => (
-                <ListGroupItem
-                  key={piece.id}
-                  className="d-flex justify-content-between align-items-center"
-                >
-                  <div>{piece.name}</div>
-                  <Button onClick={postAssignPiece(piece.id)}>
-                    Assign <FaPlus />
-                  </Button>
-                </ListGroupItem>
-              ))}
+              pieces.items
+                .filter(
+                  (piece) =>
+                    assignedPieces &&
+                    assignedPieces.findIndex(
+                      (assignedPiece) => assignedPiece.id === piece.id
+                    ) === -1
+                )
+                .map((piece) => (
+                  <ListGroupItem
+                    key={piece.id}
+                    className="d-flex justify-content-between align-items-center"
+                  >
+                    <div>{piece.name}</div>
+                    <Button onClick={postAssignPiece(piece.id)}>
+                      Assign <FaPlus />
+                    </Button>
+                  </ListGroupItem>
+                ))}
           </ListGroup>
         </Col>
         <Col>

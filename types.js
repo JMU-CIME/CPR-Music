@@ -15,4 +15,5 @@ export const Action = Object.freeze({
   AssignedPiece: 'AssignedPiece',
   HaveUser: 'HaveUser',
   GotProfile: 'GotProfile',
+  SelectedCourse: 'SelectedCourse',
 });

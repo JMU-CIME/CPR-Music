@@ -25,16 +25,14 @@ const initialAssignedPieces = {
 
 const assignedPiecesReducer = (state = initialAssignedPieces, { type, payload }) => {
   switch (type) {
-    case types.Action.GotActivities:
-      let pieces = payload.activities.map((assignment) => assignment.part.piece);
-      pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
-      pieces = pieces.filter((piece, i, arr) => {
-        return i == 0 ? true : piece.id != arr[i-1].id;
-      });
-      pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
+  case types.Action.GotActivities:
+    let pieces = payload.activities.map((assignment) => assignment.part.piece);
+    pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
+    pieces = pieces.filter((piece, i, arr) => i == 0 ? true : piece.id != arr[i-1].id);
+    pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
 
-      // return { loaded: true, items: pieces };
-      return {...state, items: {...state.items, [payload.slug]: pieces}};
+    // return { loaded: true, items: pieces };
+    return {...state, items: {...state.items, [payload.slug]: pieces}};
   }
   return state;
 };
@@ -46,9 +44,9 @@ const initialActivities = {
 
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
-    case types.Action.GotActivities:
-      console.log('got activities', payload);
-      return { loaded: true, items: payload };
+  case types.Action.GotActivities:
+    console.log('got activities', payload);
+    return { loaded: true, items: payload };
   }
   return state;
 };
@@ -141,17 +139,26 @@ const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
   return state;
 };
 
+const selectedCourseReducer = (state={}, {type, payload}) => {
+  switch(type){
+  case types.Action.SelectedCourse:
+    console.log('payload', payload)
+    return payload
+  }
+  return state
+}
+
 // COMBINED REDUCERS
 const reducers = {
   assignments: assignmentsReducer,
   activities: activitiesReducer,
   assignedPieces: assignedPiecesReducer,
-  // activityTypes: activityTypesReducer,
   pieces: piecesReducer,
   enrollments: enrollmentsReducer,
   instruments: instrumentsReducer,
   roster: rosterReducer,
   currentUser: currentUserReducer,
+  selectedCourse: selectedCourseReducer,
 };
 
 export default combineReducers(reducers);
