@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Link from 'next/link';
@@ -24,18 +23,25 @@ export default function EditCourse() {
   const assignedPieces = useSelector((state) => state.assignedPieces.items[slug]);
   const pieces = useSelector((state) => state.pieces);
   const dispatch = useDispatch();
-  const { data: session } = useSession();
+  const router = useRouter();
+  const { slug } = router.query;
+  const userInfo = useSelector((state)=>state.currentUser)
+
   useEffect(() => {
-    if (session) {// && !enrollments.loaded) {
-      dispatch(fetchEnrollments(session.djangoToken));
-    }
-    if (session) {// && !assignedPieces.loaded) {
-      dispatch(fetchActivities({ token: session.djangoToken, slug }));
-    }
-    if (session) {// && !pieces.loaded) {
-      dispatch(fetchPieces(session.djangoToken));
-    }
-  }, [slug, session, dispatch]);
+    // TODO
+    // we drop these conditions because ...? 
+    //    we should fetch based on slugs every time we get here?
+    //    even though 2 of these don't pass slug? maybe those should be only once?
+    // if (!enrollments.loaded) {
+      dispatch(fetchEnrollments(userInfo.token));
+    // }
+    // if (!activities.loaded) {
+      dispatch(fetchActivities({ token: userInfo.token, slug }));
+    // }
+    // if (!pieces.loaded) {
+      dispatch(fetchPieces(userInfo.token));
+    // }
+  }, [slug, dispatch]);
 
   const selectedEnrollment = enrollments.items.filter((enrollment) => {
     // console.log('enrollment in filter', enrollment, slug);
@@ -53,9 +59,10 @@ export default function EditCourse() {
         <Button variant="primary">
           Set Instrument Assignments <FaMusic/>
         </Button>
-      </Link>      <AddEditCourse session={session} />
-      <AddEditStudent session={session} />
-      <UploadStudents session={session} />
+      </Link>
+      <AddEditCourse />
+      <AddEditStudent />
+      <UploadStudents />
     </Layout>
   );
 }

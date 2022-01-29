@@ -2,9 +2,8 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import LoginOut from './loginout';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import LoginOut from './loginout';
 
 function Navigation() {
   return (

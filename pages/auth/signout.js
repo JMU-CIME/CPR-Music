@@ -1,11 +1,12 @@
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
-import Layout from '../../components/layout';
 import { signOut, useSession } from 'next-auth/react';
 import { useDispatch } from 'react-redux';
+import Layout from '../../components/layout';
 import { logoutUser } from '../../actions';
-const SignOut = () => {
+
+function SignOut() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const logout = (ev) => {
@@ -25,6 +26,6 @@ const SignOut = () => {
       </Row>
     </Layout>
   );
-};
+}
 
 export default SignOut;

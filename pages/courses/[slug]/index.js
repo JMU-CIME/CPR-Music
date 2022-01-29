@@ -1,22 +1,20 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchStudentAssignments } from '../../../actions';
 import { FaPlus } from 'react-icons/fa';
 import { Button, Col, ListGroupItem, Row } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Layout from '../../../components/layout';
-import {
+import { fetchStudentAssignments ,
   assignPiece,
   fetchActivities,
   fetchEnrollments,
   fetchPieces,
 } from '../../../actions';
+import Layout from '../../../components/layout';
 
 export default function CourseDetails() {
   // get assignments/activities
-  const { data: session } = useSession();
+  const userInfo = useSelector((state)=> state.currentUser)
   const dispatch = useDispatch();
   const { items: assignments, loaded: loadedAssignments } = useSelector(
     (state) => state.assignments
@@ -29,23 +27,17 @@ export default function CourseDetails() {
   const pieces = useSelector((state) => state.pieces);
 
   useEffect(() => {
-    if (session) {
-      dispatch(fetchStudentAssignments({ token: session.djangoToken, slug }));
-    }
-    if (session) {
-      dispatch(fetchActivities({ token: session.djangoToken, slug }));
-    }
-    if (session) {
-      dispatch(fetchPieces(session.djangoToken));
-    }
-
-  }, [slug, session, dispatch]);
+    dispatch(fetchStudentAssignments({ token: userInfo.token, slug }));
+    dispatch(fetchActivities({ token: userInfo.token, slug }));
+    dispatch(fetchPieces(userInfo.token));
+  }, [slug, dispatch]);
 
   const postAssignPiece = (pieceId) => (ev) =>
     dispatch(
-      assignPiece({ djangoToken: session.djangoToken, slug, piece: pieceId })
+      assignPiece({ djangoToken: userInfo.token, slug, piece: pieceId })
     );
 
+  console.log('assignments', assignments, loadedAssignments)
   return (
     <Layout>
       <h1>Course Details</h1>
@@ -54,7 +46,7 @@ export default function CourseDetails() {
           <h2>Assign New Piece</h2>
           <ListGroup>
             {pieces.items &&
-              pieces.items.filter((piece) => assignedPieces && assignedPieces.findIndex((assignedPiece) => assignedPiece.id == piece.id) == -1
+              pieces.items.filter((piece) => assignedPieces && assignedPieces.findIndex((assignedPiece) => assignedPiece.id === piece.id) === -1
               ).map((piece) => (
                 <ListGroupItem
                   key={piece.id}

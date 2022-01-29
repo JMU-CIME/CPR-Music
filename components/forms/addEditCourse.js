@@ -7,17 +7,16 @@ import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import { newCourse } from '../../actions';
 
-export default function AddEditCourse({ session }) {
+export default function AddEditCourse() {
   const router = useRouter();
   const { slug } = router.query;
 
   const dispatch = useDispatch();
 
   const enrollments = useSelector((state) => state.enrollments);
+  const userInfo = useSelector((state) => state.currentUser);
 
-  const selectedEnrollment = enrollments.items.filter((enrollment) => {
-    return enrollment.course.slug === slug;
-  })[0];
+  const selectedEnrollment = enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0];
   const selectedCourse = selectedEnrollment?.course;
   
   const today = new Date();
@@ -37,21 +36,14 @@ export default function AddEditCourse({ session }) {
     ev.preventDefault();
     ev.stopPropagation();
 
-    if (session) {
-      let token = '';
-      if (session && 'djangoToken' in session) {
-        token = session.djangoToken;
-      }
-      // tell redux we have changed data
-      dispatch(
-        newCourse({
-          name,
-          startDate,
-          endDate,
-          token,
-        })
-      );
-    }
+    dispatch(
+      newCourse({
+        name,
+        startDate,
+        endDate,
+        token: userInfo.token,
+      })
+    );
 
     // navigate back to the course list
     router.push('/courses');

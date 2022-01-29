@@ -3,8 +3,10 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Navigation from './nav';
 import styles from './layout.module.css';
+import { gotUser } from '../actions';
 
 const PUBLIC_PATHS = ['/', '/about', '/auth/signin', '/api/auth/signout'];
 
@@ -28,9 +30,17 @@ export default function Layout({ children }) {
       router.events.off('routeChangeStart', handleRouteChange);
     };
   }, []);
-  const { status, data: session } = useSession({
+
+  const { status, data } = useSession({
     required: !PUBLIC_PATHS.includes(router.pathname),
   });
+  const dispatch = useDispatch()
+  useEffect(() => {
+    console.log('status', status, data)
+    if (status === "authenticated") {
+      dispatch(gotUser({user:data.user, token: data.djangoToken}))
+    }
+  },[status, dispatch]);
   return (
     <>
       <Head>

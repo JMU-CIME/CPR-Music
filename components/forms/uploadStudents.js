@@ -4,15 +4,16 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { uploadRoster } from '../../actions';
 
-function UploadStudents({ session }) {
+function UploadStudents() {
   const [file, setFile] = useState();
   const dispatch = useDispatch();
 
   const router = useRouter();
   const { slug } = router.query;
+  const userInfo = useSelector((state) => state.currentUser)
 
   const uploadStudents = (ev) => {
     console.log('add student ev', ev);
@@ -31,7 +32,7 @@ function UploadStudents({ session }) {
     dispatch(
       uploadRoster({
         body: formData,
-        djangoToken: session.djangoToken,
+        djangoToken: userInfo.token,
         courseSlug: slug,
       })
     );

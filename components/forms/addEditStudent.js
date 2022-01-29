@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -11,6 +10,8 @@ function AddEditStudent() {
 
   const addStudent = (ev) => {
     console.log('add student ev', ev);
+
+    // TODO: actually dispatch action to add a student here
 
     // don't refresh the page
     ev.preventDefault();
@@ -47,7 +48,7 @@ function AddEditStudent() {
               value={grade}
               onChange={(ev) => {
                 console.log('setGrade');
-                setName(ev.target.value);
+                setGrade(ev.target.value);
               }}
             />
           </Col>

@@ -35,6 +35,9 @@
             "warn",
             2
         ],
-        "react/prop-types": "off"
+        "react/prop-types": "off",
+        "default-param-last": "off",
+        "default-case": "off",
+        "no-case-declarations": "off"
     }
 }

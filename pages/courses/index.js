@@ -1,38 +1,32 @@
 import { useSelector, useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Card from 'react-bootstrap/Card';
 import {
   FaCalendar,
-  FaExternalLinkAlt,
   FaFlagCheckered,
-  FaLink,
   FaLocationArrow,
   FaEdit,
   FaPlus,
 } from 'react-icons/fa';
-import Form from 'react-bootstrap/Form';
 import { fetchEnrollments } from '../../actions';
 import Layout from '../../components/layout';
 
 function Courses({ myCourses }) {
-  const { data: session } = useSession();
   const dispatch = useDispatch();
   const { items: enrollments, loaded } = useSelector(
     (state) => state.enrollments
   );
-  useEffect(() => {
-    if (session && !loaded) {
-      dispatch(fetchEnrollments(session.djangoToken));
-    }
-  }, [session, dispatch]);
 
-  const [name, setName] = useState('');
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const userInfo = useSelector(state => state.currentUser)
+  useEffect(() => {
+    if (userInfo.loaded && !loaded) {
+      dispatch(fetchEnrollments(userInfo.token));
+    }
+  }, [userInfo, dispatch]);
+
   return (
     <Layout>
       <h1>Your courses</h1>
@@ -56,7 +50,7 @@ function Courses({ myCourses }) {
                 
               </Card.Body>
               <Card.Footer className="text-muted d-flex justify-content-between">
-              <Link href={`/courses/${enrollment.course.slug}`}>
+                <Link href={`/courses/${enrollment.course.slug}`}>
                   <Button variant="primary">
                     View <FaLocationArrow/>
                   </Button>
@@ -76,11 +70,11 @@ function Courses({ myCourses }) {
             </Card.Text>
           </Card.Body>
           <Card.Footer className="text-muted d-flex justify-content-between">
-              <Link href={`/courses/create/`}>
-                <Button variant="primary">
+            <Link href="/courses/create/">
+              <Button variant="primary">
                   Create <FaPlus/>
-                </Button>
-              </Link>
+              </Button>
+            </Link>
           </Card.Footer>
         </Card>
       </div>
