@@ -14,4 +14,5 @@ export const Action = Object.freeze({
   GotPieces: 'GotPieces',
   AssignedPiece: 'AssignedPiece',
   HaveUser: 'HaveUser',
+  GotProfile: 'GotProfile',
 });

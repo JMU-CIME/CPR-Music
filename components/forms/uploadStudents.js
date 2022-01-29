@@ -41,7 +41,7 @@ function UploadStudents() {
     <div className="my-5">
       <h2>Add Multiple Students</h2>
       <p>
-        Create a <abbr title="Comma-Separated Value">CSV</abbr> with format format <pre>fullname,username,password,grade</pre> file{' '}
+        Create a <abbr title="Comma-Separated Value">CSV</abbr> file with format format <code>fullname,username,password,grade</code>
       </p>
       <Form onSubmit={uploadStudents}>
         <Form.Group as={Row} className="mb-3" controlId="formRosterCSV">

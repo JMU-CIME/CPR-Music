@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Navigation from './nav';
 import styles from './layout.module.css';
-import { gotUser } from '../actions';
+import { getUserProfile, gotUser } from '../actions';
 
 const PUBLIC_PATHS = ['/', '/about', '/auth/signin', '/api/auth/signout'];
 
@@ -39,6 +39,7 @@ export default function Layout({ children }) {
     console.log('status', status, data)
     if (status === "authenticated") {
       dispatch(gotUser({user:data.user, token: data.djangoToken}))
+      dispatch(getUserProfile({token: data.djangoToken}))
     }
   },[status, dispatch]);
   return (

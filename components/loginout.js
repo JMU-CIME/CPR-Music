@@ -11,7 +11,7 @@ function LoginOut() {
     <Link href="/api/auth/signout" passHref>
       <Nav.Link>Logout
         {
-          currentUserInfo.loaded ? ` ${currentUserInfo.name}` : ""
+          currentUserInfo.loaded ? ` ${currentUserInfo.username}` : ""
         }
       </Nav.Link>
     </Link>

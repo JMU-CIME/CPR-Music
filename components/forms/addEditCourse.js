@@ -42,6 +42,7 @@ export default function AddEditCourse() {
         startDate,
         endDate,
         token: userInfo.token,
+        userId: userInfo.id,
       })
     );
 

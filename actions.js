@@ -10,62 +10,6 @@ function assertResponse(response) {
 
 export const loggedIn = (data) => ({ type: types.LOGGED_IN, payload: data });
 
-export const newCourse =
-  ({
-    name,
-    startDate: start_date,
-    endDate: end_date,
-    slug = 'slug',
-    token = '',
-  }) =>
-    (dispatch) => {
-      const params = {
-        name,
-        start_date,
-        end_date,
-        slug,
-      };
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(params),
-      };
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
-        .then(assertResponse)
-        .then(() => dispatch(fetchEnrollments(token)));
-    };
-    
-    const enrollParams = {
-      user: 1,
-      role: 1,
-    };
-    const enrollOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
-      },
-    }
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
-      .then(assertResponse)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data from create course post", data);
-        const enrollParams = {
-          user: 1,
-          role: 1,
-          course: data.id,
-        };
-        enrollOptions.body = JSON.stringify(enrollParams);
-        console.log(enrollOptions);
-        return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, enrollOptions)
-      })
-      .then(() => dispatch(fetchEnrollments(token)));
-  };
-
 export function gotEnrollments(courses) {
   return {
     type: types.Action.GotEnrollments,
@@ -89,13 +33,63 @@ export function fetchEnrollments(djangoToken) {
   return (dispatch) =>
     djangoToken
       ? retrieveEnrollments(djangoToken)
-        .then((courses) => dispatch(gotEnrollments(courses)))
-        .catch((...rest) => {
-          console.log('catch rest');
-          console.log(rest);
-        })
+          .then((courses) => dispatch(gotEnrollments(courses)))
+          .catch((...rest) => {
+            console.log('catch rest');
+            console.log(rest);
+          })
       : null;
 }
+
+export const newCourse =
+  ({
+    name,
+    startDate: start_date,
+    endDate: end_date,
+    slug = 'slug',
+    token = '',
+    userId,
+  }) =>
+    (dispatch) => {
+      const params = {
+        name,
+        start_date,
+        end_date,
+        slug,
+        owner: userId,
+      };
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify(params),
+      };
+    
+      const enrollOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+      }
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
+        .then(assertResponse)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("data from create course post", data);
+          const enrollParams = {
+            user: userId,
+            role: 1,
+            course: data.id,
+          };
+          enrollOptions.body = JSON.stringify(enrollParams);
+          console.log(enrollOptions);
+          return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, enrollOptions)
+        })
+        .then(() => dispatch(fetchEnrollments(token)));
+    };
 
 export function addedFromRoster(courseSlug, enrollments) {
   return {
@@ -267,9 +261,9 @@ export function fetchActivities({ token, slug }) {
         },
       }
     )
+      .then(assertResponse)
       .then((response) => response.json())
       .then((activities) => dispatch(gotActivities({activities, slug})));
-  };
 }
 
 export function gotPieces(pieces) {
@@ -326,4 +320,27 @@ export function gotUser(userInfo) {
     type: types.Action.HaveUser,
     payload: userInfo
   }
+}
+
+export function gotMyProfile(myProfile) {
+  return {
+    type: types.Action.GotProfile,
+    payload: myProfile,
+  };
+}
+
+export function getUserProfile({token}) {
+  return (dispatch) =>
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/users/me/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(assertResponse)
+      .then((response, ...rest) => {
+        const results = response.json();
+        return results;
+      })
+      .then((myProfile) => dispatch(gotMyProfile(myProfile)));
 }

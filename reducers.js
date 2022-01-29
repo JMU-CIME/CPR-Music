@@ -110,9 +110,16 @@ const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   case types.Action.HaveUser:
     console.log('haveuser in reducer', payload)
     return {
+      ...state,
       loaded: true,
-      name: payload.user.name,
+      username: payload.user.name,
       token: payload.token
+    }
+  case types.Action.GotProfile:
+    console.log('types.Action.GotProfile', payload)
+    return {
+      ...state,
+      ...payload
     }
   case types.Action.LoggedOut:
     console.log('LoggedOut', payload);
