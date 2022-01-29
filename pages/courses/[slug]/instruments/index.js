@@ -1,6 +1,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -41,8 +42,11 @@ function Instruments() {
       <h1>Instruments</h1>
       <p>
         Below are the default instrument assignments for the students in this
-        class. You can Change their default below, or change their instrument
-        only for a specific assignment on the UNIMPLEMENTED SCREEN // TODO
+        class. You can change their defaults below, or change their instrument
+        only for a specific assignment on an assignemnt's edit page. 
+      </p>
+      <p>
+        Changes made below will be automatically saved.
       </p>
       <Form onSubmit={updateInstruments}>
         {roster.items &&
@@ -56,6 +60,11 @@ function Instruments() {
             // <p key={enrollment.id}>{enrollment.user.name}</p>
           ))}
       </Form>
+      <Link href={`/courses/${slug}/edit`}>
+        <Button variant="primary">
+          Return to Course Edit
+        </Button>
+      </Link>
     </Layout>
   );
 }

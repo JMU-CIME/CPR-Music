@@ -1,9 +1,10 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { Button, Col, ListGroupItem, Row } from 'react-bootstrap';
 import ListGroup from 'react-bootstrap/ListGroup';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaMusic } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   assignPiece,
@@ -48,7 +49,11 @@ export default function EditCourse() {
     <Layout>
       <h1>Edit {selectedEnrollment?.course?.name}</h1>
 
-      <AddEditCourse session={session} />
+      <Link href={`/courses/${slug}/instruments`}>
+        <Button variant="primary">
+          Set Instrument Assignments <FaMusic/>
+        </Button>
+      </Link>      <AddEditCourse session={session} />
       <AddEditStudent session={session} />
       <UploadStudents session={session} />
     </Layout>
