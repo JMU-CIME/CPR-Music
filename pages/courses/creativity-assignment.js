@@ -1,10 +1,11 @@
 import dynamic from 'next/dynamic';
 import Layout from '../../components/layout';
+
 const FlatEditor = dynamic(() => import('../../components/flatEditor'), {
   ssr: false,
 });
 
-const CreativityAssignment = () => {
+function CreativityAssignment() {
   return (
     <Layout>
       <h1>Creativity Assignment</h1>
@@ -13,9 +14,9 @@ const CreativityAssignment = () => {
         This should be the page for completing/resubmitting this assignment type
         for the specific piece
       </p>
-      <FlatEditor />
+      <FlatEditor edit />
     </Layout>
   );
-};
+}
 
 export default CreativityAssignment;

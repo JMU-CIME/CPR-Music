@@ -360,3 +360,25 @@ export function selectAssignment(assignment) {
     payload: assignment,
   };
 }
+
+export function postRecording({token, slug, assignmentId, submissionId}) {
+
+  return (dispatch) =>
+    ({ audio }) =>
+      fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submissionId}/attachments/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+          method: 'POST',
+          body: audio,
+        }
+      )
+        .then(assertResponse)
+        .then((response) => response.json())
+        .then((res) => {
+          console.log('uploaded recording', res);
+          // dispatch(addedFromRoster(courseSlug, res));
+        });
+}
