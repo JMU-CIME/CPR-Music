@@ -41,10 +41,12 @@ function FlatEditor({
       <Col>
         <div ref={editorRef} />
       </Col>
-      <Col style={{ maxWidth: '40%', whiteSpace: 'pre-wrap' }}>
-        <Button onClick={refreshJSON}>Refresh JSON</Button>
-        <pre style={{ whiteSpace: 'pre-wrap' }}>{json}</pre>
-      </Col>
+      {edit && (
+        <Col style={{ maxWidth: '40%', whiteSpace: 'pre-wrap' }}>
+          <Button onClick={refreshJSON}>Submit</Button>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{json}</pre>
+        </Col>
+      )}
     </Row>
   );
 }

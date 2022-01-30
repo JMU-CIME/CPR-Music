@@ -33,11 +33,11 @@ export function fetchEnrollments(djangoToken) {
   return (dispatch) =>
     djangoToken
       ? retrieveEnrollments(djangoToken)
-        .then((courses) => dispatch(gotEnrollments(courses)))
-        .catch((...rest) => {
-          console.log('catch rest');
-          console.log(rest);
-        })
+          .then((courses) => dispatch(gotEnrollments(courses)))
+          .catch((...rest) => {
+            console.log('catch rest');
+            console.log(rest);
+          })
       : null;
 }
 
@@ -50,46 +50,49 @@ export const newCourse =
     token = '',
     userId,
   }) =>
-    (dispatch) => {
-      const params = {
-        name,
-        start_date,
-        end_date,
-        slug,
-        owner: userId,
-      };
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(params),
-      };
-    
-      const enrollOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
-        },
-      }
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
-        .then(assertResponse)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log("data from create course post", data);
-          const enrollParams = {
-            user: userId,
-            role: 1,
-            course: data.id,
-          };
-          enrollOptions.body = JSON.stringify(enrollParams);
-          console.log(enrollOptions);
-          return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, enrollOptions)
-        })
-        .then(() => dispatch(fetchEnrollments(token)));
+  (dispatch) => {
+    const params = {
+      name,
+      start_date,
+      end_date,
+      slug,
+      owner: userId,
     };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(params),
+    };
+
+    const enrollOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+    };
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
+      .then(assertResponse)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data from create course post', data);
+        const enrollParams = {
+          user: userId,
+          role: 1,
+          course: data.id,
+        };
+        enrollOptions.body = JSON.stringify(enrollParams);
+        console.log(enrollOptions);
+        return fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
+          enrollOptions
+        );
+      })
+      .then(() => dispatch(fetchEnrollments(token)));
+  };
 
 export function addedFromRoster(courseSlug, enrollments) {
   return {
@@ -166,7 +169,7 @@ export function fetchRoster({ djangoToken, courseSlug }) {
       .then((enrollments) => dispatch(gotRoster(enrollments)));
 }
 
-export function enrollmentUpdated({enrollment, instrument}) {
+export function enrollmentUpdated({ enrollment, instrument }) {
   return {
     type: types.Action.UpdatedEnrollmentInstrument,
     payload: {
@@ -195,7 +198,9 @@ export function updateEnrollmentInstrument({
     )
       .then(assertResponse)
       .then((res) => res.json())
-      .then((enrollment) => dispatch(enrollmentUpdated({enrollment, instrument})));
+      .then((enrollment) =>
+        dispatch(enrollmentUpdated({ enrollment, instrument }))
+      );
 }
 
 export function gotAssignments(assignments) {
@@ -240,13 +245,13 @@ export function logoutUser(token) {
       .then(loggedOut);
 }
 
-export function gotActivities({activities, slug}) {
+export function gotActivities({ activities, slug }) {
   return {
     type: types.Action.GotActivities,
     payload: {
       activities,
-      slug
-    }
+      slug,
+    },
   };
 }
 
@@ -263,7 +268,7 @@ export function fetchActivities({ token, slug }) {
     )
       .then(assertResponse)
       .then((response) => response.json())
-      .then((activities) => dispatch(gotActivities({activities, slug})));
+      .then((activities) => dispatch(gotActivities({ activities, slug })));
 }
 
 export function gotPieces(pieces) {
@@ -283,9 +288,9 @@ export function fetchPieces(djangoToken) {
     })
       .then(assertResponse)
       .then((response) => response.json())
-      .then((pieces) =>{
-        console.log('pieces', pieces)
-        dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))))
+      .then((pieces) => {
+        console.log('pieces', pieces);
+        dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))));
       });
 }
 
@@ -320,8 +325,8 @@ export function assignPiece({ djangoToken, slug, piece }) {
 export function gotUser(userInfo) {
   return {
     type: types.Action.HaveUser,
-    payload: userInfo
-  }
+    payload: userInfo,
+  };
 }
 
 export function gotMyProfile(myProfile) {
@@ -331,7 +336,7 @@ export function gotMyProfile(myProfile) {
   };
 }
 
-export function getUserProfile({token}) {
+export function getUserProfile({ token }) {
   return (dispatch) =>
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/users/me/`, {
       headers: {
@@ -350,8 +355,8 @@ export function getUserProfile({token}) {
 export function selectEnrollment(enrollment) {
   return {
     type: types.Action.SelectedEnrollment,
-    payload: enrollment
-  }
+    payload: enrollment,
+  };
 }
 
 export function selectAssignment(assignment) {
@@ -361,24 +366,32 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function postRecording({token, slug, assignmentId, submissionId}) {
-
-  return (dispatch) =>
-    ({ audio }) =>
-      fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submissionId}/attachments/`,
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-          method: 'POST',
-          body: audio,
-        }
-      )
-        .then(assertResponse)
-        .then((response) => response.json())
-        .then((res) => {
-          console.log('uploaded recording', res);
-          // dispatch(addedFromRoster(courseSlug, res));
-        });
+export function postRecording({
+  token,
+  slug,
+  assignmentId,
+  submissionId,
+  audio,
+}) {
+  console.log('postRecording');
+  return (dispatch) => {
+    console.log('posting... audio, token, slug, assignmentId, submissionId');
+    console.log('posting...', audio, token, slug, assignmentId, submissionId);
+    return fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submissionId}/attachments/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+        method: 'POST',
+        body: audio,
+      }
+    )
+      .then(assertResponse)
+      .then((response) => response.json())
+      .then((res) => {
+        console.log('uploaded recording', res);
+        // dispatch(addedFromRoster(courseSlug, res));
+      });
+  };
 }

@@ -7,7 +7,9 @@ import Col from 'react-bootstrap/Col';
 // import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Row from 'react-bootstrap/Row';
 import { useSelector, useDispatch } from 'react-redux';
-import { postRecording, selectAssignment } from '../../../../actions';
+import { postRecording } from '../../../../actions';
+import Layout from '../../../../components/layout';
+// import { postRecording, selectAssignment } from '../../../../actions';
 import Recorder from '../../../../components/recorder';
 const FlatEditor = dynamic(() => import('../../../../components/flatEditor'), {
   ssr: false,
@@ -19,8 +21,6 @@ export default function PerformMelody() {
   const dispatch = useDispatch();
 
   const userInfo = useSelector((state) => state.currentUser);
-
-  
 
   // is this the right approach or more probably I should just hit backend for exactly this assignment?
   // TODO: need piece slug here
@@ -34,19 +34,22 @@ export default function PerformMelody() {
   // }, [slug, piece]);
 
   return (
-    <Row>
-      <Col>
-        <h1>Perform Melody</h1>
-        <FlatEditor />
-        <Recorder
-          submit={postRecording({
-            token: userInfo.token,
-            slug,
-            assignmentId:1,
-            submissionId:1,
-          })}
-        />
-      </Col>
-    </Row>
+    <Layout>
+      <h1>Perform Melody</h1>
+      <FlatEditor />
+      <Recorder
+        submit={({ audio }) =>
+          dispatch(
+            postRecording({
+              token: userInfo.token,
+              slug,
+              assignmentId: 1,
+              submissionId: 1,
+              audio,
+            })
+          )
+        }
+      />
+    </Layout>
   );
 }
