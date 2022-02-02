@@ -370,7 +370,6 @@ export function postRecording({
   token,
   slug,
   assignmentId,
-  submissionId,
   audio,
 }) {
   console.log('postRecording');
