@@ -375,10 +375,10 @@ export function postRecording({
 }) {
   console.log('postRecording');
   return (dispatch) => {
-    console.log('posting... audio, token, slug, assignmentId, submissionId');
-    console.log('posting...', audio, token, slug, assignmentId, submissionId);
+    console.log('posting... audio, token, slug, assignmentId, ');
+    console.log('posting...', audio, token, slug, assignmentId);
     return fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submissionId}/attachments/`,
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
       {
         headers: {
           Authorization: `Token ${token}`,
@@ -388,10 +388,25 @@ export function postRecording({
       }
     )
       .then(assertResponse)
-      .then((response) => response.json())
-      .then((res) => {
-        console.log('uploaded recording', res);
-        // dispatch(addedFromRoster(courseSlug, res));
+      .then((res) => res.json())
+      .then((submission) => {
+        console.log('new submission', submission);
+        fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submission.id}/attachments/`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+            method: 'POST',
+            body: audio,
+          }
+        )
+          .then(assertResponse)
+          .then((response) => response.json())
+          .then((res) => {
+            console.log('uploaded recording', res);
+            // dispatch(addedFromRoster(courseSlug, res));
+          });
       });
   };
 }

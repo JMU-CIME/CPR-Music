@@ -43,7 +43,7 @@ export default function PerformMelody() {
             postRecording({
               token: userInfo.token,
               slug,
-              assignmentId: 1,
+              assignmentId: 4,
               submissionId: 1,
               audio,
             })

@@ -58,7 +58,7 @@ export default function Recorder({ submit }) {
     console.log('blobData', blobData);
     const formData = new FormData(); // TODO: make filename reflect assignment
     formData.append(
-      'student_recording',
+      'file',
       new File([blobInfo[i].data], 'student-recoding.mp3', {
         mimeType: 'audio/mpeg',
       })
