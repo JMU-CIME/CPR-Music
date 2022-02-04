@@ -9,8 +9,6 @@ function assertResponse(response) {
   throw new Error(`${response.status}: ${response.statusText}`);
 }
 
-export const loggedIn = (data) => ({ type: types.LOGGED_IN, payload: data });
-
 export function gotEnrollments(courses) {
   return {
     type: types.Action.GotEnrollments,
