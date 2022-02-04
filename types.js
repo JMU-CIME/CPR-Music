@@ -17,4 +17,5 @@ export const Action = Object.freeze({
   GotProfile: 'GotProfile',
   SelectedEnrollment: 'SelectedEnrollment',
   SelectedAssignment: 'SelectedAssignment',
+  GotSingleAssignment: 'GotSingleAssignment',
 });

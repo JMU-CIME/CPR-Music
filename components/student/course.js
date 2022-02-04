@@ -8,7 +8,7 @@ import Link from 'next/link';
 // show the assignments that still need to be completed
 // show the assignments that have already been completed
 
-export default function StudentCourseView({ assignments }) {
+export default function StudentCourseView({ assignments, enrollment }) {
   console.log('student assignments', assignments);
   return (
     <Row>
@@ -18,8 +18,9 @@ export default function StudentCourseView({ assignments }) {
           {assignments &&
             assignments.map((assn) => (
               <ListGroupItem key={assn.id}>
-                <Link passHref
-                  href={`${assn.part.piece.slug}/${
+                <Link
+                  passHref
+                  href={`${enrollment.course.slug}/${assn.part.piece.slug}/${
                     assn.activity.activity_type.category
                   }${
                     assn.activity.activity_type.category === 'Perform'
@@ -28,7 +29,7 @@ export default function StudentCourseView({ assignments }) {
                   }`}
                 >
                   <a>
-                    {assn.part.name} {assn.activity.activity_type}{' '}
+                    {assn.part.piece.name} {assn.activity.activity_type.name}
                     {assn.instrument.name}
                   </a>
                 </Link>

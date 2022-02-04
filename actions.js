@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import * as types from './types';
 
 // https://allover.twodee.org/remote-state/fetching-memories/
@@ -33,11 +34,11 @@ export function fetchEnrollments(djangoToken) {
   return (dispatch) =>
     djangoToken
       ? retrieveEnrollments(djangoToken)
-          .then((courses) => dispatch(gotEnrollments(courses)))
-          .catch((...rest) => {
-            console.log('catch rest');
-            console.log(rest);
-          })
+        .then((courses) => dispatch(gotEnrollments(courses)))
+        .catch((...rest) => {
+          console.log('catch rest');
+          console.log(rest);
+        })
       : null;
 }
 
@@ -50,49 +51,49 @@ export const newCourse =
     token = '',
     userId,
   }) =>
-  (dispatch) => {
-    const params = {
-      name,
-      start_date,
-      end_date,
-      slug,
-      owner: userId,
-    };
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
-      },
-      body: JSON.stringify(params),
-    };
+    (dispatch) => {
+      const params = {
+        name,
+        start_date,
+        end_date,
+        slug,
+        owner: userId,
+      };
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+        body: JSON.stringify(params),
+      };
 
-    const enrollOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Token ${token}`,
-      },
+      const enrollOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${token}`,
+        },
+      };
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
+        .then(assertResponse)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log('data from create course post', data);
+          const enrollParams = {
+            user: userId,
+            role: 1,
+            course: data.id,
+          };
+          enrollOptions.body = JSON.stringify(enrollParams);
+          console.log(enrollOptions);
+          return fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
+            enrollOptions
+          );
+        })
+        .then(() => dispatch(fetchEnrollments(token)));
     };
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
-      .then(assertResponse)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data from create course post', data);
-        const enrollParams = {
-          user: userId,
-          role: 1,
-          course: data.id,
-        };
-        enrollOptions.body = JSON.stringify(enrollParams);
-        console.log(enrollOptions);
-        return fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
-          enrollOptions
-        );
-      })
-      .then(() => dispatch(fetchEnrollments(token)));
-  };
 
 export function addedFromRoster(courseSlug, enrollments) {
   return {
@@ -366,12 +367,7 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function postRecording({
-  token,
-  slug,
-  assignmentId,
-  audio,
-}) {
+export function postRecording({ token, slug, assignmentId, audio }) {
   console.log('postRecording');
   return (dispatch) => {
     console.log('posting... audio, token, slug, assignmentId, ');
@@ -408,4 +404,27 @@ export function postRecording({
           });
       });
   };
+}
+
+export function gotSingleStudentAssignment(assignment) {
+  return {
+    type: types.Action.GotSingleAssignment,
+    payload: assignment,
+  };
+}
+
+export function fetchSingleStudentAssignment({ token, slug, assignmentId }) {
+  return (dispatch) =>
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then(assertResponse)
+      .then((response) => response.json())
+      .then((assignment) => dispatch(selectAssignment(assignment)));
 }

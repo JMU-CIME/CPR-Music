@@ -62,7 +62,10 @@ export default function CourseDetails() {
     <Layout>
       <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
       {currentEnrollment.role === 'Student' ? (
-        <StudentCourseView assignments={assignments} />
+        <StudentCourseView
+          assignments={assignments}
+          enrollment={currentEnrollment}
+        />
       ) : (
         <TeacherCourseView
           pieces={pieces}

@@ -24,6 +24,8 @@ function FlatEditor({
       sharingKey: score.sharingKey,
       appId: '60a51c906bcde01fc75a3ad0',
       controlsPosition: 'bottom',
+      // controlsDisplay: false, // these are paid embed features?? https://flat.io/embed#pricing
+      // controlsPlay: false,
     };
     if (edit) {
       embedParams.mode = 'edit';

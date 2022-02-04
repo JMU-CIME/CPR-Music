@@ -38,6 +38,7 @@
         "react/prop-types": "off",
         "default-param-last": "off",
         "default-case": "off",
-        "no-case-declarations": "off"
+        "no-case-declarations": "off",
+        "jsx-a11y/anchor-is-valid": "off"
     }
 }

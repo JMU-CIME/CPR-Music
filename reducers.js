@@ -34,7 +34,7 @@ const assignedPiecesReducer = (
     );
     pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
     pieces = pieces.filter((piece, i, arr) =>
-      i == 0 ? true : piece.id != arr[i - 1].id
+      i === 0 ? true : piece.id !== arr[i - 1].id
     );
     pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
 
@@ -52,8 +52,8 @@ const initialActivities = {
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
   case types.Action.GotActivities:
-    console.log('got activities', payload);
-    return { loaded: true, items: payload };
+    console.log('got activities', payload); // TODO: this reducer doesn't map
+    return { loaded: true, items: {[payload.slug]: payload.activities} };
   }
   return state;
 };
@@ -115,7 +115,7 @@ const initialCurrentUser = { loaded: false };
 const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   switch (type) {
   case types.Action.HaveUser:
-    console.log('haveuser in reducer', payload);
+    console.log('have user in reducer', payload);
     return {
       ...state,
       loaded: true,
@@ -154,7 +154,9 @@ const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
   switch (type) {
   case types.Action.SelectedEnrollment:
     console.log('SelectedEnrollment payload', payload);
-    return payload ?? state;
+    if (payload) {
+      return payload;
+    }
   }
   return state;
 };
