@@ -12,16 +12,19 @@ export const Action = Object.freeze({
   GotActivities: 'GotActivities',
   GotPieces: 'GotPieces',
   AssignedPiece: 'AssignedPiece',
+  UnassignedPiece: 'UnassignedPiece',
   HaveUser: 'HaveUser',
   GotProfile: 'GotProfile',
   SelectedEnrollment: 'SelectedEnrollment',
   SelectedAssignment: 'SelectedAssignment',
   GotSingleAssignment: 'GotSingleAssignment',
   SetInstrumentActive: 'SetInstrumentActive',
+  SetPieceChangeState: 'SetPieceChangeState',
 });
 
 export const ActivityState = Object.freeze({
   Inactive: 'Inactive',
   Active: 'Active',
   Erroneous: 'Erroneous',
+  Success: 'Success',
 });

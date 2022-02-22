@@ -40,6 +40,20 @@ const assignedPiecesReducer = (
 
     // return { loaded: true, items: pieces };
     return { ...state, items: { ...state.items, [payload.slug]: pieces } };
+  
+  case types.Action.AssignedPiece:
+    console.log('AssignedPiece', payload)
+    return {
+      ...state,
+      items: { ...state.items, [payload.slug]: [...state.items[payload.slug], payload.piece] }
+    }
+  
+  case types.Action.UnassignedPiece:
+    console.log('UnassignedPiece', payload)
+    return {
+      ...state,
+      items: { ...state.items, [payload.slug]: [...state.items[payload.slug].filter((pieceObj)=>pieceObj.id !== payload.piece.id)] }
+    }
   }
   return state;
 };

@@ -209,7 +209,7 @@ export function updateEnrollmentInstrument({
       .then((res) => res.json())
       .then((enrollment) => {
         dispatch(
-          setInstrumentActivity(enrollmentId, types.ActivityState.Inactive)
+          setInstrumentActivity(enrollmentId, types.ActivityState.Success)
         );
         dispatch(enrollmentUpdated({ enrollment, instrument }));
       })
@@ -312,10 +312,18 @@ export function fetchPieces(djangoToken) {
       });
 }
 
-export function assignedPiece(piece) {
+export function assignedPiece({ piece, slug }) {
   return {
     type: types.Action.AssignedPiece,
-    payload: piece,
+    payload: { piece, slug },
+  };
+}
+
+export function unassignedPiece({ piece, slug }) {
+  console.log('unassignedPiece({piece, slug})', piece, slug);
+  return {
+    type: types.Action.UnassignedPiece,
+    payload: { piece, slug },
   };
 }
 
@@ -331,13 +339,64 @@ export function assignPiece({ djangoToken, slug, piece }) {
           'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: JSON.stringify({ piece_id: piece }),
+        body: JSON.stringify({ piece_id: piece.id }),
         // body: data,
       }
     )
       .then(assertResponse)
       .then((response) => response.json())
-      .then((pieceResponse) => dispatch(assignedPiece(pieceResponse)));
+      .then((pieceResponse) => dispatch(assignedPiece({ piece, slug })));
+}
+
+export function setPieceChangeState({ piece, state }) {
+  return {
+    type: types.Action.SetPieceChangeState,
+    payload: { piece, state },
+  };
+}
+
+export function unassignPiece({ piece, slug, djangoToken }) {
+  return (dispatch) => {
+    dispatch(
+      setPieceChangeState({
+        pieceId: piece.id,
+        state: types.ActivityState.Active,
+      })
+    );
+    // const data = new FormData();
+    // data.append("piece_id", piece);
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/unassign/`,
+      {
+        headers: {
+          Authorization: `Token ${djangoToken}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify({ piece_id: piece.id }),
+        // body: data,
+      }
+    )
+      .then(assertResponse)
+      .then(() => dispatch(unassignedPiece({ piece, slug })))
+      .then(() =>
+        dispatch(
+          setPieceChangeState({
+            pieceId: piece.id,
+            state: types.ActivityState.Success,
+          })
+        )
+      )
+      .catch((err) => {
+        console.log('caught error in unassign', err);
+        dispatch(
+          setPieceChangeState({
+            pieceId: piece.id,
+            state: types.ActivityState.Erroneous,
+          })
+        );
+      });
+  };
 }
 
 export function gotUser(userInfo) {
