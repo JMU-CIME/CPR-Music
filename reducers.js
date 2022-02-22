@@ -91,7 +91,7 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
     console.log('GotRoster', payload);
     const items = {};
     payload.forEach((item) => {
-      items[item.id] = item;
+      items[item.id] = {...item, activityState: types.ActivityState.Inactive};
     });
     return { loaded: true, items };
   case types.Action.UpdatedEnrollmentInstrument:
@@ -106,6 +106,18 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
         },
       },
     };
+  case types.Action.SetInstrumentActive:
+    console.log('SetInstrumentActive', payload);
+    return {
+      ...state,
+      items: {
+        ...state.items,
+        [payload.enrollmentId]: {
+          ...state.items[payload.enrollmentId],
+          activityState: payload.activityState,
+        },
+      },
+    }; 
   }
   return state;
 };

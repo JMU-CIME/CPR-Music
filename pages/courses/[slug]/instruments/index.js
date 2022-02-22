@@ -10,7 +10,7 @@ import StudentInstrument from '../../../../components/forms/studentInstrument';
 import Layout from '../../../../components/layout';
 
 function Instruments() {
-  const userInfo = useSelector((state)=>state.currentUser)
+  const userInfo = useSelector((state) => state.currentUser);
   const { items: instruments, loaded: instrumentsLoaded } = useSelector(
     (state) => state.instruments
   );
@@ -19,18 +19,22 @@ function Instruments() {
   const router = useRouter();
   const { slug } = router.query;
   console.log('instruments', instruments);
+  console.log('slug', slug);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!instrumentsLoaded) {
-      dispatch(fetchInstruments(userInfo.token));
+    if ('token' in userInfo) {
+      if (!instrumentsLoaded) {
+        dispatch(fetchInstruments(userInfo.token));
+      }
+      // if (session) {
+      if (!roster.loaded && slug) {
+        console.log('userInfo', userInfo);
+        dispatch(
+          fetchRoster({ djangoToken: userInfo.token, courseSlug: slug })
+        );
+      }
     }
-    // if (session) {
-    if (!roster.loaded) {
-      dispatch(
-        fetchRoster({ djangoToken: userInfo.token, courseSlug: slug })
-      );
-    }
-  }, [dispatch]);
+  }, [dispatch, slug, userInfo]);
   const updateInstruments = (ev) => {};
   return (
     <Layout>
@@ -38,27 +42,25 @@ function Instruments() {
       <p>
         Below are the default instrument assignments for the students in this
         class. You can change their defaults below, or change their instrument
-        only for a specific assignment on an assignment's edit page. 
+        only for a specific assignment on an assignment's edit page.
       </p>
-      <p>
-        Changes made below will be automatically saved.
-      </p>
+      <p>Changes made below will be automatically saved.</p>
       <Form onSubmit={updateInstruments}>
         {roster.items &&
-          roster.items.filter((e) => (e.role !== "Teacher")).map((enrollment) => (
-            <StudentInstrument
-              key={enrollment.id}
-              enrollment={enrollment}
-              options={instruments}
-              token={userInfo.token}
-            />
-            // <p key={enrollment.id}>{enrollment.user.name}</p>
-          ))}
+          Object.values(roster.items)
+            .filter((e) => e.role !== 'Teacher')
+            .map((enrollment) => (
+              <StudentInstrument
+                key={enrollment.id}
+                enrollment={enrollment}
+                options={instruments}
+                token={userInfo.token}
+              />
+              // <p key={enrollment.id}>{enrollment.user.name}</p>
+            ))}
       </Form>
       <Link href={`/courses/${slug}/edit`}>
-        <Button variant="primary">
-          Return to Course Edit
-        </Button>
+        <Button variant="primary">Return to Course Edit</Button>
       </Link>
     </Layout>
   );

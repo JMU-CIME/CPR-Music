@@ -1,4 +1,3 @@
-
 export const SELECT_COURSE = 'SELECT_COURSE';
 
 export const Action = Object.freeze({
@@ -18,4 +17,11 @@ export const Action = Object.freeze({
   SelectedEnrollment: 'SelectedEnrollment',
   SelectedAssignment: 'SelectedAssignment',
   GotSingleAssignment: 'GotSingleAssignment',
+  SetInstrumentActive: 'SetInstrumentActive',
+});
+
+export const ActivityState = Object.freeze({
+  Inactive: 'Inactive',
+  Active: 'Active',
+  Erroneous: 'Erroneous',
 });

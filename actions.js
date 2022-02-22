@@ -32,11 +32,11 @@ export function fetchEnrollments(djangoToken) {
   return (dispatch) =>
     djangoToken
       ? retrieveEnrollments(djangoToken)
-        .then((courses) => dispatch(gotEnrollments(courses)))
-        .catch((...rest) => {
-          console.log('catch rest');
-          console.log(rest);
-        })
+          .then((courses) => dispatch(gotEnrollments(courses)))
+          .catch((...rest) => {
+            console.log('catch rest');
+            console.log(rest);
+          })
       : null;
 }
 
@@ -49,49 +49,49 @@ export const newCourse =
     token = '',
     userId,
   }) =>
-    (dispatch) => {
-      const params = {
-        name,
-        start_date,
-        end_date,
-        slug,
-        owner: userId,
-      };
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
-        },
-        body: JSON.stringify(params),
-      };
-
-      const enrollOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Token ${token}`,
-        },
-      };
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
-        .then(assertResponse)
-        .then((response) => response.json())
-        .then((data) => {
-          console.log('data from create course post', data);
-          const enrollParams = {
-            user: userId,
-            role: 1,
-            course: data.id,
-          };
-          enrollOptions.body = JSON.stringify(enrollParams);
-          console.log(enrollOptions);
-          return fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
-            enrollOptions
-          );
-        })
-        .then(() => dispatch(fetchEnrollments(token)));
+  (dispatch) => {
+    const params = {
+      name,
+      start_date,
+      end_date,
+      slug,
+      owner: userId,
     };
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+      body: JSON.stringify(params),
+    };
+
+    const enrollOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${token}`,
+      },
+    };
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
+      .then(assertResponse)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data from create course post', data);
+        const enrollParams = {
+          user: userId,
+          role: 1,
+          course: data.id,
+        };
+        enrollOptions.body = JSON.stringify(enrollParams);
+        console.log(enrollOptions);
+        return fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
+          enrollOptions
+        );
+      })
+      .then(() => dispatch(fetchEnrollments(token)));
+  };
 
 export function addedFromRoster(courseSlug, enrollments) {
   return {
@@ -138,12 +138,14 @@ export function fetchInstruments(djangoToken) {
         'Content-Type': 'application/json',
       },
     })
+      .then(assertResponse)
       .then((response) => response.json())
-      .then((instruments) =>
-        dispatch(
+      .then((instruments) => {
+        console.log('instruments', instruments);
+        return dispatch(
           gotInstruments(instruments.sort((a, b) => (a.name < b.name ? -1 : 1)))
-        )
-      );
+        );
+      });
 }
 
 export function gotRoster(enrollments) {
@@ -178,13 +180,21 @@ export function enrollmentUpdated({ enrollment, instrument }) {
   };
 }
 
+export function setInstrumentActivity(enrollmentId, activityState) {
+  return {
+    type: types.Action.SetInstrumentActive,
+    payload: { enrollmentId, activityState },
+  };
+}
+
 export function updateEnrollmentInstrument({
   djangoToken,
   enrollmentId,
   instrument,
 }) {
-  return (dispatch) =>
-    fetch(
+  return (dispatch) => {
+    dispatch(setInstrumentActivity(enrollmentId, types.ActivityState.Active));
+    return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/${enrollmentId}/`,
       {
         headers: {
@@ -197,9 +207,18 @@ export function updateEnrollmentInstrument({
     )
       .then(assertResponse)
       .then((res) => res.json())
-      .then((enrollment) =>
-        dispatch(enrollmentUpdated({ enrollment, instrument }))
-      );
+      .then((enrollment) => {
+        dispatch(
+          setInstrumentActivity(enrollmentId, types.ActivityState.Inactive)
+        );
+        dispatch(enrollmentUpdated({ enrollment, instrument }));
+      })
+      .catch(() => {
+        dispatch(
+          setInstrumentActivity(enrollmentId, types.ActivityState.Erroneous)
+        );
+      });
+  };
 }
 
 export function gotAssignments(assignments) {
