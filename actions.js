@@ -29,10 +29,12 @@ export function retrieveEnrollments(djangoToken) {
 }
 
 export function fetchEnrollments() {
+  console.info('fetchEnrollments');
   return (dispatch, getState) => {
-    const { currentUser: {token: djangoToken} } = getState();
-    return djangoToken
-      ? retrieveEnrollments(djangoToken)
+    const { currentUser: {token} } = getState();
+    console.log('fetchEnrollments has token:', token)
+    return token
+      ? retrieveEnrollments(token)
         .then((courses) => dispatch(gotEnrollments(courses)))
         .catch((...rest) => {
           console.log('catch rest');
@@ -48,10 +50,12 @@ export const newCourse =
     startDate: start_date,
     endDate: end_date,
     slug = 'slug',
-    token = '',
     userId,
   }) =>
-    (dispatch) => {
+    (dispatch, getState) => {
+      const {
+        currentUser: { token }
+      } = getState();
       const params = {
         name,
         start_date,
@@ -92,7 +96,7 @@ export const newCourse =
             enrollOptions
           );
         })
-        .then(() => dispatch(fetchEnrollments(token)));
+        .then(() => dispatch(fetchEnrollments()));
     };
 
 export function addedFromRoster(courseSlug, enrollments) {
@@ -105,13 +109,16 @@ export function addedFromRoster(courseSlug, enrollments) {
   };
 }
 
-export function uploadRoster({ body, djangoToken, courseSlug }) {
-  return (dispatch) =>
+export function uploadRoster({ body, courseSlug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token }
+    } = getState();
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${courseSlug}/roster/`,
       {
         headers: {
-          Authorization: `Token ${djangoToken}`,
+          Authorization: `Token ${token}`,
         },
         method: 'POST',
         body,
@@ -123,6 +130,7 @@ export function uploadRoster({ body, djangoToken, courseSlug }) {
         console.log('uploaded', res);
         dispatch(addedFromRoster(courseSlug, res));
       });
+  }
 }
 
 export function gotInstruments(instruments) {
@@ -132,11 +140,14 @@ export function gotInstruments(instruments) {
   };
 }
 
-export function fetchInstruments(djangoToken) {
-  return (dispatch) =>
+export function fetchInstruments() {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/instruments/`, {
       headers: {
-        Authorization: `Token ${djangoToken}`,
+        Authorization: `Token ${token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -148,6 +159,7 @@ export function fetchInstruments(djangoToken) {
           gotInstruments(instruments.sort((a, b) => (a.name < b.name ? -1 : 1)))
         );
       });
+  }
 }
 
 export function gotRoster(enrollments) {
@@ -157,19 +169,23 @@ export function gotRoster(enrollments) {
   };
 }
 
-export function fetchRoster({ djangoToken, courseSlug }) {
-  return (dispatch) =>
+export function fetchRoster({ courseSlug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${courseSlug}/roster/`,
       {
         headers: {
-          Authorization: `Token ${djangoToken}`,
+          Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
         },
       }
     )
       .then((response) => response.json())
       .then((enrollments) => dispatch(gotRoster(enrollments)));
+  }
 }
 
 export function enrollmentUpdated({ enrollment, instrument }) {
@@ -190,17 +206,19 @@ export function setInstrumentActivity(enrollmentId, activityState) {
 }
 
 export function updateEnrollmentInstrument({
-  djangoToken,
   enrollmentId,
   instrument,
 }) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     dispatch(setInstrumentActivity(enrollmentId, types.ActivityState.Active));
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/${enrollmentId}/`,
       {
         headers: {
-          Authorization: `Token ${djangoToken}`,
+          Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
         },
         method: 'PATCH',
@@ -230,8 +248,11 @@ export function gotAssignments(assignments) {
   };
 }
 
-export function fetchStudentAssignments({ token, slug }) {
-  return (dispatch) =>
+export function fetchStudentAssignments({ slug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
       {
@@ -243,6 +264,7 @@ export function fetchStudentAssignments({ token, slug }) {
     )
       .then((response) => response.json())
       .then((assignments) => dispatch(gotAssignments(assignments)));
+  }
 }
 
 export function loggedOut() {
@@ -251,8 +273,11 @@ export function loggedOut() {
   };
 }
 
-export function logoutUser(token) {
-  return (dispatch) =>
+export function logoutUser() {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token`, {
       method: 'DELETE',
       headers: {
@@ -263,6 +288,7 @@ export function logoutUser(token) {
       .then(assertResponse)
       .then((res) => res.json())
       .then(loggedOut);
+  }
 }
 
 export function gotActivities({ activities, slug }) {
@@ -275,8 +301,11 @@ export function gotActivities({ activities, slug }) {
   };
 }
 
-export function fetchActivities({ token, slug }) {
-  return (dispatch) =>
+export function fetchActivities({ slug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
       {
@@ -289,6 +318,7 @@ export function fetchActivities({ token, slug }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((activities) => dispatch(gotActivities({ activities, slug })));
+  }
 }
 
 export function gotPieces(pieces) {
@@ -298,11 +328,14 @@ export function gotPieces(pieces) {
   };
 }
 
-export function fetchPieces(djangoToken) {
-  return (dispatch) =>
+export function fetchPieces() {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/pieces/`, {
       headers: {
-        Authorization: `Token ${djangoToken}`,
+        Authorization: `Token ${token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -312,6 +345,7 @@ export function fetchPieces(djangoToken) {
         console.log('pieces', pieces);
         dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))));
       });
+  }
 }
 
 export function assignedPiece({ piece, slug }) {
@@ -329,15 +363,18 @@ export function unassignedPiece({ piece, slug }) {
   };
 }
 
-export function assignPiece({ djangoToken, slug, piece }) {
-  return (dispatch) =>
+export function assignPiece({ slug, piece }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     // const data = new FormData();
     // data.append("piece_id", piece);
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assign/`,
       {
         headers: {
-          Authorization: `Token ${djangoToken}`,
+          Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
         },
         method: 'POST',
@@ -348,6 +385,7 @@ export function assignPiece({ djangoToken, slug, piece }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((pieceResponse) => dispatch(assignedPiece({ piece, slug })));
+  }
 }
 
 export function setPieceChangeState({ piece, state }) {
@@ -357,8 +395,11 @@ export function setPieceChangeState({ piece, state }) {
   };
 }
 
-export function unassignPiece({ piece, slug, djangoToken }) {
-  return (dispatch) => {
+export function unassignPiece({ piece, slug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     dispatch(
       setPieceChangeState({
         pieceId: piece.id,
@@ -371,7 +412,7 @@ export function unassignPiece({ piece, slug, djangoToken }) {
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/unassign/`,
       {
         headers: {
-          Authorization: `Token ${djangoToken}`,
+          Authorization: `Token ${token}`,
           'Content-Type': 'application/json',
         },
         method: 'POST',
@@ -415,8 +456,11 @@ export function gotMyProfile(myProfile) {
   };
 }
 
-export function getUserProfile({ token }) {
-  return (dispatch) =>
+export function getUserProfile() {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/users/me/`, {
       headers: {
         Authorization: `Token ${token}`,
@@ -429,6 +473,7 @@ export function getUserProfile({ token }) {
         return results;
       })
       .then((myProfile) => dispatch(gotMyProfile(myProfile)));
+  }
 }
 
 export function selectEnrollment(enrollment) {
@@ -445,9 +490,12 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function postRecording({ token, slug, assignmentId, audio }) {
+export function postRecording({ slug, assignmentId, audio }) {
   console.log('postRecording');
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     console.log('posting... audio, token, slug, assignmentId, ');
     console.log('posting...', audio, token, slug, assignmentId);
     return fetch(
@@ -491,8 +539,11 @@ export function gotSingleStudentAssignment(assignment) {
   };
 }
 
-export function fetchSingleStudentAssignment({ token, slug, assignmentId }) {
-  return (dispatch) =>
+export function fetchSingleStudentAssignment({ slug, assignmentId }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
     fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}`,
       {
@@ -505,4 +556,5 @@ export function fetchSingleStudentAssignment({ token, slug, assignmentId }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((assignment) => dispatch(selectAssignment(assignment)));
+  }
 }

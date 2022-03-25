@@ -3,14 +3,12 @@ import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import Layout from '../components/layout';
 
-const Index = () => {
-  const dispatch = useDispatch();
-
+function Index() {
   return (
     <Layout>
       <h1>Welcome to Music CPR</h1>
     </Layout>
   );
-};
+}
 
 export default Index;

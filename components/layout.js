@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Navigation from './nav';
 import styles from './layout.module.css';
 import { getUserProfile, gotUser } from '../actions';
@@ -42,6 +42,9 @@ export default function Layout({ children }) {
       dispatch(getUserProfile({token: data.djangoToken}))
     }
   },[status, dispatch]);
+
+  const {loaded: userLoaded, token } = useSelector(state => state.currentUser)
+  console.log('layout token', token)
   return (
     <>
       <Head>
@@ -49,9 +52,12 @@ export default function Layout({ children }) {
         <meta name="description" content="Music CPR" />
       </Head>
       <Navigation />
-      <Container>
-        <main className={styles.container}>{children}</main>
-      </Container>
+      {
+        userLoaded && token ?
+          <Container>
+            <main className={styles.container}>{children}</main>
+          </Container> : <p>spinner</p>
+      }
     </>
   );
 }
