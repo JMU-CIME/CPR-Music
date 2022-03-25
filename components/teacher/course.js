@@ -58,7 +58,10 @@ export default function TeacherCourseView({
         <ListGroup>
           {assignedPieces && assignedPieces.length > 0 ? (
             assignedPieces.map((piece) => (
-              <ListGroupItem key={piece.id}>
+              <ListGroupItem
+                key={piece.id}
+                className="d-flex justify-content-between"
+              >
                 {piece.name}
                 <Button variant="danger" onClick={unassign(piece)}>
                   Delete

@@ -141,7 +141,7 @@ export default NextAuth({
       );
 
       if (url.startsWith(baseUrl)) {
-        //something
+        // something
       }
       // Allows relative callback URLs
       else if (url.startsWith('/')) {

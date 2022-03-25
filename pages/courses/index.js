@@ -23,7 +23,7 @@ function Courses({ myCourses }) {
   const userInfo = useSelector(state => state.currentUser)
   useEffect(() => {
     if (userInfo.loaded && !loaded) {
-      dispatch(fetchEnrollments(userInfo.token));
+      dispatch(fetchEnrollments());
     }
   }, [userInfo, dispatch]);
 

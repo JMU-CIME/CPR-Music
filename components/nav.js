@@ -7,7 +7,7 @@ import LoginOut from './loginout';
 
 function Navigation() {
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="sm">
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>Music CPR</Navbar.Brand>
