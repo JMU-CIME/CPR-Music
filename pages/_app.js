@@ -1,14 +1,20 @@
 import { SessionProvider } from 'next-auth/react';
-import { wrapper } from '../store';
 import '../styles/global.css';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { wrapper } from '../store';
 
 export function App({ Component, pageProps: { session, ...pageProps } }) {
+  const queryClient = new QueryClient()
   return (
-    <SessionProvider session={session}>
-      <Component {...pageProps} />
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 }
 

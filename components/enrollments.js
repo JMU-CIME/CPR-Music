@@ -10,22 +10,29 @@ import {
   FaEdit,
   FaPlus,
 } from 'react-icons/fa';
-import { fetchEnrollments } from "../actions";
+import { useQuery } from "react-query";
+import { getEnrollments } from "../api";
+// import { fetchEnrollments } from "../actions";
 
 export default function Enrollments({ children }) {
-  const dispatch = useDispatch();
-  const { items: enrollments, loaded } = useSelector(
-    (state) => state.enrollments
-  );
+  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
+  if (isLoading) return 'Loading...'
+  if (error) return `An error has occurred: ${  error.message}`
 
-  useEffect(() => {
-    if (!loaded) {
-      dispatch(fetchEnrollments());
-    } else {
-      console.log('enrollments dont need to be fetched', enrollments)
-    }
-  }, [dispatch]);
+  // const dispatch = useDispatch();
+  // const { items: enrollments, loaded } = useSelector(
+  //   (state) => state.enrollments
+  // );
 
+  // useEffect(() => {
+  //   if (!loaded) {
+  //     dispatch(fetchEnrollments());
+  //   } else {
+  //     console.log('enrollments dont need to be fetched', enrollments)
+  //   }
+  // }, [dispatch]);
+
+  console.log('enrollmentsenrollments', enrollments)
   return (
     <div className="course-list">
       {enrollments &&
