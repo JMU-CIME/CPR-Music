@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import Layout from "../../../../components/layout";
 import StudentCourseView from "../../../../components/student/course";
 
 export default function PieceActivities() {
@@ -6,7 +7,7 @@ export default function PieceActivities() {
 return (
   <Layout>
     <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
-    {currentEnrollment.role === 'Student' ? (
+    {/* {currentEnrollment.role === 'Student' ? (
       <StudentCourseView
         assignments={assignments}
         enrollment={currentEnrollment}
@@ -17,7 +18,7 @@ return (
         assignedPieces={assignedPieces}
         assignments={assignments}
       />
-    )}
+    )} */}
   </Layout>
 );
     }
