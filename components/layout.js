@@ -44,7 +44,6 @@ export default function Layout({ children }) {
   },[status, dispatch]);
 
   const {loaded: userLoaded, token } = useSelector(state => state.currentUser)
-  console.log('layout token', token)
   return (
     <>
       <Head>
@@ -53,7 +52,7 @@ export default function Layout({ children }) {
       </Head>
       <Navigation />
       {
-        userLoaded && token ?
+        !PUBLIC_PATHS.includes(router.pathname) && userLoaded && token || PUBLIC_PATHS.includes(router.pathname) ?
           <Container>
             <main className={styles.container}>{children}</main>
           </Container> : <p>spinner</p>

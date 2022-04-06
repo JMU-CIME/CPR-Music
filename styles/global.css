@@ -1,6 +1,10 @@
 .course-item {
   width: 18rem;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
+  color: black;
+}
+.course-item .card-body {
+  min-height: 5.5rem;
 }
 
 .course-item:first-child {
@@ -10,10 +14,54 @@
 .course-list {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
   /* align-items: space; */
 }
 
 .form-control.date-field {
   display: inline-block;
   width: 4rem;
+}
+
+.card-color {
+  min-height: 10rem;
+  background-color: red;
+}
+
+a:nth-of-type(2) .card .card-color {
+  background-color: green;
+}
+
+a:nth-of-type(3) .card .card-color {
+  background-color: blue;
+}
+
+a:nth-of-type(4) .card .card-color {
+  background-color: magenta;
+}
+
+a:nth-of-type(5) .card .card-color {
+  background-color: cyan;
+}
+
+a:nth-of-type(6) .card .card-color {
+  background-color: #450084;
+}
+
+.course-item {
+  text-decoration: none;
+}
+.card-group {
+  margin-bottom: 1rem;
+}
+.card-group .card-img-top {
+  min-height: 8rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.artistic-process {
+  font-size: 8rem;
 }

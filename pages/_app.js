@@ -7,7 +7,13 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { wrapper } from '../store';
 
 export function App({ Component, pageProps: { session, ...pageProps } }) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  })
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>

@@ -6,6 +6,7 @@ import Embed from 'flat-embed';
 
 function FlatEditor({
   edit = false,
+  height = 450,
   score = {
     score: '61e09029dffcd50014571a80',
     sharingKey:
@@ -32,7 +33,7 @@ function FlatEditor({
     }
     embed = new Embed(editorRef.current, {
       score: score.score,
-      height: '450',
+      height: `${height}`,
       width: '100%',
       embedParams,
     });
