@@ -5,11 +5,12 @@ import StudentCourseView from "../../../../components/student/course";
 
 export default function PieceActivities() {
   const router = useRouter();
-  const { slug } = router.query;
+  const { slug , piece} = router.query;
   
   return (
     <Layout>
-      <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
+      <p>{slug} - {piece}</p>
+      
       {/* {currentEnrollment.role === 'Student' ? (
       <StudentCourseView
         assignments={assignments}
