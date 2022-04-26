@@ -77,7 +77,8 @@ export default function TeacherCourseView(){
   if (isLoading || isLoadingAssignedActs || !assignedPieces) return 'Loading...'
   if (error || errorAssignedActs) return `An error has occurred: ${  error?.message ?? errorAssignedActs?.message}`
   
-  
+  console.log('assigned', assignedPieces)
+
   return (
     <Row>
       <Col>

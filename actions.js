@@ -450,6 +450,7 @@ export function gotUser(userInfo) {
 }
 
 export function gotMyProfile(myProfile) {
+  console.log('myprofile', myProfile)
   return {
     type: types.Action.GotProfile,
     payload: myProfile,
