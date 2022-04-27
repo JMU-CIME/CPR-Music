@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Link from 'next/link';
+import TranspositionBadge from '../transpositionBadge';
 // on the student's course view:
 // show the name of the course
 // show the assignments that still need to be completed
@@ -29,8 +30,7 @@ export default function StudentCourseView({ assignments, enrollment }) {
                   }`}
                 >
                   <a>
-                    {assn.part.piece.name} {assn.activity.activity_type.name}
-                    {assn.instrument.name}
+                    {assn.part.piece.name} {assn.activity.activity_type.name} <TranspositionBadge instrument={assn.instrument} />
                   </a>
                 </Link>
               </ListGroupItem>

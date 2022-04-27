@@ -186,3 +186,22 @@ export function mutateGradeSubmission(slug) {
         .then((response) => response.json())
     })
 }
+
+export function mutateCreateSubmission({slug, assignmentId}) {
+  console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
+  return (submission) => getSession()
+    .then((session) => {
+      const token = session.djangoToken;
+      console.log('mutateCreateSubmission, session, submission', session, submission)
+      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(submission),
+      })
+    })
+    .then(assertResponse)
+    .then((res) => res.json())
+}

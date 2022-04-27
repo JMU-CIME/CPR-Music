@@ -11,6 +11,7 @@ import { postRecording } from '../../../../actions';
 import Layout from '../../../../components/layout';
 // import { postRecording, selectAssignment } from '../../../../actions';
 import Recorder from '../../../../components/recorder';
+
 const FlatEditor = dynamic(() => import('../../../../components/flatEditor'), {
   ssr: false,
 });

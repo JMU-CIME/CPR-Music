@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchStudentAssignments,
-  fetchActivities,
+  // fetchActivities,
   fetchPieces,
   selectEnrollment,
   fetchEnrollments,
@@ -21,15 +21,15 @@ import TeacherCourseView from '../../../components/teacher/course';
 export default function CourseDetails() {
   // get assignments/activities
   // const userInfo = useSelector((state) => state.currentUser);
-  // const dispatch = useDispatch();
-  // const { items: assignments, loaded: loadedAssignments } = useSelector(
-  //   (state) => state.assignments
-  // );
+  const dispatch = useDispatch();
+  const { items: assignments, loaded: loadedAssignments } = useSelector(
+    (state) => state.assignments
+  );
   const router = useRouter();
   const { slug } = router.query;
   const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
-
+  console.log('currentEnrollment', currentEnrollment)
 
   // const enrollments = useSelector((state) => state.enrollments);
 
@@ -45,14 +45,9 @@ export default function CourseDetails() {
   //   }
   // }, [userInfo, dispatch]);
 
-  // useEffect(() => {
-  //   if (userInfo.token) {
-  //     dispatch(fetchStudentAssignments({ token: userInfo.token, slug }));
-  //     dispatch(fetchActivities({ token: userInfo.token, slug }));
-  //     // dispatch(fetchPieces(userInfo.token));
-  //   }
-    
-  // }, [slug, dispatch, userInfo]);
+  useEffect(() => {
+    dispatch(fetchStudentAssignments({ slug }));
+  }, [slug, dispatch]);
 
   // useEffect(() => {
   //   console.log('enrollments to filter', enrollments);
@@ -75,8 +70,8 @@ export default function CourseDetails() {
           <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
           {currentEnrollment.role === 'Student' ? (
             <StudentCourseView
-              // assignments={assignments}
-              // enrollment={currentEnrollment}
+              assignments={assignments}
+              enrollment={currentEnrollment}
             />
           ) : (
             <TeacherCourseView

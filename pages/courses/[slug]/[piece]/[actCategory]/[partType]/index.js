@@ -13,6 +13,7 @@ import {
 } from '../../../../../../actions';
 import Layout from '../../../../../../components/layout';
 import Recorder from '../../../../../../components/recorder';
+
 const FlatEditor = dynamic(
   () => import('../../../../../../components/flatEditor'),
   {
@@ -32,19 +33,19 @@ export default function PerformMelody() {
   const assignment = useSelector((state) => state.selectedAssignment);
   useEffect(() => {
     if (loadedActivities){
-    dispatch(
-      fetchSingleStudentAssignment({
-        token: userInfo.token,
-        slug,
-        assignmentId: activities[slug].filter(
-          (assn) =>
-            assn.part.piece.slug === piece &&
+      dispatch(
+        fetchSingleStudentAssignment({
+          token: userInfo.token,
+          slug,
+          assignmentId: activities[slug].filter(
+            (assn) =>
+              assn.part.piece.slug === piece &&
             assn.activity.part_type === partType &&
             assn.activity.activity_type.category === actCategory 
 
-        ),
-      })
-    );}
+          ),
+        })
+      );}
   }, [dispatch, slug, userInfo, activities]);
 
   return (

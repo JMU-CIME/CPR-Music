@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import CreativityActivity from "../../../../../components/student/creativity";
 import RespondActivity from "../../../../../components/student/respond";
 
-export default function () {
+export default function CreateRespondActivity () {
 
   const router = useRouter();
   const { slug, piece, actCategory } = router.query;
