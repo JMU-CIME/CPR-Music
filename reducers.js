@@ -9,7 +9,7 @@ const mockAssignments = {
 const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
   switch (type) {
   case types.Action.GotAssignments:
-    console.log('got assignments', payload);
+    // console.log('got assignments', payload);
     return {
       loaded: true,
       items: payload,
@@ -42,14 +42,14 @@ const assignedPiecesReducer = (
     return { ...state, items: { ...state.items, [payload.slug]: pieces } };
   
   case types.Action.AssignedPiece:
-    console.log('AssignedPiece', payload)
+    // console.log('AssignedPiece', payload)
     return {
       ...state,
       items: { ...state.items, [payload.slug]: [...state.items[payload.slug], payload.piece] }
     }
   
   case types.Action.UnassignedPiece:
-    console.log('UnassignedPiece', payload)
+    // console.log('UnassignedPiece', payload)
     return {
       ...state,
       items: { ...state.items, [payload.slug]: [...state.items[payload.slug].filter((pieceObj)=>pieceObj.id !== payload.piece.id)] }
@@ -66,7 +66,7 @@ const initialActivities = {
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
   case types.Action.GotActivities:
-    console.log('got activities', payload); // TODO: this reducer doesn't map
+    // console.log('got activities', payload); // TODO: this reducer doesn't map
     return { loaded: true, items: {[payload.slug]: payload.activities} };
   }
   return state;
@@ -77,7 +77,7 @@ const initialPieces = { loaded: false, items: [] };
 const piecesReducer = (state = initialPieces, { type, payload }) => {
   switch (type) {
   case types.Action.GotPieces:
-    console.log('got pieces', payload);
+    // console.log('got pieces', payload);
     return { loaded: true, items: payload };
   }
   return state;
@@ -88,10 +88,10 @@ const mockEnrollments = { loaded: false, items: [] };
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
   case types.Action.AddedRoster:
-    console.log('addedRoster', payload);
+    // console.log('addedRoster', payload);
     return state;
   case types.Action.GotEnrollments:
-    console.log('GotEnrollments', payload);
+    // console.log('GotEnrollments', payload);
     return { loaded: true, items: payload };
   }
   return state;
@@ -102,14 +102,14 @@ const mockRoster = { loaded: false, items: [] };
 const rosterReducer = (state = mockRoster, { type, payload }) => {
   switch (type) {
   case types.Action.GotRoster:
-    console.log('GotRoster', payload);
+    // console.log('GotRoster', payload);
     const items = {};
     payload.forEach((item) => {
       items[item.id] = {...item, activityState: types.ActivityState.Inactive};
     });
     return { loaded: true, items };
   case types.Action.UpdatedEnrollmentInstrument:
-    console.log('UpdatedEnrollmentInstrument', payload);
+    // console.log('UpdatedEnrollmentInstrument', payload);
     return {
       ...state,
       items: {
@@ -121,7 +121,7 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
       },
     };
   case types.Action.SetInstrumentActive:
-    console.log('SetInstrumentActive', payload);
+    // console.log('SetInstrumentActive', payload);
     return {
       ...state,
       items: {
@@ -141,7 +141,7 @@ const initialCurrentUser = { loaded: false };
 const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   switch (type) {
   case types.Action.HaveUser:
-    console.log('have user in reducer', payload);
+    // console.log('have user in reducer', payload);
     return {
       ...state,
       loaded: true,
@@ -149,13 +149,13 @@ const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
       token: payload.token,
     };
   case types.Action.GotProfile:
-    console.log('types.Action.GotProfile', payload);
+    // console.log('types.Action.GotProfile', payload);
     return {
       ...state,
       ...payload,
     };
   case types.Action.LoggedOut:
-    console.log('LoggedOut', payload);
+    // console.log('LoggedOut', payload);
     return { loaded: false };
   }
   return state;
@@ -166,7 +166,7 @@ const mockInstruments = { loaded: false, items: [] };
 const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
   switch (type) {
   case types.Action.GotInstruments:
-    console.log('GotInstruments', payload);
+    // console.log('GotInstruments', payload);
     const items = {};
     payload.forEach((instrument) => {
       items[instrument.id] = instrument;
@@ -179,7 +179,7 @@ const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
 const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
   switch (type) {
   case types.Action.SelectedEnrollment:
-    console.log('SelectedEnrollment payload', payload);
+    // console.log('SelectedEnrollment payload', payload);
     if (payload) {
       return payload;
     }
@@ -190,7 +190,7 @@ const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
 const selectedAssignmentReducer = (state = {}, { type, payload }) => {
   switch (type) {
   case types.Action.SelectedAssignment:
-    console.log('SelectedAssignment payload', payload);
+    // console.log('SelectedAssignment payload', payload);
     return payload;
   }
   return state;

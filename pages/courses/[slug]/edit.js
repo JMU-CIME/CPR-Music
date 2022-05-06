@@ -39,8 +39,8 @@ export default function EditCourse() {
   }, [slug, dispatch]);
 
   const selectedEnrollment = enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0];
-  console.log('pieces', pieces);
-  console.log('pieces.items', pieces.items);
+  // console.log('pieces', pieces);
+  // console.log('pieces.items', pieces.items);
 
   return (
     <Layout>

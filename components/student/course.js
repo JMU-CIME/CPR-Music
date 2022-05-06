@@ -11,6 +11,11 @@ import TranspositionBadge from '../transpositionBadge';
 
 export default function StudentCourseView({ assignments, enrollment }) {
   console.log('student assignments', assignments);
+  // const submittedAssignments = assignments.filter((assn) => {})
+  // const outstandingAssignments = []
+
+
+
   return (
     <Row>
       <Col>

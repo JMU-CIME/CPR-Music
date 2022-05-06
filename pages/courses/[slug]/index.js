@@ -29,7 +29,7 @@ export default function CourseDetails() {
   const { slug } = router.query;
   const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
-  console.log('currentEnrollment', currentEnrollment)
+  // console.log('currentEnrollment', currentEnrollment)
 
   // const enrollments = useSelector((state) => state.enrollments);
 

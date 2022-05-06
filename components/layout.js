@@ -36,7 +36,7 @@ export default function Layout({ children }) {
   });
   const dispatch = useDispatch()
   useEffect(() => {
-    console.log('status', status, data)
+    // console.log('status', status, data)
     if (status === "authenticated") {
       dispatch(gotUser({user:data.user, token: data.djangoToken}))
       dispatch(getUserProfile({token: data.djangoToken}))

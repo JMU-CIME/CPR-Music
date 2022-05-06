@@ -8,18 +8,22 @@ import { FaCheck, FaFrownOpen } from 'react-icons/fa';
 
 function FlatEditor({
   edit = false,
-  height = 450,
+  height,
   score = {
     // scoreId: '61e09029dffcd50014571a80',
-    sharingKey:
-      '169f2baebaa5721b4442b124fc984cce26f7e63312fb597d187f9c4d0e3aa1897df093c3bec76af250eb3ca0f36eb4f645ac70f470a695ccd217a1ce0cd52120',
+    // sharingKey:
+    //   '169f2baebaa5721b4442b124fc984cce26f7e63312fb597d187f9c4d0e3aa1897df093c3bec76af250eb3ca0f36eb4f645ac70f470a695ccd217a1ce0cd52120',
   },
   onSubmit,
-  submittingStatus = 'idle'
+  submittingStatus = 'idle',
+  scoreJSON,
 }) {
+  console.log('flat io embed log', score)
   const [json, setJson] = useState('');
+  const [embed, setEmbed] = useState();
+  const [refId, setRefId] = useState('0');
   const editorRef = React.createRef();
-  let embed;
+  
   const refreshJSON = () => {
     embed.getJSON().then((jsonData) => {
       const data = JSON.stringify(jsonData);
@@ -29,34 +33,71 @@ function FlatEditor({
       }
     });
   };
-
-  useEffect(() => {
-    console.log('flatioscore param', score)
-
+  useEffect(()=>{
     const embedParams = {
-      sharingKey: score.sharingKey,
+      // sharingKey: score.sharingKey,
       appId: '60a51c906bcde01fc75a3ad0',
       controlsPosition: 'bottom',
       // controlsDisplay: false, // these are paid embed features?? https://flat.io/embed#pricing
       // controlsPlay: false,
     };
+    let computedHeight = 300;
     if (edit) {
       embedParams.mode = 'edit';
+      console.log('height', height)
+      if (!height) {
+        computedHeight = 450;
+        console.log('set height to 450')
+        console.log('flatHeight', computedHeight)
+      }
+    } else if (height) {
+      console.log('set height to explicit')
+      computedHeight = height;
     }
+
+    console.log('computedHeight', computedHeight)
     const allParams = {
-      // score: score.scoreId,
-      height: `${height}`,
+      height: `${computedHeight}`,
       width: '100%',
       embedParams,
     }
-    if(score.scoreId) {
-      allParams.score = score.scoreId;
-      console.log('got scoreId', allParams)
+    console.log('allp', allParams)
+    
+    // embed = new Embed(editorRef.current, allParams);
+    setEmbed(new Embed(editorRef.current, allParams));
+  }, [edit, height])
+
+  useEffect(() => {
+    console.log('flat useeffect:: score: ', score, " embed: ", embed)
+    if(score.scoreId && score.sharingKey && embed) {
+      console.log('got score as param', score)
+      embed.loadFlatScore({
+        score: score.scoreId, 
+        sharingKey: score.sharingKey
+      })
+        .then(()=>{
+          console.log('score loaded from scoreId', score.scoreId)
+          setRefId(score.scoreId)
+        })
+        .catch((e) => {
+          console.error('score not loaded from scoreId');
+          console.error(e);
+        })
+      
+    } else if (scoreJSON && embed) {
+      console.log('loadJSON', scoreJSON)
+      embed.loadJSON(scoreJSON)
+        .then(()=>{
+          console.log('score loaded from json')
+          setRefId(score.scoreId)
+        })
+        .catch((e) => {
+          console.error('score not loaded from json');
+          console.error(e);
+        })
     }
-    if (typeof window !== "undefined") {
-      embed = new Embed(editorRef.current, allParams);
-    }
-  }, []);
+    
+  }, [score, scoreJSON, embed]);
 
   return (
     <>
@@ -79,7 +120,7 @@ function FlatEditor({
                 <FaCheck /> : submittingStatus === 'error' && <FaFrownOpen />
               }
             </Button>
-            <pre style={{ whiteSpace: 'pre-wrap' }}>{json}</pre>
+            {/* <pre style={{ whiteSpace: 'pre-wrap' }}>{json}</pre> */}
           </Col>
         </Row>
       )}

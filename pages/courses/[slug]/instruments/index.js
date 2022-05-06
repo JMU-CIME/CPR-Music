@@ -15,11 +15,11 @@ function Instruments() {
     (state) => state.instruments
   );
   const roster = useSelector((state) => state.roster);
-  console.log('roster', roster);
+  // console.log('roster', roster);
   const router = useRouter();
   const { slug } = router.query;
-  console.log('instruments', instruments);
-  console.log('slug', slug);
+  // console.log('instruments', instruments);
+  // console.log('slug', slug);
   const dispatch = useDispatch();
   useEffect(() => {
     if ('token' in userInfo) {
@@ -28,7 +28,7 @@ function Instruments() {
       }
       // if (session) {
       if (!roster.loaded && slug) {
-        console.log('userInfo', userInfo);
+        // console.log('userInfo', userInfo);
         dispatch(
           fetchRoster({ djangoToken: userInfo.token, courseSlug: slug })
         );

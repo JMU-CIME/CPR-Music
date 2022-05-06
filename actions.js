@@ -29,10 +29,10 @@ export function retrieveEnrollments(djangoToken) {
 }
 
 export function fetchEnrollments() {
-  console.info('fetchEnrollments');
+  // console.info('fetchEnrollments');
   return (dispatch, getState) => {
     const { currentUser: {token} } = getState();
-    console.log('fetchEnrollments has token:', token)
+    // console.log('fetchEnrollments has token:', token)
     return token
       ? retrieveEnrollments(token)
         .then((courses) => dispatch(gotEnrollments(courses)))
@@ -83,14 +83,14 @@ export const newCourse =
         .then(assertResponse)
         .then((response) => response.json())
         .then((data) => {
-          console.log('data from create course post', data);
+          // console.log('data from create course post', data);
           const enrollParams = {
             user: userId,
             role: 1,
             course: data.id,
           };
           enrollOptions.body = JSON.stringify(enrollParams);
-          console.log(enrollOptions);
+          // console.log(enrollOptions);
           return fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
             enrollOptions
@@ -127,7 +127,7 @@ export function uploadRoster({ body, courseSlug }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((res) => {
-        console.log('uploaded', res);
+        // console.log('uploaded', res);
         dispatch(addedFromRoster(courseSlug, res));
       });
   }
@@ -154,7 +154,7 @@ export function fetchInstruments() {
       .then(assertResponse)
       .then((response) => response.json())
       .then((instruments) => {
-        console.log('instruments', instruments);
+        // console.log('instruments', instruments);
         return dispatch(
           gotInstruments(instruments.sort((a, b) => (a.name < b.name ? -1 : 1)))
         );
@@ -342,7 +342,7 @@ export function fetchPieces() {
       .then(assertResponse)
       .then((response) => response.json())
       .then((pieces) => {
-        console.log('pieces', pieces);
+        // console.log('pieces', pieces);
         dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))));
       });
   }
@@ -356,7 +356,7 @@ export function assignedPiece({ piece, slug }) {
 }
 
 export function unassignedPiece({ piece, slug }) {
-  console.log('unassignedPiece({piece, slug})', piece, slug);
+  // console.log('unassignedPiece({piece, slug})', piece, slug);
   return {
     type: types.Action.UnassignedPiece,
     payload: { piece, slug },
@@ -431,7 +431,7 @@ export function unassignPiece({ piece, slug }) {
         )
       )
       .catch((err) => {
-        console.log('caught error in unassign', err);
+        // console.log('caught error in unassign', err);
         dispatch(
           setPieceChangeState({
             pieceId: piece.id,
@@ -450,7 +450,7 @@ export function gotUser(userInfo) {
 }
 
 export function gotMyProfile(myProfile) {
-  console.log('myprofile', myProfile)
+  // console.log('myprofile', myProfile)
   return {
     type: types.Action.GotProfile,
     payload: myProfile,
@@ -492,13 +492,13 @@ export function selectAssignment(assignment) {
 }
 
 export function postRecording({ slug, assignmentId, audio }) {
-  console.log('postRecording');
+  // console.log('postRecording');
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
-    console.log('posting... audio, token, slug, assignmentId, ');
-    console.log('posting...', audio, token, slug, assignmentId);
+    // console.log('posting... audio, token, slug, assignmentId, ');
+    // console.log('posting...', audio, token, slug, assignmentId);
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
       {
@@ -512,7 +512,7 @@ export function postRecording({ slug, assignmentId, audio }) {
       .then(assertResponse)
       .then((res) => res.json())
       .then((submission) => {
-        console.log('new submission', submission);
+        // console.log('new submission', submission);
         fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submission.id}/attachments/`,
           {
@@ -526,7 +526,7 @@ export function postRecording({ slug, assignmentId, audio }) {
           .then(assertResponse)
           .then((response) => response.json())
           .then((res) => {
-            console.log('uploaded recording', res);
+            // console.log('uploaded recording', res);
             // dispatch(addedFromRoster(courseSlug, res));
           });
       });

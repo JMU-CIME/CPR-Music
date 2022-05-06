@@ -22,7 +22,7 @@ export function getEnrollments() {
     })
 }
 export function getAllPieces() {
-  console.log('begin: getAllPieces')
+  // console.log('begin: getAllPieces')
   return getSession()
     .then((session) => {
       const token = session.djangoToken;
@@ -34,14 +34,14 @@ export function getAllPieces() {
       })
         .then(assertResponse)
         .then((response) => {
-          console.log('end: getAllPieces')
+          // console.log('end: getAllPieces')
           return response.json()
         })
       
     })
 }
 export function getAssignedPieces(slug) {
-  console.log('begin: getAssignedPieces')
+  // console.log('begin: getAssignedPieces')
   return () => getSession()
     .then((session) => {
       const token = session.djangoToken;
@@ -57,7 +57,7 @@ export function getAssignedPieces(slug) {
     })
     .then(assertResponse)
     .then((response) => {
-      console.log('end: getAssignedPieces');
+      // console.log('end: getAssignedPieces');
       return response.json();
     })
     .then((assignments) => {
@@ -81,7 +81,7 @@ export function mutateAssignPiece(slug) {
   return (piece) => getSession()
     .then((session) =>  {
       const token = session.djangoToken;
-      console.log('assignpiece now', token, slug, piece)
+      // console.log('assignpiece now', token, slug, piece)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assign/`,
         {
@@ -102,7 +102,7 @@ export function mutateUnassignPiece(slug) {
   return (piece) => getSession()
     .then((session) =>  {
       const token = session.djangoToken;
-      console.log('unassignpiece now', token, slug, piece)
+      // console.log('unassignpiece now', token, slug, piece)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/unassign/`,
         {
@@ -121,7 +121,7 @@ export function getRecentSubmissions({ slug, piece, partType }) {
   return ()=> getSession()
     .then((session) => {
       const token = session.djangoToken;
-      console.log('fetch submissions: slug, piece, partType: ', slug, piece, partType)
+      // console.log('fetch submissions: slug, piece, partType: ', slug, piece, partType)
       return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/submissions/recent/?piece_slug=${piece}&activity_name=${partType}`, {
         headers: {
           Authorization: `Token ${token}`,
@@ -161,11 +161,11 @@ export function mutateGradeSubmission(slug) {
     grader}) => getSession()
     .then((session) =>  {
       const token = session.djangoToken;
-      console.log('grade submission now', token, slug, submission,
-        rhythm,
-        tone,
-        expression,
-        grader)
+      // console.log('grade submission now', token, slug, submission,
+      //   rhythm,
+      //   tone,
+      //   expression,
+      //   grader)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/grades/`,
         {
@@ -188,11 +188,11 @@ export function mutateGradeSubmission(slug) {
 }
 
 export function mutateCreateSubmission({slug, assignmentId}) {
-  console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
+  // console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
   return (submission) => getSession()
     .then((session) => {
       const token = session.djangoToken;
-      console.log('mutateCreateSubmission, session, submission', session, submission)
+      // console.log('mutateCreateSubmission, session, submission', session, submission)
       return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`, {
         headers: {
           Authorization: `Token ${token}`,
