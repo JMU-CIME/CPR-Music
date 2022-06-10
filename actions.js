@@ -3,7 +3,7 @@ import * as types from './types';
 
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
-  if (response.status >= 200 || response.status < 300) {
+  if (response.status >= 200 && response.status < 300) {
     return response;
   }
   throw new Error(`${response.status}: ${response.statusText}`);
@@ -153,12 +153,12 @@ export function fetchInstruments() {
     })
       .then(assertResponse)
       .then((response) => response.json())
-      .then((instruments) => {
+      .then((instruments) => 
         // console.log('instruments', instruments);
-        return dispatch(
+        dispatch(
           gotInstruments(instruments.sort((a, b) => (a.name < b.name ? -1 : 1)))
-        );
-      });
+        )
+      );
   }
 }
 
@@ -491,7 +491,7 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function postRecording({ slug, assignmentId, audio }) {
+export function postRecording({ slug, assignmentId, audio, composition }) {
   // console.log('postRecording');
   return (dispatch, getState) => {
     const {
@@ -499,14 +499,19 @@ export function postRecording({ slug, assignmentId, audio }) {
     } = getState();
     // console.log('posting... audio, token, slug, assignmentId, ');
     // console.log('posting...', audio, token, slug, assignmentId);
+    let body = audio;
+    if (composition) {
+      body = JSON.stringify({content: composition})
+    }
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
       {
         headers: {
           Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
         },
         method: 'POST',
-        body: audio,
+        body,
       }
     )
       .then(assertResponse)

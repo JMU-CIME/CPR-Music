@@ -1,7 +1,7 @@
 import { getSession } from "next-auth/react";
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
-  if (response.status >= 200 || response.status < 300) {
+  if (response.status >= 200 && response.status < 300) {
     return response;
   }
   throw new Error(`${response.status}: ${response.statusText}`);
@@ -21,6 +21,25 @@ export function getEnrollments() {
       });
     })
 }
+
+export function getStudentAssignments(slug) {
+  console.log('slug in query fn', slug)
+  return () => getSession()
+    .then((session) => {
+      const token = session.djangoToken;
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+    })
+    .then((response) => response.json())
+}
+
 export function getAllPieces() {
   // console.log('begin: getAllPieces')
   return getSession()
@@ -33,10 +52,10 @@ export function getAllPieces() {
         },
       })
         .then(assertResponse)
-        .then((response) => {
+        .then((response) => 
           // console.log('end: getAllPieces')
-          return response.json()
-        })
+          response.json()
+        )
       
     })
 }
@@ -56,10 +75,10 @@ export function getAssignedPieces(slug) {
       )
     })
     .then(assertResponse)
-    .then((response) => {
+    .then((response) => 
       // console.log('end: getAssignedPieces');
-      return response.json();
-    })
+      response.json()
+    )
     .then((assignments) => {
       const pieces = {}
       assignments.forEach((assignment) => { 
@@ -186,7 +205,7 @@ export function mutateGradeSubmission(slug) {
         .then((response) => response.json())
     })
 }
-
+// should i make this mutator optionally have a recording or??
 export function mutateCreateSubmission({slug, assignmentId}) {
   // console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
   return (submission) => getSession()
@@ -204,4 +223,24 @@ export function mutateCreateSubmission({slug, assignmentId}) {
     })
     .then(assertResponse)
     .then((res) => res.json())
+}
+
+export function getMySubmissionsForAssignment ({slug, assignmentId}) {
+  console.log('getMySubmissionsForAssignment', assignmentId)
+  return getSession()
+    .then((session) => {
+      const token = session.djangoToken;
+      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`, {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })      
+    })
+    .then(assertResponse)
+    .then((response) => response.json())
+    .then((resultsJson) => {
+      console.log('end: getMySubmissionsForAssignment', resultsJson, resultsJson.length)
+      return resultsJson
+    })
 }

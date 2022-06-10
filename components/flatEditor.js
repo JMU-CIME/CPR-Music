@@ -17,12 +17,20 @@ function FlatEditor({
   onSubmit,
   submittingStatus = 'idle',
   scoreJSON,
+  onUpdate,
 }) {
   console.log('flat io embed log', score)
   const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
   const editorRef = React.createRef();
+
+  // const getComposition = () => {
+  //   return embed.getJSON().then((jsonData) => {
+  //     const data = JSON.stringify(jsonData);
+  //     setJson(data);
+  //   })
+  // }
   
   const refreshJSON = () => {
     embed.getJSON().then((jsonData) => {
@@ -78,6 +86,20 @@ function FlatEditor({
         .then(()=>{
           console.log('score loaded from scoreId', score.scoreId)
           setRefId(score.scoreId)
+          if (edit) {
+            embed.off('noteDetails')
+            embed.on('noteDetails', (info) => {
+              console.log('noteDetails', info);
+              console.log('pitch', info.pitches)
+              embed.getJSON().then((jsonData) => {
+                const data = JSON.stringify(jsonData);
+                setJson(data);
+                if (onUpdate) {
+                  onUpdate(data);
+                }
+              });
+            });
+          }
         })
         .catch((e) => {
           console.error('score not loaded from scoreId');
@@ -90,6 +112,52 @@ function FlatEditor({
         .then(()=>{
           console.log('score loaded from json')
           setRefId(score.scoreId)
+          // console.log(editorRef.current.querySelector('*'))
+          // embed.on('playbackPosition', (info) => {
+          //   console.log('playbackPosition', info);
+          // });
+          // embed.on('scoreLoaded', (info) => {
+          //   console.log('scoreLoaded', info);
+          // });
+          // embed.on('cursorPosition', (info) => {
+          //   console.log('cursorPosition', info);
+          // });
+          // embed.on('cursorContext', (info) => {
+          //   console.log('cursorContext', info);
+          // });
+          // embed.on('measureDetails', (info) => {
+          //   console.log('measureDetails', info);
+          // });
+          if (edit) {
+            embed.off('noteDetails')
+            embed.on('noteDetails', (info) => {
+              console.log('noteDetails', info);
+              console.log('pitch', info.pitches)
+              embed.getJSON().then((jsonData) => {
+                const data = JSON.stringify(jsonData);
+                setJson(data);
+                if (onUpdate) {
+                  onUpdate(data);
+                }
+              });
+            });
+          }
+          // embed.on('rangeSelection', (info) => {
+          //   console.log('rangeSelection', info);
+          // });
+          // embed.on('fullscreen', (info) => {
+          //   console.log('fullscreen', info);
+          // });
+          // embed.on('play', (info) => {
+          //   console.log('play', info);
+          // });
+          // embed.on('pause', (info) => {
+          //   console.log('pause', info);
+          // });
+          // embed.on('stop', (info) => {
+          //   console.log('stop', info);
+          // });
+
         })
         .catch((e) => {
           console.error('score not loaded from json');
@@ -106,7 +174,7 @@ function FlatEditor({
           <div ref={editorRef} />
         </Col>
       </Row>
-      {edit && (
+      {/* {edit && (
         <Row>
           <Col style={{ maxWidth: '40%', whiteSpace: 'pre-wrap' }}>
             <Button onClick={refreshJSON} disabled={submittingStatus === 'loading'}>
@@ -120,10 +188,9 @@ function FlatEditor({
                 <FaCheck /> : submittingStatus === 'error' && <FaFrownOpen />
               }
             </Button>
-            {/* <pre style={{ whiteSpace: 'pre-wrap' }}>{json}</pre> */}
           </Col>
         </Row>
-      )}
+      )} */}
     
     </>
   );

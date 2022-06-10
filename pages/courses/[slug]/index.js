@@ -9,7 +9,7 @@ import {
   selectEnrollment,
   fetchEnrollments,
 } from '../../../actions';
-import { getEnrollments } from '../../../api';
+import { getEnrollments, getStudentAssignments } from '../../../api';
 import Layout from '../../../components/layout';
 import StudentCourseView from '../../../components/student/course';
 import TeacherCourseView from '../../../components/teacher/course';
@@ -21,12 +21,16 @@ import TeacherCourseView from '../../../components/teacher/course';
 export default function CourseDetails() {
   // get assignments/activities
   // const userInfo = useSelector((state) => state.currentUser);
-  const dispatch = useDispatch();
-  const { items: assignments, loaded: loadedAssignments } = useSelector(
-    (state) => state.assignments
-  );
+  // const dispatch = useDispatch();
+  // const { items: assignments, loaded: loadedAssignments } = useSelector(
+  //   (state) => state.assignments
+  // );
   const router = useRouter();
   const { slug } = router.query;
+  console.log('slug from router', slug);
+  const { isLoading: loaded, error: assignmentsError, data: assignments } = useQuery('assignments', getStudentAssignments(slug), {
+    enabled: !!slug
+  })
   const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
   // console.log('currentEnrollment', currentEnrollment)
@@ -45,9 +49,9 @@ export default function CourseDetails() {
   //   }
   // }, [userInfo, dispatch]);
 
-  useEffect(() => {
-    dispatch(fetchStudentAssignments({ slug }));
-  }, [slug, dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchStudentAssignments({ slug }));
+  // }, [slug, dispatch]);
 
   // useEffect(() => {
   //   console.log('enrollments to filter', enrollments);

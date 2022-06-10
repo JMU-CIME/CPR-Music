@@ -3,15 +3,26 @@ import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import { FaBook, FaDrum, FaGuitar, FaPenFancy } from "react-icons/fa";
-import { ListGroup, Tab } from "react-bootstrap";
+import ListGroup from "react-bootstrap/ListGroup";
+import Spinner from "react-bootstrap/Spinner";
+import Tab from "react-bootstrap/Tab";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useQuery } from "react-query";
 import Layout from "../layout";
 import Instructions from "./instructions";
+import { getMySubmissionsForAssignment } from "../../api";
 
 export default function StudentAssignment({children, assignment}) {
   const router = useRouter();
+
   const { slug, piece, actCategory, partType } = router.query;
+  console.log('slug, assignmentId', slug, assignment.id)
+  const { isLoading, isIdle, error, data: submissions } = useQuery(['submissions',slug,assignment.id], () => getMySubmissionsForAssignment({slug, assignmentId:assignment.id}), {
+    enabled: !!assignment && !!slug
+  })
+
+  console.log('submissions', submissions)
   return (
     <Layout>
       <Row>
@@ -50,17 +61,24 @@ export default function StudentAssignment({children, assignment}) {
           </Tab.Container>
         </Col>
         <Col>
-          <h1>{assignment?.part?.piece?.name} - Perform {assignment?.activity?.part_type} Activity</h1>
+          <h1>{assignment?.activity?.part_type !== "Combined" && `${assignment?.activity?.activity_type.category} `}{assignment?.activity?.activity_type.name} Activity</h1>
+          {/* {assignment?.activity?.part_type !== "Combined" && <h1>{`${assignment?.activity?.part_type} Activity`}</h1>} */}
           {/* instructions */}
           <Instructions body={assignment?.activity?.body}/>
           {/* tasks */}
           {children}
         </Col>
-        <Col md={2}>
-          {/* assignment meta (submit, resubmit, else?) */}
+        {/* <Col md={2}>
           <h2>Assignment</h2>
+          { isLoading ? <Spinner as="span"
+            animation="border"
+            size="sm"
+            role="status"
+            aria-hidden="true">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner> : <p>{submissions && submissions.length} Submissions: {submissions.length}</p> }
           <Button>Submit</Button>
-        </Col>
+        </Col> */}
       </Row>
     </Layout>
   )

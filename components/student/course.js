@@ -21,7 +21,7 @@ export default function StudentCourseView({ assignments, enrollment }) {
       <Col>
         <h2>Student Course View</h2>
         <ListGroup>
-          {assignments &&
+          {assignments && Array.isArray(assignments) && 
             assignments.map((assn) => (
               <ListGroupItem key={assn.id}>
                 <Link
