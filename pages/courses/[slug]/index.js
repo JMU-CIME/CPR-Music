@@ -13,6 +13,8 @@ import { getEnrollments, getStudentAssignments } from '../../../api';
 import Layout from '../../../components/layout';
 import StudentCourseView from '../../../components/student/course';
 import TeacherCourseView from '../../../components/teacher/course';
+import Link from 'next/link';
+import Button from 'react-bootstrap/Button';
 
 
 // this is the course details page. it should show different things to the
@@ -78,11 +80,18 @@ export default function CourseDetails() {
               enrollment={currentEnrollment}
             />
           ) : (
-            <TeacherCourseView
-              // pieces={pieces}
-              // assignedPieces={assignedPieces}
-              // assignments={assignments}
-            />
+            <div>
+              <Link href={`/courses/${slug}/edit`}>
+                <Button variant="primary">Edit Course Details</Button>
+              </Link>
+              <div className="my-5">
+                <TeacherCourseView
+                  // pieces={pieces}
+                  // assignedPieces={assignedPieces}
+                  // assignments={assignments}
+                />
+              </div>
+            </div>
           )}
         </>
       }
