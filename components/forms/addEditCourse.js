@@ -36,7 +36,7 @@ export default function AddEditCourse() {
     ev.preventDefault();
     ev.stopPropagation();
 
-    let x = dispatch(
+    dispatch(
       newCourse({
         name,
         startDate,
@@ -44,9 +44,7 @@ export default function AddEditCourse() {
         token: userInfo.token,
         userId: userInfo.id,
       })
-    );
-
-    x.then((newSlug) => {
+    ).then((newSlug) => {
         router.push(`/courses/${newSlug}/edit`);
 
   });
