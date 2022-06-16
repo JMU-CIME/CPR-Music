@@ -44,11 +44,11 @@ export default function AddEditCourse() {
         token: userInfo.token,
         userId: userInfo.id,
       })
-    );
+    ).then((newSlug) => {
+        router.push(`/courses/${newSlug}/edit`);
 
-    // navigate back to the course list
-    router.push('/courses');
-  };
+  });
+}
   return (
     <div className="my-5">
       <h2>{verb} Course</h2>

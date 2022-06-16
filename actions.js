@@ -52,7 +52,7 @@ export const newCourse =
     slug = 'slug',
     userId,
   }) =>
-    (dispatch, getState) => {
+    async(dispatch, getState) => {
       const {
         currentUser: { token }
       } = getState();
@@ -79,7 +79,8 @@ export const newCourse =
           Authorization: `Token ${token}`,
         },
       };
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
+      var newSlug;
+      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/`, options)
         .then(assertResponse)
         .then((response) => response.json())
         .then((data) => {
@@ -89,6 +90,7 @@ export const newCourse =
             role: 1,
             course: data.id,
           };
+          newSlug = data.slug;
           enrollOptions.body = JSON.stringify(enrollParams);
           // console.log(enrollOptions);
           return fetch(
@@ -97,6 +99,7 @@ export const newCourse =
           );
         })
         .then(() => dispatch(fetchEnrollments()));
+      return newSlug;
     };
 
 export function addedFromRoster(courseSlug, enrollments) {
