@@ -36,7 +36,7 @@ export default function AddEditCourse() {
     ev.preventDefault();
     ev.stopPropagation();
 
-    dispatch(
+    let x = dispatch(
       newCourse({
         name,
         startDate,
@@ -46,9 +46,11 @@ export default function AddEditCourse() {
       })
     );
 
-    // navigate back to the course list
-    router.push('/courses');
-  };
+    x.then((newSlug) => {
+        router.push(`/courses/${newSlug}/edit`);
+
+  });
+}
   return (
     <div className="my-5">
       <h2>{verb} Course</h2>
