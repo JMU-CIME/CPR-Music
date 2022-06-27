@@ -25,7 +25,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env.local
+# .env.local # i don't care we need to be able to test
 .env.development.local
 .env.test.local
 .env.production.local
