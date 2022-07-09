@@ -9,6 +9,9 @@ function assertResponse(response) {
 export function getEnrollments() {
   return getSession()
     .then((session) => {
+      if (!session || !session.djangoToken) {
+        return {}
+      }
       const token = session.djangoToken;
       return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
         headers: {

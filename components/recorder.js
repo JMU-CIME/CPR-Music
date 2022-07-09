@@ -116,7 +116,7 @@ export default function Recorder({ submit }) {
 
         {isRecording ? (
           <Button onClick={stopRecording}>
-            <FaStop />
+            <FaStop /> Stop Recording
           </Button>
         ) : (
           <Button onClick={startRecording}>
