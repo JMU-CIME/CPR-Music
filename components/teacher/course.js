@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 // import { assignPiece, unassignPiece } from '../../actions';
 import Link from 'next/link';
-import { getAssignedPieces, getAllPieces, mutateUnassignPiece, mutateAssignPiece } from '../../api';
+import { getAssignedPieces, getAllPieces, mutateUnassignPiece, mutateAssignPiece, getStudentAssignments } from '../../api';
 
 // for the teacher, it should:
 // 1. permit assigning of pieces
@@ -18,19 +18,31 @@ import { getAssignedPieces, getAllPieces, mutateUnassignPiece, mutateAssignPiece
 // 3. invite to grade an assignment (this is weird bc it's at a level below piece while #1 is at the piece level)
 // 
 
-// export default function TeacherCourseView({
-//   assignedPieces,
-//   pieces,
-//   assignments,
-// }) {
 export default function TeacherCourseView(){
   const queryClient = useQueryClient()
   const router = useRouter();
   const { slug } = router.query;
   const { isLoading, error, data: allPieces } = useQuery('allPieces', getAllPieces)
-  const { isLoadingAssignedActs, errorAssignedActs, data: assignedPieces } = useQuery('assignedPieces', getAssignedPieces(slug))
+  const {
+    isLoading: loaded,
+    error: assignmentsError,
+    data: assignments,
+    refetch: refetchStudentAssns,  // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property, 
+    // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
+  } = useQuery('assignments', getStudentAssignments(slug), {
+    enabled: !!slug,
+  });
+  const { isLoadingAssignedActs,
+    errorAssignedActs,
+    data: assignedPieces,
+    refetch: refetchAssignedPieces,  // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property, 
+    // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
+  } = useQuery('assignedPieces', getAssignedPieces(assignments), {
+    enabled: !!assignments
+  })
   const unassignMutation = useMutation(mutateUnassignPiece(slug),  {
     onMutate: async (unassignedPiece) => {
+      console.log('unassignMutation - onMutate')
       console.log('unassignedPiece', unassignedPiece)
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries('assignedPieces')
@@ -43,34 +55,47 @@ export default function TeacherCourseView(){
     },
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, unassignedPiece, context) => {
+      console.log('unassignMutation - onError')
       queryClient.setQueryData('assignedPieces', context.previousAssigned)
     },
     // Always refetch after error or success:
-    onSettled: () => {
-      queryClient.invalidateQueries('assignedPieces')
+    onSettled: async () => {
+      console.log('unassignMutation - onSettled')
+      await queryClient.invalidateQueries('assignments')
+      await refetchStudentAssns();
+      await queryClient.invalidateQueries('assignedPieces')
+      refetchAssignedPieces() // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property, 
+      // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
     },
   });
   const unassign = (piece) => unassignMutation.mutate(piece)
 
   const assignMutation = useMutation(mutateAssignPiece(slug), {
     onMutate: async (newPiece) => {
+      console.log('assignMutation - onMutate')
       console.log('newPiece', newPiece)
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries('assignedPieces')
       // Snapshot the previous value
       const previousAssigned = queryClient.getQueryData('assignedPieces')
       // Optimistically update to the new value
-      queryClient.setQueryData('assignedPieces', old => {console.log('old', old); return {...old, [newPiece.slug]:newPiece}})
+      queryClient.setQueryData('assignedPieces', old => {console.log('old', old); console.log('optimistic', { ...old, [newPiece.slug]: newPiece }); return {...old, [newPiece.slug]:newPiece}})
       // Return a context object with the snapshotted value
       return { previousAssigned }
     },
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, newPiece, context) => {
+      console.log('assignMutation - onError')
       queryClient.setQueryData('assignedPieces', context.previousAssigned)
     },
     // Always refetch after error or success:
-    onSettled: () => {
-      queryClient.invalidateQueries('assignedPieces')
+    onSettled: async () => {
+      console.log('assignMutation - onSettled')
+      await queryClient.invalidateQueries('assignments');
+      await refetchStudentAssns()
+      await queryClient.invalidateQueries('assignedPieces')
+      refetchAssignedPieces(); // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property, 
+      // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
     },
   });
   const assign = (piece) => assignMutation.mutate(piece)
@@ -107,23 +132,6 @@ export default function TeacherCourseView(){
       </Col>
       <Col>
         <h2>Assigned Pieces</h2>
-        {/* <ListGroup>
-          {assignedPieces && Object.values(assignedPieces).length > 0 ? (
-            Object.values(assignedPieces).map((piece) => (
-              <ListGroupItem
-                key={piece.id}
-                className="d-flex justify-content-between"
-              >
-                {piece.name}
-                <Button variant="danger" onClick={() => {console.log('unassign click', piece);unassign(piece)}}>
-                  Delete
-                </Button>
-              </ListGroupItem>
-            ))
-          ) : (
-            <p>There are no pieces assigned to this course.</p>
-          )}
-        </ListGroup> */}
         
         {assignedPieces && Object.values(assignedPieces).length > 0 ? (
           <Accordion defaultActiveKey={Object.values(assignedPieces)[0]} alwaysOpen>

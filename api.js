@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
   if (response.status >= 200 && response.status < 300) {
@@ -7,101 +7,87 @@ function assertResponse(response) {
   throw new Error(`${response.status}: ${response.statusText}`);
 }
 export function getEnrollments() {
-  return getSession()
-    .then((session) => {
-      if (!session || !session.djangoToken) {
-        return {}
-      }
-      const token = session.djangoToken;
-      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }).then((response, ...rest) => {
-        const results = response.json();
-        return results;
-      });
-    })
+  return getSession().then((session) => {
+    if (!session || !session.djangoToken) {
+      return {};
+    }
+    const token = session.djangoToken;
+    return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    }).then((response, ...rest) => {
+      const results = response.json();
+      return results;
+    });
+  });
 }
 
 export function getStudentAssignments(slug) {
-  console.log('slug in query fn', slug)
-  return () => getSession()
-    .then((session) => {
-      const token = session.djangoToken;
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-    })
-    .then((response) => response.json())
+  return () => {
+    console.log('getStudentAssignments');
+    return getSession()
+      .then((session) => {
+        const token = session.djangoToken;
+        return fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+      })
+      .then((response) => response.json())
+      .then((results) => {
+        console.log('results', results);
+        return results;
+      });
+  };
 }
 
 export function getAllPieces() {
   // console.log('begin: getAllPieces')
-  return getSession()
-    .then((session) => {
-      const token = session.djangoToken;
-      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/pieces/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-        .then(assertResponse)
-        .then((response) => 
-          // console.log('end: getAllPieces')
-          response.json()
-        )
-      
+  return getSession().then((session) => {
+    const token = session.djangoToken;
+    return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/pieces/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
     })
+      .then(assertResponse)
+      .then((response) =>
+        // console.log('end: getAllPieces')
+        response.json()
+      );
+  });
 }
-export function getAssignedPieces(slug) {
-  // console.log('begin: getAssignedPieces')
-  return () => getSession()
-    .then((session) => {
-      const token = session.djangoToken;
-      return fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
-        {
-          headers: {
-            Authorization: `Token ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      )
-    })
-    .then(assertResponse)
-    .then((response) => 
-      // console.log('end: getAssignedPieces');
-      response.json()
-    )
-    .then((assignments) => {
-      const pieces = {}
-      assignments.forEach((assignment) => { 
-        const pieceSlug = assignment.part.piece.slug
-        if (!(pieceSlug in pieces)) {
-          pieces[pieceSlug] = {
-            ...assignment.part.piece,
-            activities: {}
-          }
-        }
-        const act_type = assignment.activity.activity_type
-        pieces[pieceSlug].activities[`${act_type.category}-${act_type.name}`] = act_type;
-      })
-      return pieces;
-    })
+export function getAssignedPieces(assignments) {
+  return () => {
+    console.log('getAssignedPieces', assignments);
+    const pieces = {};
+    assignments.forEach((assignment) => {
+      const pieceSlug = assignment.part.piece.slug;
+      if (!(pieceSlug in pieces)) {
+        pieces[pieceSlug] = {
+          ...assignment.part.piece,
+          activities: {},
+        };
+      }
+      const act_type = assignment.activity.activity_type;
+      pieces[pieceSlug].activities[`${act_type.category}-${act_type.name}`] =
+        act_type;
+    });
+    return pieces;
+  };
 }
 
 export function mutateAssignPiece(slug) {
-  return (piece) => getSession()
-    .then((session) =>  {
+  return (piece) =>
+    getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('assignpiece now', token, slug, piece)
       return fetch(
@@ -113,16 +99,16 @@ export function mutateAssignPiece(slug) {
           },
           method: 'POST',
           body: JSON.stringify({ piece_id: piece.id }),
-        // body: data,
+          // body: data,
         }
       )
         .then(assertResponse)
-        .then((response) => response.json())
-    })
+        .then((response) => response.json());
+    });
 }
 export function mutateUnassignPiece(slug) {
-  return (piece) => getSession()
-    .then((session) =>  {
+  return (piece) =>
+    getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('unassignpiece now', token, slug, piece)
       return fetch(
@@ -134,26 +120,32 @@ export function mutateUnassignPiece(slug) {
           },
           method: 'POST',
           body: JSON.stringify({ piece_id: piece.id }),
-        // body: data,
+          // body: data,
         }
-      )
-    })
+      );
+    });
 }
 export function getRecentSubmissions({ slug, piece, partType }) {
-  return ()=> getSession()
-    .then((session) => {
+  return () =>
+    getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('fetch submissions: slug, piece, partType: ', slug, piece, partType)
-      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/submissions/recent/?piece_slug=${piece}&activity_name=${partType}`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/submissions/recent/?piece_slug=${piece}&activity_name=${partType}`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
         .then(assertResponse)
         .then((response) => response.json())
-        .then((data) => {console.log('gotRecentSubmissions', data); return data;})
-    })
+        .then((data) => {
+          console.log('gotRecentSubmissions', data);
+          return data;
+        });
+    });
   // const p = new Promise((resolve, reject) => {
   //   setTimeout(() => {
   //     console.log('received gradable submissions for slug, piece, actCategory, partType', slug, piece, actCategory, partType)
@@ -172,16 +164,12 @@ export function getRecentSubmissions({ slug, piece, partType }) {
   //   }, 2000)
   // })
   // return p
-    // })
+  // })
 }
 
 export function mutateGradeSubmission(slug) {
-  return ({submission,
-    rhythm,
-    tone,
-    expression,
-    grader}) => getSession()
-    .then((session) =>  {
+  return ({ submission, rhythm, tone, expression, grader }) =>
+    getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('grade submission now', token, slug, submission,
       //   rhythm,
@@ -196,54 +184,67 @@ export function mutateGradeSubmission(slug) {
             'Content-Type': 'application/json',
           },
           method: 'POST',
-          body: JSON.stringify({ submission,
+          body: JSON.stringify({
+            submission,
             rhythm,
             tone,
             expression,
-            grader }),
-        // body: data,
+            grader,
+          }),
+          // body: data,
         }
       )
         .then(assertResponse)
-        .then((response) => response.json())
-    })
+        .then((response) => response.json());
+    });
 }
 // should i make this mutator optionally have a recording or??
-export function mutateCreateSubmission({slug, assignmentId}) {
+export function mutateCreateSubmission({ slug, assignmentId }) {
   // console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
-  return (submission) => getSession()
-    .then((session) => {
-      const token = session.djangoToken;
-      // console.log('mutateCreateSubmission, session, submission', session, submission)
-      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(submission),
+  return (submission) =>
+    getSession()
+      .then((session) => {
+        const token = session.djangoToken;
+        // console.log('mutateCreateSubmission, session, submission', session, submission)
+        return fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+              'Content-Type': 'application/json',
+            },
+            method: 'POST',
+            body: JSON.stringify(submission),
+          }
+        );
       })
-    })
-    .then(assertResponse)
-    .then((res) => res.json())
+      .then(assertResponse)
+      .then((res) => res.json());
 }
 
-export function getMySubmissionsForAssignment ({slug, assignmentId}) {
-  console.log('getMySubmissionsForAssignment', assignmentId)
+export function getMySubmissionsForAssignment({ slug, assignmentId }) {
+  console.log('getMySubmissionsForAssignment', assignmentId);
   return getSession()
     .then((session) => {
       const token = session.djangoToken;
-      return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`, {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })      
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
     })
     .then(assertResponse)
     .then((response) => response.json())
     .then((resultsJson) => {
-      console.log('end: getMySubmissionsForAssignment', resultsJson, resultsJson.length)
-      return resultsJson
-    })
+      console.log(
+        'end: getMySubmissionsForAssignment',
+        resultsJson,
+        resultsJson.length
+      );
+      return resultsJson;
+    });
 }
