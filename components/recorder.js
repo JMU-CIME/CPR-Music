@@ -19,6 +19,8 @@ export default function Recorder({ submit }) {
   const [isBlocked, setIsBlocked] = useState(false);
   const [recorder, setRecorder] = useState(new MicRecorder());
   const dispatch = useDispatch();
+  const [min, setMinute] = useState(0);
+  const [sec, setSecond] = useState(0);
 
   const startRecording = (ev) => {
     console.log('startRecording', ev);
@@ -85,6 +87,28 @@ export default function Recorder({ submit }) {
     }
   }, []);
 
+  useEffect(() => {
+    let interval = null;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setSecond(sec => sec + 1);
+        if (sec == 59) {
+          setMinute(min => min + 1);
+          setSecond(sec => 0);
+        }
+        if (min == 99) {
+          setMinute(min => 0);
+          setSecond(sec => 0);
+        }
+      }, 1000);
+    } else if (!isRecording && sec !== 0) {
+      setMinute(min => 0);
+      setSecond(sec => 0);
+      clearInterval(interval);
+    }
+    return () => { clearInterval(interval); };
+  }, [isRecording, sec]);
+
   return (
     <Row>
       <Col>
@@ -113,17 +137,18 @@ export default function Recorder({ submit }) {
       <Col>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <audio src={blobURL} />
-
+        
         {isRecording ? (
           <Button onClick={stopRecording}>
-            <FaStop /> Stop Recording
+            <FaStop /> {String(min).padStart(2, '0')}:{String(sec).padStart(2, '0')}
           </Button>
         ) : (
           <Button onClick={startRecording}>
-            <FaMicrophone />
+            <FaMicrophone /> 
           </Button>
         )}
       </Col>
     </Row>
   );
+
 }
