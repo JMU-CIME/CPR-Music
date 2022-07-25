@@ -18,7 +18,7 @@ function SignOut() {
     <Layout>
       <Row>
         <Col md={4}>
-          <h1>Are you sure you?</h1>
+          <h1>Are you sure you want to Sign Out?</h1>
           <Button variant="warning" onClick={logout}>
             Sign out
           </Button>
