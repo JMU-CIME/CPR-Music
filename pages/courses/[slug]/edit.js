@@ -1,58 +1,49 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import { FaMusic } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  fetchActivities,
-  fetchEnrollments,
-  fetchPieces,
-} from '../../../actions';
+import { useQuery } from 'react-query';
+import Spinner from 'react-bootstrap/Spinner';
 import AddEditCourse from '../../../components/forms/addEditCourse';
-import AddEditStudent from '../../../components/forms/addEditStudent';
+// import AddEditStudent from '../../../components/forms/addEditStudent';
 import UploadStudents from '../../../components/forms/uploadStudents';
 import Layout from '../../../components/layout';
+import { getEnrollments, mutateCourse } from '../../../api';
 
 export default function EditCourse() {
   const router = useRouter();
   const { slug } = router.query;
-  const enrollments = useSelector((state) => state.enrollments);
-  const pieces = useSelector((state) => state.pieces);
-  const dispatch = useDispatch();
-  const userInfo = useSelector((state)=>state.currentUser)
 
-  useEffect(() => {
-    // TODO
-    // we drop these conditions because ...? 
-    //    we should fetch based on slugs every time we get here?
-    //    even though 2 of these don't pass slug? maybe those should be only once?
-    // if (!enrollments.loaded) {
-    dispatch(fetchEnrollments(userInfo.token));
-    // }
-    // if (!activities.loaded) {
-    dispatch(fetchActivities({ token: userInfo.token, slug }));
-    // }
-    // if (!pieces.loaded) {
-    dispatch(fetchPieces(userInfo.token));
-    // }
-  }, [slug, dispatch]);
+  const {
+    isLoading,
+    error,
+    data: enrollments,
+  } = useQuery('enrollments', getEnrollments);
+  const currentEnrollment =
+    enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0];
 
-  const selectedEnrollment = enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0];
-  // console.log('pieces', pieces);
-  // console.log('pieces.items', pieces.items);
 
-  return (
+  return isLoading ? (
+    <Spinner
+      as="span"
+      animation="border"
+      size="sm"
+      role="status"
+      aria-hidden="true"
+    >
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  ) : (
     <Layout>
-      <h1>Edit {selectedEnrollment?.course?.name}</h1>
+      <h1>Edit {currentEnrollment?.course?.name}</h1>
 
       <Link href={`/courses/${slug}/instruments`}>
         <Button variant="primary">
-          Set Instrument Assignments <FaMusic/>
+          Set Instrument Assignments <FaMusic />
         </Button>
       </Link>
       <AddEditCourse />
-      <AddEditStudent />
+      {/* <AddEditStudent /> */}
       <UploadStudents />
     </Layout>
   );
