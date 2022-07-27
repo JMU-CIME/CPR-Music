@@ -16,7 +16,7 @@ function LoginOut() {
       </Nav.Link>
     </Link>
   ) : (
-    <Link href="/auth/signin" passHref>
+    <Link href="/auth/signin?callbackUrl=/courses" passHref>
       <Nav.Link>Login</Nav.Link>
     </Link>
   );
