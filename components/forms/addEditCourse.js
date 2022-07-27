@@ -53,8 +53,12 @@ export default function AddEditCourse() {
   // );
 
   const [name, setName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startDate, setStartDate] = useState(
+    today.toISOString().substring(0, 10)
+  );
+  const [endDate, setEndDate] = useState(
+    sampleEnd.toISOString().substring(0, 10)
+  );
 
   useEffect(() => {
     if (selectedCourse) {
