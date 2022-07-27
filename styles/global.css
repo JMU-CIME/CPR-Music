@@ -65,3 +65,26 @@ a:nth-of-type(6) .card .card-color {
 .artistic-process {
   font-size: 8rem;
 }
+
+.show-out {
+  visibility: hidden;
+  opacity: 0;
+  animation: fade 2s linear;
+  /* transition: visibility 0s 2s, opacity 2s linear; */
+}
+
+@keyframes fade {
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.hiding {
+  visibility: hidden;
+  opacity: 0;
+}

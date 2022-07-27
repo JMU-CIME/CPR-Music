@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
+import Spinner from 'react-bootstrap/Spinner';
 import { fetchInstruments, fetchRoster } from '../../../../actions';
 import StudentInstrument from '../../../../components/forms/studentInstrument';
 import Layout from '../../../../components/layout';
@@ -46,7 +47,7 @@ function Instruments() {
       </p>
       <p>Changes made below will be automatically saved.</p>
       <Form onSubmit={updateInstruments}>
-        {roster.items &&
+        {roster?.items && Object.values(roster.items).length ? (
           Object.values(roster.items)
             .filter((e) => e.role !== 'Teacher')
             .map((enrollment) => (
@@ -57,7 +58,18 @@ function Instruments() {
                 token={userInfo.token}
               />
               // <p key={enrollment.id}>{enrollment.user.name}</p>
-            ))}
+            ))
+        ) : (
+          <Spinner
+            as="span"
+            animation="border"
+            size="sm"
+            role="status"
+            aria-hidden="true"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        )}
       </Form>
       <Link href={`/courses/${slug}/edit`}>
         <Button variant="primary">Return to Course Edit</Button>

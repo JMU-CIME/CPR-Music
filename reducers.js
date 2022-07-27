@@ -117,6 +117,7 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
         [payload.enrollment.id]: {
           ...state.items[payload.enrollment.id],
           instrument: payload.instrument,
+          activityState: types.ActivityState.Success,
         },
       },
     };
