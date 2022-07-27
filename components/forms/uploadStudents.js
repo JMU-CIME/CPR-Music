@@ -43,6 +43,7 @@ function UploadStudents() {
       <p>
         Create a <abbr title="Comma-Separated Value">CSV</abbr> file with format format <code>fullname,username,password,grade</code>
       </p>
+      <p>We provide <a download href="/roster-for-musiccpr.csv">this example roster csv file</a> in case it's easiest to just edit that.</p>
       <Form onSubmit={uploadStudents}>
         <Form.Group as={Row} className="mb-3" controlId="formRosterCSV">
           <Form.Label column sm={2}>
