@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
+import { signOut } from 'next-auth/react';
 import * as types from './types';
+
 
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
@@ -476,7 +478,13 @@ export function getUserProfile() {
         const results = response.json();
         return results;
       })
-      .then((myProfile) => dispatch(gotMyProfile(myProfile)));
+      .then((myProfile) => dispatch(gotMyProfile(myProfile)))
+      .catch((err) => {
+        console.log('err', err)
+        if (err?.message.includes('403')) {
+          signOut({ callbackUrl: '/' });
+        }
+      });
   }
 }
 
