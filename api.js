@@ -248,3 +248,27 @@ export function getMySubmissionsForAssignment({ slug, assignmentId }) {
       return resultsJson;
     });
 }
+
+export function mutateCourse(slug) {
+  // expecting params to be any subset of name, start_date, end_date, slug
+  return (params) =>{
+    console.log('params', params)
+    return getSession().then((session) => {
+      console.log('session', session);
+      const token = session.djangoToken;
+      return fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+          body: JSON.stringify(params),
+          // body: data,
+        }
+      )
+        .then(assertResponse)
+        .then((response) => response.json());
+    });}
+}
