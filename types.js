@@ -20,6 +20,7 @@ export const Action = Object.freeze({
   GotSingleAssignment: 'GotSingleAssignment',
   SetInstrumentActive: 'SetInstrumentActive',
   SetPieceChangeState: 'SetPieceChangeState',
+  DidInstrument: 'DidInstrument',
 });
 
 export const ActivityState = Object.freeze({

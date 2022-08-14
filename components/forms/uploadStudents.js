@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadRoster } from '../../actions';
+import { didInstrument, uploadRoster } from '../../actions';
 
 function UploadStudents() {
   const [file, setFile] = useState();
@@ -13,7 +13,17 @@ function UploadStudents() {
 
   const router = useRouter();
   const { slug } = router.query;
-  const userInfo = useSelector((state) => state.currentUser)
+  const userInfo = useSelector((state) => state.currentUser);
+
+  const { shouldInstrument = false } = useSelector(
+    (state) => state.enrollments
+  );
+
+  if (shouldInstrument && router.asPath.endsWith('/edit')) {
+    console.log('shouldInstrument', shouldInstrument);
+    router.push(router.asPath.replace('/edit', '/instruments'));
+    dispatch(didInstrument())
+  }
 
   const uploadStudents = (ev) => {
     console.log('add student ev', ev);
@@ -41,9 +51,16 @@ function UploadStudents() {
     <div className="my-5">
       <h2>Add Multiple Students</h2>
       <p>
-        Create a <abbr title="Comma-Separated Value">CSV</abbr> file with format format <code>fullname,username,password,grade</code>
+        Create a <abbr title="Comma-Separated Value">CSV</abbr> file with format
+        format <code>fullname,username,password,grade</code>
       </p>
-      <p>We provide <a download href="/roster-for-musiccpr.csv">this example roster csv file</a> in case it's easiest to just edit that.</p>
+      <p>
+        We provide{' '}
+        <a download href="/roster-for-musiccpr.csv">
+          this example roster csv file
+        </a>{' '}
+        in case it's easiest to just edit that.
+      </p>
       <Form onSubmit={uploadStudents}>
         <Form.Group as={Row} className="mb-3" controlId="formRosterCSV">
           <Form.Label column sm={2}>

@@ -575,3 +575,10 @@ export function fetchSingleStudentAssignment({ slug, assignmentId }) {
       .then((assignment) => dispatch(selectAssignment(assignment)));
   }
 }
+
+export function didInstrument() {
+  console.log('action didInstrument');
+  return {
+    type: types.Action.DidInstrument,
+  };
+}
