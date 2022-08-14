@@ -311,7 +311,8 @@ export function fetchActivities({ slug }) {
     const {
       currentUser: { token },
     } = getState();
-    fetch(
+    console.log('token to fetchActivities', token)
+    return token && fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
       {
         headers: {
@@ -322,7 +323,10 @@ export function fetchActivities({ slug }) {
     )
       .then(assertResponse)
       .then((response) => response.json())
-      .then((activities) => dispatch(gotActivities({ activities, slug })));
+      .then((activities) => dispatch(gotActivities({ activities, slug })))
+      .catch(() => {
+        console.log('caught')
+      });
   }
 }
 

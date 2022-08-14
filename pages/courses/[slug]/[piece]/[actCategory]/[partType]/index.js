@@ -28,19 +28,23 @@ export default function PerformMelody() {
   const router = useRouter();
   const { slug, piece, actCategory, partType } = router.query;
   const dispatch = useDispatch();
-  const [parsedScore, setParsedScore] = useState()
-  
+  const [parsedScore, setParsedScore] = useState();
+
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    dispatch(fetchActivities({ slug }));
-  }, [slug])
+    console.log('may fetch activities', slug, userInfo.token);
+    if (slug && userInfo.token) {
+      console.log('will fetch activities', slug, userInfo.token);
+      dispatch(fetchActivities({ slug }));
+    }
+  }, [slug, userInfo.token]);
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
   const assignment = useSelector((state) => state.selectedAssignment);
   useEffect(() => {
     // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
-    if (loadedActivities){
+    if (loadedActivities) {
       // console.log('activities', activities)
       // console.log('piece, partType, actCategory', piece, partType, actCategory)
       dispatch(
@@ -49,55 +53,63 @@ export default function PerformMelody() {
           assignmentId: activities[slug].filter(
             (assn) =>
               assn.part.piece.slug === piece &&
-            assn.activity.part_type === partType &&
-            assn.activity.activity_type.category === actCategory 
-
+              assn.activity.part_type === partType &&
+              assn.activity.activity_type.category === actCategory
           )?.[0]?.id,
         })
-      );}
+      );
+    }
   }, [slug, loadedActivities, activities, partType]);
 
   // console.log('assignment.instrument.transposition', assignment?.instrument?.transposition, assignment?.part?.transpositions)
-  
-  useEffect(()=>{
-    console.log('assignment', assignment)
-    const score = assignment?.part?.transpositions?.filter((partTransposition) => partTransposition.transposition.name === assignment?.instrument?.transposition)?.[0]?.flatio
-    console.log('score, score && true', score, score && true)
-    if (score) {
-      setParsedScore(JSON.parse(score))
-      console.log('parsedScore', parsedScore)
-    }
-  },[assignment])
 
-  console.log('assignment', assignment)
-  console.log('parsedScore', parsedScore)
-  return assignment && assignment?.id && assignment?.part ? (
+  useEffect(() => {
+    console.log('assignment', assignment);
+    const score = assignment?.part?.transpositions?.filter(
+      (partTransposition) =>
+        partTransposition.transposition.name ===
+        assignment?.instrument?.transposition
+    )?.[0]?.flatio;
+    console.log('score, score && true', score, score && true);
+    if (score) {
+      setParsedScore(JSON.parse(score));
+      console.log('parsedScore', parsedScore);
+    }
+  }, [assignment]);
+
+  console.log('assignment', assignment);
+  console.log('parsedScore', parsedScore);
+  // TODO: maybe I should let studentAssignment render anyway but then handle missing things at a lower level
+  // return assignment && assignment?.id && assignment?.part ? (
+  return (
     <StudentAssignment assignment={assignment}>
       {parsedScore !== undefined && <FlatEditor score={parsedScore} />}
-
-      <Recorder
-        submit={({ audio }) =>
-          dispatch(
-            postRecording({
-              token: userInfo.token,
-              slug,
-              assignmentId: assignment.id,
-              audio,
-            })
-          )
-        }
-      />
+      {partType && (
+        <Recorder
+          accompaniment={assignment?.part?.piece?.accompaniment}
+          submit={({ audio }) =>
+            dispatch(
+              postRecording({
+                token: userInfo.token,
+                slug,
+                assignmentId: assignment.id,
+                audio,
+              })
+            )
+          }
+        />
+      )}
     </StudentAssignment>
-  ) : (
-    <Spinner
-      as="span"
-      animation="border"
-      size="sm"
-      role="status"
-      aria-hidden="true"
-    >
-      <span className="visually-hidden">Loading...</span>
-    </Spinner>
   );
-  
+  // ) : (
+  //   <Spinner
+  //     as="span"
+  //     animation="border"
+  //     size="sm"
+  //     role="status"
+  //     aria-hidden="true"
+  //   >
+  //     <span className="visually-hidden">Loading...</span>
+  //   </Spinner>
+  // );
 }

@@ -1,7 +1,7 @@
 // with thanks to https://medium.com/front-end-weekly/recording-audio-in-mp3-using-reactjs-under-5-minutes-5e960defaf10
 
 import MicRecorder from 'mic-recorder-to-mp3';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { FaMicrophone, FaStop, FaCloudUploadAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
@@ -9,8 +9,9 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import { useRouter } from 'next/router';
 
-export default function Recorder({ submit }) {
+export default function Recorder({ submit, accompaniment }) {
   // const Mp3Recorder = new MicRecorder({ bitRate: 128 }); // 128 is default already
   const [isRecording, setIsRecording] = useState(false);
   const [blobURL, setBlobURL] = useState('');
@@ -22,11 +23,23 @@ export default function Recorder({ submit }) {
   const [min, setMinute] = useState(0);
   const [sec, setSecond] = useState(0);
 
+  const accompanimentRef = useRef(null);
+
+  const router = useRouter();
+  const { slug, piece, actCategory, partType } = router.query;
+
+  useEffect(() => {
+    setBlobInfo([]);
+    setBlobURL('');
+    setBlobData();
+  }, [partType])
+
   const startRecording = (ev) => {
     console.log('startRecording', ev);
     if (isBlocked) {
       console.error('cannot record, microphone permissions are blocked');
     } else {
+      accompanimentRef.current.play();
       recorder
         .start()
         .then(setIsRecording(true))
@@ -36,6 +49,8 @@ export default function Recorder({ submit }) {
 
   const stopRecording = (ev) => {
     console.log('stopRecording', ev);
+    accompanimentRef.current.pause();
+    accompanimentRef.current.load();
     recorder
       .stop()
       .getMp3()
@@ -117,7 +132,9 @@ export default function Recorder({ submit }) {
   return (
     <Row>
       <Col>
-        {' '}
+      
+        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+        <audio src={accompaniment} ref={accompanimentRef}/>
         {blobInfo.length === 0 ? (
           <span>No takes yet. Click the microphone icon to record.</span>
         ) : (
