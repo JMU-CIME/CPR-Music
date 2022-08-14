@@ -71,19 +71,22 @@ export default function Recorder({ submit }) {
 
   // check for recording permissions
   useEffect(() => {
-    if (typeof window !== 'undefined' && navigator && navigator.mediaDevices.getUserMedia) {
+    if (
+      typeof window !== 'undefined' &&
+      navigator &&
+      navigator.mediaDevices.getUserMedia
+    ) {
       console.log('navigator available');
-      navigator.mediaDevices.getUserMedia(
-        { audio: true }).then(
-          () => {
-            console.log('Permission Granted');
-            setIsBlocked(false);
-          }).catch(
-            () => {
-              console.log('Permission Denied');
-              setIsBlocked(true);
-            }
-          );
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then(() => {
+          console.log('Permission Granted');
+          setIsBlocked(false);
+        })
+        .catch(() => {
+          console.log('Permission Denied');
+          setIsBlocked(true);
+        });
     }
   }, []);
 
@@ -91,22 +94,24 @@ export default function Recorder({ submit }) {
     let interval = null;
     if (isRecording) {
       interval = setInterval(() => {
-        setSecond(sec => sec + 1);
-        if (sec == 59) {
-          setMinute(min => min + 1);
-          setSecond(sec => 0);
+        setSecond(sec + 1);
+        if (sec === 59) {
+          setMinute(min + 1);
+          setSecond(0);
         }
-        if (min == 99) {
-          setMinute(min => 0);
-          setSecond(sec => 0);
+        if (min === 99) {
+          setMinute(0);
+          setSecond(0);
         }
       }, 1000);
     } else if (!isRecording && sec !== 0) {
-      setMinute(min => 0);
-      setSecond(sec => 0);
+      setMinute(0);
+      setSecond(0);
       clearInterval(interval);
     }
-    return () => { clearInterval(interval); };
+    return () => {
+      clearInterval(interval);
+    };
   }, [isRecording, sec]);
 
   return (
@@ -140,7 +145,8 @@ export default function Recorder({ submit }) {
 
         {isRecording ? (
           <Button onClick={stopRecording}>
-            <FaStop /> {String(min).padStart(2, '0')}:{String(sec).padStart(2, '0')}
+            <FaStop /> {String(min).padStart(2, '0')}:
+            {String(sec).padStart(2, '0')}
           </Button>
         ) : (
           <Button onClick={startRecording}>
@@ -150,5 +156,4 @@ export default function Recorder({ submit }) {
       </Col>
     </Row>
   );
-
 }
