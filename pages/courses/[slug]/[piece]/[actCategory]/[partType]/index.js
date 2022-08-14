@@ -71,7 +71,7 @@ export default function PerformMelody() {
 
   console.log('assignment', assignment)
   console.log('parsedScore', parsedScore)
-  return assignment ? 
+  return assignment && assignment?.id && assignment?.part ? (
     <StudentAssignment assignment={assignment}>
       {parsedScore !== undefined && <FlatEditor score={parsedScore} />}
 
@@ -81,18 +81,23 @@ export default function PerformMelody() {
             postRecording({
               token: userInfo.token,
               slug,
-              assignmentId: assignment.id, 
+              assignmentId: assignment.id,
               audio,
             })
           )
         }
       />
-    </StudentAssignment> : <Spinner as="span"
+    </StudentAssignment>
+  ) : (
+    <Spinner
+      as="span"
       animation="border"
       size="sm"
       role="status"
-      aria-hidden="true">
+      aria-hidden="true"
+    >
       <span className="visually-hidden">Loading...</span>
     </Spinner>
+  );
   
 }
