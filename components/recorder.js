@@ -71,19 +71,19 @@ export default function Recorder({ submit }) {
 
   // check for recording permissions
   useEffect(() => {
-    if (typeof window !== 'undefined' && navigator && navigator.getUserMedia) {
+    if (typeof window !== 'undefined' && navigator && navigator.mediaDevices.getUserMedia) {
       console.log('navigator available');
-      navigator.getUserMedia(
-        { audio: true },
-        () => {
-          console.log('Permission Granted');
-          setIsBlocked(false);
-        },
-        () => {
-          console.log('Permission Denied');
-          setIsBlocked(true);
-        }
-      );
+      navigator.mediaDevices.getUserMedia(
+        { audio: true }).then(
+          () => {
+            console.log('Permission Granted');
+            setIsBlocked(false);
+          }).catch(
+            () => {
+              console.log('Permission Denied');
+              setIsBlocked(true);
+            }
+          );
     }
   }, []);
 
@@ -137,14 +137,14 @@ export default function Recorder({ submit }) {
       <Col>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
         <audio src={blobURL} />
-        
+
         {isRecording ? (
           <Button onClick={stopRecording}>
             <FaStop /> {String(min).padStart(2, '0')}:{String(sec).padStart(2, '0')}
           </Button>
         ) : (
           <Button onClick={startRecording}>
-            <FaMicrophone /> 
+            <FaMicrophone />
           </Button>
         )}
       </Col>
