@@ -507,14 +507,14 @@ export function selectAssignment(assignment) {
 }
 
 export function postRecording({ slug, assignmentId, audio, composition }) {
-  // console.log('postRecording');
+  console.log('postRecording', slug, assignmentId, audio, composition);
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
     // console.log('posting... audio, token, slug, assignmentId, ');
     // console.log('posting...', audio, token, slug, assignmentId);
-    let body = audio;
+    let body = '{"content":"N/A for Perform submissions"}';
     if (composition) {
       body = JSON.stringify({content: composition})
     }

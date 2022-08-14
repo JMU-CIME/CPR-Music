@@ -117,8 +117,8 @@ export default function StudentAssignment({ children, assignment }) {
           </Col>
           <Col>
             <h1>
-              {assignment?.activity?.part_type !== 'Combined' &&
-                `${assignment?.activity?.activity_type.category} `}
+              {/* {assignment?.activity?.part_type === 'Combined' &&
+                `${assignment?.activity?.activity_type.category} `} */}
               {assignment?.activity?.activity_type.name} Activity
             </h1>
             {/* {assignment?.activity?.part_type !== "Combined" && <h1>{`${assignment?.activity?.part_type} Activity`}</h1>} */}
