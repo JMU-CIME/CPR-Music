@@ -195,7 +195,7 @@ export default function TeacherCourseView() {
                       <Col md={9}>
                         <ListGroup>
                           {piece.activities &&
-                          Object.values(piece.activities).length > 0 ? (
+                            Object.values(piece.activities).length > 0 &&
                             Object.keys(piece.activities).map((activityKey) => (
                               <ListGroupItem
                                 key={activityKey}
@@ -214,10 +214,7 @@ export default function TeacherCourseView() {
                                   Delete
                                 </Button> */}
                               </ListGroupItem>
-                            ))
-                          ) : (
-                            <p>There are no pieces assigned to this course.</p>
-                          )}
+                            ))}
                         </ListGroup>
                       </Col>
                       <Col style={{ textAlign: 'center' }}>
@@ -237,7 +234,7 @@ export default function TeacherCourseView() {
               ))}
             </Accordion>
           ) : (
-            <p>no assigned pieces</p>
+            <p>There are no pieces assigned to this course.</p>
           )}
         </Col>
       </Row>

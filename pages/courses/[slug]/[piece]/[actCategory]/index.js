@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { getStudentAssignments } from "../../../../../api";
 import StudentAssignment from "../../../../../components/student/assignment";
+import ConnectActivity from "../../../../../components/student/connect";
 import CreativityActivity from "../../../../../components/student/creativity";
 import RespondActivity from "../../../../../components/student/respond";
 
@@ -24,7 +25,7 @@ export default function CreateRespondActivity () {
   
   // TODO: branch on actCategory
   return currentAssignment ? <StudentAssignment assignment={currentAssignment}>
-    {actCategory === 'Create' ? <CreativityActivity/> : <RespondActivity/>}
+    {actCategory === 'Create' ? <CreativityActivity/> : actCategory === 'Respond' ? <RespondActivity/> : <ConnectActivity />}
   </StudentAssignment> : <Spinner as="span"
     animation="border"
     size="sm"
