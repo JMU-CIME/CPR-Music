@@ -553,6 +553,61 @@ export function postRecording({ slug, assignmentId, audio, composition }) {
   };
 }
 
+export function postRespond({ slug, assignmentId, response }) {
+  console.log('postRespond', slug, assignmentId, response);
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
+    console.log('resp', response)
+    const body = JSON.stringify({ content: JSON.stringify(response) });
+    return fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body,
+      }
+    )
+      .then(assertResponse)
+      .then((res) => res.json())
+      .then((submission) => {
+        console.log('new submission', submission);
+      })
+  };
+}
+
+export function postConnect({ slug, assignmentId, response }) {
+  console.log('postConnect', slug, assignmentId, response);
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
+    console.log('resp', response);
+    const body = JSON.stringify({ content: response });
+    return fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+        body,
+      }
+    )
+      .then(assertResponse)
+      .then((res) => res.json())
+      .then((submission) => {
+        console.log('new submission', submission);
+      });
+  };
+}
+
+
 export function gotSingleStudentAssignment(assignment) {
   return {
     type: types.Action.GotSingleAssignment,

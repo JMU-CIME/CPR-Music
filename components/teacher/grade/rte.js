@@ -11,8 +11,9 @@ import { useMutation, useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { mutateGradeSubmission } from "../../../api";
+import { postRecording } from "../../../actions";
 
-export default function RTE({submission, autoFocus=false}) {
+export default function RTE({submission, submitAction, autoFocus=false}) {
   const router = useRouter();
   const userInfo = useSelector((state) => state.currentUser)
   const { slug } = router.query;
@@ -75,7 +76,7 @@ export default function RTE({submission, autoFocus=false}) {
     r,
     t,
     e,
-    grader}) => gradeMutation.mutate({submission:sub,
+    grader}) => gradeMutation.mutate({student_submission:sub,
     rhythm: r,
     tone: t,
     expression: e,
@@ -86,7 +87,11 @@ export default function RTE({submission, autoFocus=false}) {
     // console.log('onSubmit');
     ev.preventDefault();
     ev.stopPropagation();
-    grade({sub: submission.id, r:rhythm, t:tone, e:expression, grader:userInfo.id})
+    if (!submitAction) {
+      grade({sub: submission.id, r:rhythm, t:tone, e:expression, grader:userInfo.id})
+    } else {
+      submitAction({ r: rhythm, t: tone, e: expression, grader: userInfo.id });
+    }
   }}>
     <Form.Group className="mb-3" controlId="Rhythm">
       <FloatingLabel

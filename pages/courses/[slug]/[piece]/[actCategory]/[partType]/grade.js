@@ -18,9 +18,6 @@ export default function GradeActivity() {
   if (error) return `An error has occurred: ${  error.message}`
   
   return <Layout>
-    {/* <p>
-      {`Grading: ${slug}/${piece}/${actCategory}/${partType}`}
-    </p> */}
     <GradePerform submissions={submissions} />
   </Layout>
 }

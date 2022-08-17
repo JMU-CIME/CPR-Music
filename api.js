@@ -168,7 +168,7 @@ export function getRecentSubmissions({ slug, piece, partType }) {
 }
 
 export function mutateGradeSubmission(slug) {
-  return ({ submission, rhythm, tone, expression, grader }) =>
+  return ({ student_submission, rhythm, tone, expression, grader }) =>
     getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('grade submission now', token, slug, submission,
@@ -185,7 +185,8 @@ export function mutateGradeSubmission(slug) {
           },
           method: 'POST',
           body: JSON.stringify({
-            submission,
+            student_submission: [student_submission],
+            own_submission: [],
             rhythm,
             tone,
             expression,
@@ -199,9 +200,9 @@ export function mutateGradeSubmission(slug) {
     });
 }
 // should i make this mutator optionally have a recording or??
-export function mutateCreateSubmission({ slug, assignmentId }) {
+export function mutateCreateSubmission({ slug }) {
   // console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
-  return (submission) =>
+  return (submission, assignmentId) =>
     getSession()
       .then((session) => {
         const token = session.djangoToken;
