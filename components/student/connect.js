@@ -18,16 +18,16 @@ export default function ConnectActivity() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    console.log('may fetch activities', slug, userInfo.token);
+    console.log('ConnectActivity::may fetch activities', slug, userInfo.token);
     if (slug && userInfo.token) {
-      console.log('will fetch activities', slug, userInfo.token);
+      console.log('ConnectActivity::will fetch activities', slug, userInfo.token);
       dispatch(fetchActivities({ slug }));
     }
   }, [slug, userInfo.token]);
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
-  console.log('activities', activities);
+  console.log('ConnectActivity::activities', activities);
   // const assignment = useSelector((state) => state.selectedAssignment);
   const assignment =
     loadedActivities &&
@@ -39,7 +39,7 @@ export default function ConnectActivity() {
         assn.activity.activity_type.category.startsWith(actCategory)
     )?.[0];
   const assignmentId = assignment?.id;
-  console.log('assignmentid', assignmentId);
+  console.log('ConnectActivity::assignmentid', assignmentId);
   useEffect(() => {
     // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
     if (loadedActivities && assignmentId) {
@@ -74,12 +74,12 @@ export default function ConnectActivity() {
           width="560"
           height="315"
           title="YouTube video player"
-          frameborder="0"
+          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
+          allowFullScreen
         ></iframe>
       )}
-      <Form onSubmit={submitAction}>
+      <Form id="connect-form" onSubmit={submitAction}>
         <textarea
           name="response"
           id="response"

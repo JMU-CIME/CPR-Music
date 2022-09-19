@@ -16,16 +16,16 @@ export default function RespondActivity() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    console.log('may fetch activities', slug, userInfo.token);
+    console.log('RespondActivity::may fetch activities', slug, userInfo.token);
     if (slug && userInfo.token) {
-      console.log('will fetch activities', slug, userInfo.token);
+      console.log('RespondActivity::will fetch activities', slug, userInfo.token);
       dispatch(fetchActivities({ slug }));
     }
   }, [slug, userInfo.token]);
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
-  console.log('activities', activities);
+  console.log('RespondActivity::activities', activities);
   // const assignment = useSelector((state) => state.selectedAssignment);
   const assignmentId =
     loadedActivities &&
@@ -36,7 +36,7 @@ export default function RespondActivity() {
         assn.part.piece.slug === piece &&
         assn.activity.activity_type.category === actCategory
     )?.[0]?.id;
-  console.log('assignmentid', assignmentId);
+  console.log('RespondActivity::assignmentid', assignmentId);
   useEffect(() => {
     // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
     if (loadedActivities && assignmentId) {
@@ -64,6 +64,7 @@ export default function RespondActivity() {
     <>
       <textarea
         name="response"
+        className='response-form'
         id="response"
         rows="10"
         onChange={(e) => {
