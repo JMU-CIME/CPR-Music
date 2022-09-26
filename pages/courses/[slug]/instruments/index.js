@@ -15,6 +15,7 @@ function Instruments() {
   const { items: instruments, loaded: instrumentsLoaded } = useSelector(
     (state) => state.instruments
   );
+  const sortedIntruments = instrumentsLoaded ? Object.values(instruments).sort((A, B) => A.name > B.name): [];
   const roster = useSelector((state) => state.roster);
   // console.log('roster', roster);
   const router = useRouter();
@@ -54,7 +55,7 @@ function Instruments() {
               <StudentInstrument
                 key={enrollment.id}
                 enrollment={enrollment}
-                options={instruments}
+                options={sortedIntruments}
                 token={userInfo.token}
               />
               // <p key={enrollment.id}>{enrollment.user.name}</p>
