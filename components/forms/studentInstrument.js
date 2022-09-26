@@ -34,11 +34,11 @@ function StudentInstrument({ enrollment, token, options: instruments }) {
         Instrument for {enrollment.user.name}
       </Form.Label>
       <Col sm={6}>
-        {instruments && Object.values(instruments).length ? (
+        {instruments && instruments.length ? (
           <Form.Select value={instrument ?? ''} onChange={updateInstrument}>
             <option value="">None</option>
             {instruments &&
-              Object.values(instruments).map((instrumentOption) => (
+              instruments.map((instrumentOption) => (
                 <option key={instrumentOption.id} value={instrumentOption.id}>
                   {instrumentOption.name}
                 </option>
