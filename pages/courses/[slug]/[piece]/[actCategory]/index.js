@@ -20,8 +20,8 @@ export default function CreateRespondActivity () {
   })
   // console.log({ slug, piece, actCategory })
   const currentAssignment = assignments && assignments.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
-  console.log('currentassignment', currentAssignment)
-  console.log('actCategory', actCategory) 
+  console.log('CreateRespondActivity::currentassignment', currentAssignment)
+  console.log('CreateRespondActivity::actCategory', actCategory) 
   
   // TODO: branch on actCategory
   return currentAssignment ? <StudentAssignment assignment={currentAssignment}>
