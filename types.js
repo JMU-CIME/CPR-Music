@@ -21,6 +21,9 @@ export const Action = Object.freeze({
   SetInstrumentActive: 'SetInstrumentActive',
   SetPieceChangeState: 'SetPieceChangeState',
   DidInstrument: 'DidInstrument',
+  BeginUpload: 'BeginUpload',
+  UploadSucceeded: 'UploadSucceeded',
+  UploadFailed: 'UploadFailed',
 });
 
 export const ActivityState = Object.freeze({
@@ -28,4 +31,11 @@ export const ActivityState = Object.freeze({
   Active: 'Active',
   Erroneous: 'Erroneous',
   Success: 'Success',
+});
+
+export const UploadStatusEnum = Object.freeze({
+  Inactive: 0,
+  Active: 1,
+  Success: 2,
+  Erroneous: 3,
 });

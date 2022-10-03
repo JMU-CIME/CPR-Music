@@ -3,13 +3,14 @@
 import MicRecorder from 'mic-recorder-to-mp3';
 import { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import { FaMicrophone, FaStop, FaCloudUploadAlt } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
+import { FaMicrophone, FaStop, FaCloudUploadAlt, FaSpinner, FaTimesCircle, FaCheck } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
+import { UploadStatusEnum } from '../types';
 
 export default function Recorder({ submit, accompaniment }) {
   // const Mp3Recorder = new MicRecorder({ bitRate: 128 }); // 128 is default already
@@ -28,11 +29,22 @@ export default function Recorder({ submit, accompaniment }) {
   const router = useRouter();
   const { slug, piece, actCategory, partType } = router.query;
 
+  const {uploadStatus} = useSelector((state) => state.selectedAssignment);
+  console.log('uploadStatus', uploadStatus)
+  // const uploadStatus = 1; // 0 = not started, 1 = in progress, 2 = success, 3 = error
+  // const UploadStatusEnum = {
+  //   Inactive: 0,
+  //   Active: 1,
+  //   Success: 2,
+  //   Erroneous: 3,
+  // }
+
+
   useEffect(() => {
     setBlobInfo([]);
     setBlobURL('');
     setBlobData();
-  }, [partType])
+  }, [partType]);
 
   const startRecording = (ev) => {
     console.log('startRecording', ev);
@@ -132,9 +144,8 @@ export default function Recorder({ submit, accompaniment }) {
   return (
     <Row>
       <Col>
-      
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <audio src={accompaniment} ref={accompanimentRef}/>
+        <audio src={accompaniment} ref={accompanimentRef} />
         {blobInfo.length === 0 ? (
           <span>No takes yet. Click the microphone icon to record.</span>
         ) : (
@@ -151,6 +162,32 @@ export default function Recorder({ submit, accompaniment }) {
                 <Button onClick={() => submitRecording(i)}>
                   <FaCloudUploadAlt />
                 </Button>
+                {/* eslint-disable no-nested-ternary */}
+                {uploadStatus === UploadStatusEnum.Active ? (
+                  <FaSpinner
+                    className={
+                      uploadStatus === UploadStatusEnum.Active
+                        ? 'fa-spin'
+                        : 'hiding'
+                    }
+                  />
+                ) : uploadStatus === UploadStatusEnum.Erroneous ? (
+                  <FaTimesCircle
+                    className={
+                      uploadStatus === UploadStatusEnum.Erroneous
+                        ? 'show-out'
+                        : 'hiding'
+                    }
+                  />
+                ) : uploadStatus === UploadStatusEnum.Success ? (
+                  <FaCheck
+                    className={
+                      uploadStatus === UploadStatusEnum.Success
+                        ? 'show-out'
+                        : 'hiding'
+                    }
+                  />
+                ) : null}
               </ListGroupItem>
             ))}
           </ListGroup>

@@ -203,11 +203,17 @@ const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
   return state;
 };
 
-const selectedAssignmentReducer = (state = {}, { type, payload }) => {
+const selectedAssignmentReducer = (state = {uploadStatus: types.UploadStatusEnum.Inactive}, { type, payload }) => {
   switch (type) {
     case types.Action.SelectedAssignment:
-      // console.log('SelectedAssignment payload', payload);
+      console.log('SelectedAssignment payload', payload);
       return payload;
+    case types.Action.BeginUpload:
+      return { ...state, uploadStatus: types.UploadStatusEnum.Active };
+    case types.Action.UploadSucceeded:
+      return { ...state, uploadStatus: types.UploadStatusEnum.Success };
+    case types.Action.UploadFailed:
+      return { ...state, uploadStatus: types.UploadStatusEnum.Erroneous };
   }
   return state;
 };

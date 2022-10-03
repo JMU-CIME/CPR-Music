@@ -506,12 +506,33 @@ export function selectAssignment(assignment) {
   };
 }
 
+export function beginUpload() {
+  return {
+    type: types.Action.BeginUpload,
+  };
+}
+
+export function uploadSucceeded() {
+  return {
+    type: types.Action.UploadSucceeded,
+  };
+}
+
+export function uploadFailed() {
+  return {
+    type: types.Action.UploadFailed,
+  };
+}
+
+
 export function postRecording({ slug, assignmentId, audio, composition }) {
   console.log('postRecording', slug, assignmentId, audio, composition);
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
+
+    dispatch(beginUpload())
     // console.log('posting... audio, token, slug, assignmentId, ');
     // console.log('posting...', audio, token, slug, assignmentId);
     let body = '{"content":"N/A for Perform submissions"}';
@@ -549,6 +570,13 @@ export function postRecording({ slug, assignmentId, audio, composition }) {
             // console.log('uploaded recording', res);
             // dispatch(addedFromRoster(courseSlug, res));
           });
+      })
+      .then(() =>{
+        // success case
+        dispatch(uploadSucceeded())
+      })
+      .catch((err) => {
+        dispatch(uploadFailed())
       });
   };
 }
