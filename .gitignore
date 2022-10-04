@@ -35,3 +35,4 @@ yarn-error.log*
 
 #stewart battle
 yarn.lock
+package-lock.json
