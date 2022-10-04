@@ -27,7 +27,7 @@ export default function StudentAssignment({ children, assignment }) {
     ['submissions', slug, assignment.id],
     () => getMySubmissionsForAssignment({ slug, assignmentId: assignment.id }),
     {
-      enabled: !!assignment && !!slug,
+      enabled: !!assignment && !!slug && !!assignment.id,
     }
   );
 
