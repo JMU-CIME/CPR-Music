@@ -19,7 +19,7 @@ function FlatEditor({
   scoreJSON,
   onUpdate,
 }) {
-  console.log('flat io embed log', score)
+  // console.log('flat io embed log', score)
   const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
@@ -52,45 +52,45 @@ function FlatEditor({
     let computedHeight = 300;
     if (edit) {
       embedParams.mode = 'edit';
-      console.log('height', height)
+      // console.log('height', height)
       if (!height) {
         computedHeight = 450;
-        console.log('set height to 450')
-        console.log('flatHeight', computedHeight)
+        // console.log('set height to 450')
+        // console.log('flatHeight', computedHeight)
       }
     } else if (height) {
-      console.log('set height to explicit')
+      // console.log('set height to explicit')
       computedHeight = height;
     }
 
-    console.log('computedHeight', computedHeight)
+    // console.log('computedHeight', computedHeight)
     const allParams = {
       height: `${computedHeight}`,
       width: '100%',
       embedParams,
     }
-    console.log('allp', allParams)
+    // console.log('allp', allParams)
     
     // embed = new Embed(editorRef.current, allParams);
     setEmbed(new Embed(editorRef.current, allParams));
   }, [edit, height])
 
   useEffect(() => {
-    console.log('flat useeffect:: score: ', score, " embed: ", embed)
+    // console.log('flat useeffect:: score: ', score, " embed: ", embed)
     if(score.scoreId && score.sharingKey && embed) {
-      console.log('got score as param', score)
+      // console.log('got score as param', score)
       embed.loadFlatScore({
         score: score.scoreId, 
         sharingKey: score.sharingKey
       })
         .then(()=>{
-          console.log('score loaded from scoreId', score.scoreId)
+          // console.log('score loaded from scoreId', score.scoreId)
           setRefId(score.scoreId)
           if (edit) {
             embed.off('noteDetails')
             embed.on('noteDetails', (info) => {
-              console.log('noteDetails', info);
-              console.log('pitch', info.pitches)
+              // console.log('noteDetails', info);
+              // console.log('pitch', info.pitches)
               embed.getJSON().then((jsonData) => {
                 const data = JSON.stringify(jsonData);
                 setJson(data);
@@ -107,10 +107,10 @@ function FlatEditor({
         })
       
     } else if (scoreJSON && embed) {
-      console.log('loadJSON', scoreJSON)
+      // console.log('loadJSON', scoreJSON)
       embed.loadJSON(scoreJSON)
         .then(()=>{
-          console.log('score loaded from json')
+          // console.log('score loaded from json')
           setRefId(score.scoreId)
           // console.log(editorRef.current.querySelector('*'))
           // embed.on('playbackPosition', (info) => {
@@ -131,8 +131,8 @@ function FlatEditor({
           if (edit) {
             embed.off('noteDetails')
             embed.on('noteDetails', (info) => {
-              console.log('noteDetails', info);
-              console.log('pitch', info.pitches)
+              // console.log('noteDetails', info);
+              // console.log('pitch', info.pitches)
               embed.getJSON().then((jsonData) => {
                 const data = JSON.stringify(jsonData);
                 setJson(data);

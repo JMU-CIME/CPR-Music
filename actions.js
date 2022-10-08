@@ -31,10 +31,8 @@ export function retrieveEnrollments(djangoToken) {
 }
 
 export function fetchEnrollments() {
-  // console.info('fetchEnrollments');
   return (dispatch, getState) => {
     const { currentUser: {token} } = getState();
-    // console.log('fetchEnrollments has token:', token)
     return token
       ? retrieveEnrollments(token)
         .then((courses) => dispatch(gotEnrollments(courses)))
@@ -86,7 +84,6 @@ export const newCourse =
         .then(assertResponse)
         .then((response) => response.json())
         .then((data) => {
-          // console.log('data from create course post', data);
           const enrollParams = {
             user: userId,
             role: 1,
@@ -94,7 +91,6 @@ export const newCourse =
           };
           newSlug = data.slug;
           enrollOptions.body = JSON.stringify(enrollParams);
-          // console.log(enrollOptions);
           return fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`,
             enrollOptions
@@ -132,7 +128,6 @@ export function uploadRoster({ body, courseSlug }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((res) => {
-        // console.log('uploaded', res);
         dispatch(addedFromRoster(courseSlug, res));
       });
   }
@@ -159,7 +154,6 @@ export function fetchInstruments() {
       .then(assertResponse)
       .then((response) => response.json())
       .then((instruments) => 
-        // console.log('instruments', instruments);
         dispatch(
           gotInstruments(instruments.sort((a, b) => (a.name < b.name ? -1 : 1)))
         )
@@ -311,7 +305,6 @@ export function fetchActivities({ slug }) {
     const {
       currentUser: { token },
     } = getState();
-    console.log('token to fetchActivities', token)
     return token && fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
       {
@@ -351,7 +344,6 @@ export function fetchPieces() {
       .then(assertResponse)
       .then((response) => response.json())
       .then((pieces) => {
-        // console.log('pieces', pieces);
         dispatch(gotPieces(pieces.sort((a, b) => (a.name < b.name ? -1 : 1))));
       });
   }
@@ -365,7 +357,6 @@ export function assignedPiece({ piece, slug }) {
 }
 
 export function unassignedPiece({ piece, slug }) {
-  // console.log('unassignedPiece({piece, slug})', piece, slug);
   return {
     type: types.Action.UnassignedPiece,
     payload: { piece, slug },
@@ -440,7 +431,6 @@ export function unassignPiece({ piece, slug }) {
         )
       )
       .catch((err) => {
-        // console.log('caught error in unassign', err);
         dispatch(
           setPieceChangeState({
             pieceId: piece.id,
@@ -459,7 +449,6 @@ export function gotUser(userInfo) {
 }
 
 export function gotMyProfile(myProfile) {
-  // console.log('myprofile', myProfile)
   return {
     type: types.Action.GotProfile,
     payload: myProfile,
@@ -484,7 +473,6 @@ export function getUserProfile() {
       })
       .then((myProfile) => dispatch(gotMyProfile(myProfile)))
       .catch((err) => {
-        console.log('err', err)
         if (err?.message.includes('403')) {
           signOut({ callbackUrl: '/' });
         }
@@ -506,38 +494,52 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function beginUpload() {
+export function beginUpload(submissionId) {
   return {
     type: types.Action.BeginUpload,
+    payload: {submissionId}
   };
 }
 
-export function uploadSucceeded() {
+export function uploadSucceeded(submissionId) {
   return {
     type: types.Action.UploadSucceeded,
+    payload: { submissionId },
   };
 }
 
-export function uploadFailed() {
+export function uploadFailed(submissionId) {
   return {
     type: types.Action.UploadFailed,
+    payload: { submissionId },
   };
 }
 
 
-export function postRecording({ slug, assignmentId, audio, composition }) {
-  console.log('postRecording', slug, assignmentId, audio, composition);
+export function postRecording({
+  slug,
+  assignmentId,
+  audio,
+  composition,
+  submissionId,
+}) {
+  console.log(
+    'postRecording',
+    slug,
+    assignmentId,
+    audio,
+    composition,
+    submissionId
+  );
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
 
-    dispatch(beginUpload())
-    // console.log('posting... audio, token, slug, assignmentId, ');
-    // console.log('posting...', audio, token, slug, assignmentId);
+    dispatch(beginUpload(submissionId));
     let body = '{"content":"N/A for Perform submissions"}';
     if (composition) {
-      body = JSON.stringify({content: composition})
+      body = JSON.stringify({ content: composition });
     }
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
@@ -553,7 +555,6 @@ export function postRecording({ slug, assignmentId, audio, composition }) {
       .then(assertResponse)
       .then((res) => res.json())
       .then((submission) => {
-        // console.log('new submission', submission);
         fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/${submission.id}/attachments/`,
           {
@@ -567,27 +568,24 @@ export function postRecording({ slug, assignmentId, audio, composition }) {
           .then(assertResponse)
           .then((response) => response.json())
           .then((res) => {
-            // console.log('uploaded recording', res);
-            // dispatch(addedFromRoster(courseSlug, res));
           });
       })
-      .then(() =>{
+      .then(() => {
         // success case
-        dispatch(uploadSucceeded())
+        dispatch(uploadSucceeded(submissionId));
       })
       .catch((err) => {
-        dispatch(uploadFailed())
+        dispatch(uploadFailed(submissionId));
       });
   };
 }
 
 export function postRespond({ slug, assignmentId, response }) {
-  console.log('postRespond', slug, assignmentId, response);
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
-    console.log('resp', response)
+    dispatch(beginUpload(assignmentId));
     const body = JSON.stringify({ content: JSON.stringify(response) });
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
@@ -605,16 +603,23 @@ export function postRespond({ slug, assignmentId, response }) {
       .then((submission) => {
         console.log('new submission', submission);
       })
+
+      .then(() => {
+        // success case
+        dispatch(uploadSucceeded(assignmentId));
+      })
+      .catch((err) => {
+        dispatch(uploadFailed(assignmentId));
+      });
   };
 }
 
 export function postConnect({ slug, assignmentId, response }) {
-  console.log('postConnect', slug, assignmentId, response);
   return (dispatch, getState) => {
     const {
       currentUser: { token },
     } = getState();
-    console.log('resp', response);
+    dispatch(beginUpload(assignmentId));
     const body = JSON.stringify({ content: response });
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
@@ -631,6 +636,13 @@ export function postConnect({ slug, assignmentId, response }) {
       .then((res) => res.json())
       .then((submission) => {
         console.log('new submission', submission);
+      })
+      .then(() => {
+        // success case
+        dispatch(uploadSucceeded(assignmentId));
+      })
+      .catch((err) => {
+        dispatch(uploadFailed(assignmentId));
       });
   };
 }
@@ -649,7 +661,7 @@ export function fetchSingleStudentAssignment({ slug, assignmentId }) {
       currentUser: { token },
     } = getState();
     fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/`,
       {
         headers: {
           Authorization: `Token ${token}`,

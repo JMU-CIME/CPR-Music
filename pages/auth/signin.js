@@ -1,10 +1,11 @@
 import { getCsrfToken } from 'next-auth/react';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Layout from '../../components/layout';
+import { Alert } from 'react-bootstrap';
 
 export default function SignIn({ csrfToken }) {
   const { error } = useRouter().query;
@@ -36,7 +37,7 @@ export default function SignIn({ csrfToken }) {
             />
           </Col>
         </Form.Group>
-        <Button type="submit">Sign in</Button>    
+        <Button type="submit">Sign in</Button>
         {error && <SignInError error={error} />}
       </Form>
     </Layout>
@@ -45,7 +46,7 @@ export default function SignIn({ csrfToken }) {
 
 // This is the recommended way for Next.js 9.3 or newer
 export async function getServerSideProps(context) {
-  const token = await getCsrfToken(context)
+  const token = await getCsrfToken(context);
   return {
     props: {
       csrfToken: token ?? null,
@@ -54,20 +55,28 @@ export async function getServerSideProps(context) {
 }
 
 const errors = {
-  Signin: "Try signing with a different account.",
-  OAuthSignin: "Try signing with a different account.",
-  OAuthCallback: "Try signing with a different account.",
-  OAuthCreateAccount: "Try signing with a different account.",
-  EmailCreateAccount: "Try signing with a different account.",
-  Callback: "Try signing with a different account.",
+  Signin: 'Try signing with a different account.',
+  OAuthSignin: 'Try signing with a different account.',
+  OAuthCallback: 'Try signing with a different account.',
+  OAuthCreateAccount: 'Try signing with a different account.',
+  EmailCreateAccount: 'Try signing with a different account.',
+  Callback: 'Try signing with a different account.',
   OAuthAccountNotLinked:
-    "To confirm your identity, sign in with the same account you used originally.",
-  EmailSignin: "Check your email address.",
-  CredentialsSignin:
-    "Sign in failed. Check your login credentials.",
-  default: "Unable to sign in.",
+    'To confirm your identity, sign in with the same account you used originally.',
+  EmailSignin: 'Check your email address.',
+  CredentialsSignin: 'Sign in failed. Check your login credentials.',
+  default: 'Unable to sign in.',
 };
-const SignInError = ({ error = errors.default }) => {
+function SignInError({ error = errors.default }) {
   const errorMessage = error && (errors[error] ?? errors.default);
-  return <div>{errorMessage}</div>;
-};
+  return (
+    <Alert variant="danger">
+      {errorMessage}{' '}
+      {error === 'CredentialsSignin' && (
+        <a href={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/accounts/password/reset/`}>
+          Forgot your password?
+        </a>
+      )}
+    </Alert>
+  );
+}

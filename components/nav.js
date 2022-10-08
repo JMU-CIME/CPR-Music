@@ -23,17 +23,14 @@ function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Link href="/" passHref>
-              <Nav.Link>Home</Nav.Link>
-            </Link>
             <Link href="/courses" passHref>
               <Nav.Link>Courses</Nav.Link>
             </Link>
-            {
-              currentEnrollment && <Link href={`/courses/${slug}`} passHref>
+            {currentEnrollment && (
+              <Link href={`/courses/${slug}`} passHref>
                 <Nav.Link>Assignments</Nav.Link>
               </Link>
-            }
+            )}
             {/* <NavDropdown title="Courses" id="basic-nav-dropdown">
               <Link href="/courses" passHref>
                 <NavDropdown.Item>All</NavDropdown.Item>
@@ -63,6 +60,9 @@ function Navigation() {
             </NavDropdown> */}
           </Nav>
           <Nav>
+            <Link href="/about" passHref>
+              <Nav.Link>About</Nav.Link>
+            </Link>
             <LoginOut />
           </Nav>
         </Navbar.Collapse>

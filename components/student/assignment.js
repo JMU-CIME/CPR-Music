@@ -2,7 +2,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { FaBook, FaDrum, FaGuitar, FaPenFancy } from 'react-icons/fa';
+import { FaBook, FaDrum, FaGuitar, FaLink, FaPenFancy } from 'react-icons/fa';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Spinner from 'react-bootstrap/Spinner';
 import Tab from 'react-bootstrap/Tab';
@@ -32,6 +32,15 @@ export default function StudentAssignment({ children, assignment }) {
   );
 
   console.log('submissions', submissions);
+
+  // const
+  const composer = assignment?.part?.piece?.composer?.name;
+  const composerCheat = composer?.split(' ').pop();
+  const connectLink = `Connect ${composerCheat}`;
+  const hasCompose = ['Benjamin', 'Danyew', 'Green'].includes(composerCheat);
+
+  console.log(composer, composerCheat, connectLink, hasCompose)
+
   return (
     <Layout>
       {assignment && assignment?.id && assignment?.part ? (
@@ -110,6 +119,24 @@ export default function StudentAssignment({ children, assignment }) {
                         </span>
                       </ListGroup.Item>
                     </Link>
+                    {hasCompose && (
+                      <Link
+                        href={`/courses/${slug}/${piece}/${connectLink}`}
+                        passHref
+                      >
+                        <ListGroup.Item
+                          action
+                          eventKey="Connect"
+                          href={`/courses/${slug}/${piece}/${connectLink}`}
+                          active={actCategory === 'Connect'}
+                          as="a"
+                        >
+                          <span>
+                            <FaLink /> Connect
+                          </span>
+                        </ListGroup.Item>
+                      </Link>
+                    )}
                   </ListGroup>
                 </Col>
               </Row>

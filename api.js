@@ -44,6 +44,25 @@ export function getStudentAssignments(slug) {
       .then((results) => {
         console.log('results', results);
         return results;
+      })
+      .then((results) => {
+        const grouped = results.reduce((acc, obj) => {
+          const key = obj.part.piece.name;
+          if (!acc[key]) {
+            acc[key] = [];
+          }
+          // Add object to list for given key's value
+          acc[key].push(obj);
+          return acc;
+        }, {});
+        // for (let piece of Object.keys(grouped)) {
+        //   grouped[piece].sort((a, b) => {
+        //     return a.activity.activity_type.order - b.activity.activity_type.order;
+        //   });
+        // }
+        console.log('grouped', grouped);
+        return grouped;
+        // Object.keys(grouped).sort()
       });
   };
 }
@@ -252,8 +271,8 @@ export function getMySubmissionsForAssignment({ slug, assignmentId }) {
 
 export function mutateCourse(slug) {
   // expecting params to be any subset of name, start_date, end_date, slug
-  return (params) =>{
-    console.log('params', params)
+  return (params) => {
+    console.log('params', params);
     return getSession().then((session) => {
       console.log('session', session);
       const token = session.djangoToken;
@@ -271,5 +290,6 @@ export function mutateCourse(slug) {
       )
         .then(assertResponse)
         .then((response) => response.json());
-    });}
+    });
+  };
 }

@@ -11,6 +11,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
 import { UploadStatusEnum } from '../types';
+import StatusIndicator from './statusIndicator';
 
 export default function Recorder({ submit, accompaniment }) {
   // const Mp3Recorder = new MicRecorder({ bitRate: 128 }); // 128 is default already
@@ -28,17 +29,6 @@ export default function Recorder({ submit, accompaniment }) {
 
   const router = useRouter();
   const { slug, piece, actCategory, partType } = router.query;
-
-  const {uploadStatus} = useSelector((state) => state.selectedAssignment);
-  console.log('uploadStatus', uploadStatus)
-  // const uploadStatus = 1; // 0 = not started, 1 = in progress, 2 = success, 3 = error
-  // const UploadStatusEnum = {
-  //   Inactive: 0,
-  //   Active: 1,
-  //   Success: 2,
-  //   Erroneous: 3,
-  // }
-
 
   useEffect(() => {
     setBlobInfo([]);
@@ -67,7 +57,6 @@ export default function Recorder({ submit, accompaniment }) {
       .stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        console.log('blob', blob);
         setBlobData(blob);
         const url = URL.createObjectURL(blob);
         setBlobURL(url);
@@ -83,8 +72,7 @@ export default function Recorder({ submit, accompaniment }) {
       .catch((e) => console.error('error stopping recording', e));
   };
 
-  const submitRecording = (i) => {
-    console.log('blobData', blobData);
+  const submitRecording = (i, submissionId) => {
     const formData = new FormData(); // TODO: make filename reflect assignment
     formData.append(
       'file',
@@ -93,7 +81,7 @@ export default function Recorder({ submit, accompaniment }) {
       })
     );
     // dispatch(submit({ audio: formData }));
-    submit({ audio: formData });
+    submit({ audio: formData, submissionId });
   };
 
   // check for recording permissions
@@ -159,35 +147,12 @@ export default function Recorder({ submit, accompaniment }) {
               >
                 {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                 <audio style={{ height: '2.25rem' }} src={take.url} controls />
-                <Button onClick={() => submitRecording(i)}>
+                <Button
+                  onClick={() => submitRecording(i, `recording-take-${i}`)}
+                >
                   <FaCloudUploadAlt />
                 </Button>
-                {/* eslint-disable no-nested-ternary */}
-                {uploadStatus === UploadStatusEnum.Active ? (
-                  <FaSpinner
-                    className={
-                      uploadStatus === UploadStatusEnum.Active
-                        ? 'fa-spin'
-                        : 'hiding'
-                    }
-                  />
-                ) : uploadStatus === UploadStatusEnum.Erroneous ? (
-                  <FaTimesCircle
-                    className={
-                      uploadStatus === UploadStatusEnum.Erroneous
-                        ? 'show-out'
-                        : 'hiding'
-                    }
-                  />
-                ) : uploadStatus === UploadStatusEnum.Success ? (
-                  <FaCheck
-                    className={
-                      uploadStatus === UploadStatusEnum.Success
-                        ? 'show-out'
-                        : 'hiding'
-                    }
-                  />
-                ) : null}
+                <StatusIndicator statusId={`recording-take-${i}`} />
               </ListGroupItem>
             ))}
           </ListGroup>

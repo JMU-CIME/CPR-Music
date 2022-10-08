@@ -18,12 +18,11 @@ export default function CreateRespondActivity () {
   const { isLoading: loaded, error: assignmentsError, data: assignments } = useQuery('assignments', getStudentAssignments(slug), {
     enabled: !!slug
   })
-  // console.log({ slug, piece, actCategory })
-  const currentAssignment = assignments && assignments.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
-  console.log('CreateRespondActivity::currentassignment', currentAssignment)
-  console.log('CreateRespondActivity::actCategory', actCategory) 
+  const currentAssignment = assignments && Object.values(assignments).reduce((prev, current) => [...prev, ...current], []).filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   
   // TODO: branch on actCategory
+
+  /* eslint-disable no-nested-ternary */
   return currentAssignment ? <StudentAssignment assignment={currentAssignment}>
     {actCategory === 'Create' ? <CreativityActivity/> : actCategory === 'Respond' ? <RespondActivity/> : <ConnectActivity />}
   </StudentAssignment> : <Spinner as="span"

@@ -32,9 +32,7 @@ export default function PerformMelody() {
 
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    console.log('may fetch activities', slug, userInfo.token);
     if (slug && userInfo.token) {
-      console.log('will fetch activities', slug, userInfo.token);
       dispatch(fetchActivities({ slug }));
     }
   }, [slug, userInfo.token]);
@@ -43,10 +41,7 @@ export default function PerformMelody() {
   );
   const assignment = useSelector((state) => state.selectedAssignment);
   useEffect(() => {
-    // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
     if (loadedActivities) {
-      // console.log('activities', activities)
-      // console.log('piece, partType, actCategory', piece, partType, actCategory)
       dispatch(
         fetchSingleStudentAssignment({
           slug,
@@ -61,24 +56,17 @@ export default function PerformMelody() {
     }
   }, [slug, loadedActivities, activities, partType]);
 
-  // console.log('assignment.instrument.transposition', assignment?.instrument?.transposition, assignment?.part?.transpositions)
-
   useEffect(() => {
-    console.log('assignment', assignment);
     const score = assignment?.part?.transpositions?.filter(
       (partTransposition) =>
         partTransposition.transposition.name ===
         assignment?.instrument?.transposition
     )?.[0]?.flatio;
-    console.log('score, score && true', score, score && true);
     if (score) {
       setParsedScore(JSON.parse(score));
-      console.log('parsedScore', parsedScore);
     }
   }, [assignment]);
 
-  console.log('assignment', assignment);
-  console.log('parsedScore', parsedScore);
   // TODO: maybe I should let studentAssignment render anyway but then handle missing things at a lower level
   // return assignment && assignment?.id && assignment?.part ? (
   return (
@@ -87,13 +75,14 @@ export default function PerformMelody() {
       {partType && (
         <Recorder
           accompaniment={assignment?.part?.piece?.accompaniment}
-          submit={({ audio }) =>
+          submit={({ audio, submissionId }) =>
             dispatch(
               postRecording({
                 token: userInfo.token,
                 slug,
                 assignmentId: assignment.id,
                 audio,
+                submissionId,
               })
             )
           }

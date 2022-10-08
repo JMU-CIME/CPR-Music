@@ -98,13 +98,13 @@ const mockEnrollments = { loaded: false, items: [] };
 const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
   switch (type) {
     case types.Action.AddedRoster:
-      return {...state, shouldInstrument: true};
+      return { ...state, shouldInstrument: true };
     case types.Action.GotEnrollments:
       // console.log('GotEnrollments', payload);
       return { loaded: true, items: payload, shouldInstrument: false };
     case types.Action.DidInstrument:
       console.log('updating shouldInstrument');
-      return {...state, shouldInstrument: false};
+      return { ...state, shouldInstrument: false };
   }
   return state;
 };
@@ -203,7 +203,10 @@ const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
   return state;
 };
 
-const selectedAssignmentReducer = (state = {uploadStatus: types.UploadStatusEnum.Inactive}, { type, payload }) => {
+const selectedAssignmentReducer = (
+  state = { uploadStatus: types.UploadStatusEnum.Inactive },
+  { type, payload }
+) => {
   switch (type) {
     case types.Action.SelectedAssignment:
       console.log('SelectedAssignment payload', payload);
@@ -214,6 +217,41 @@ const selectedAssignmentReducer = (state = {uploadStatus: types.UploadStatusEnum
       return { ...state, uploadStatus: types.UploadStatusEnum.Success };
     case types.Action.UploadFailed:
       return { ...state, uploadStatus: types.UploadStatusEnum.Erroneous };
+  }
+  return state;
+};
+
+const submitStatusReducer = (
+  state = { submissions: {} },
+  { type, payload }
+) => {
+  switch (type) {
+    case types.Action.BeginUpload:
+      console.log("state", state);
+      console.log("payload", payload);
+      return {
+        ...state,
+        submissions: {
+          ...state.submissions,
+          [payload.submissionId]: types.UploadStatusEnum.Active,
+        },
+      };
+    case types.Action.UploadSucceeded:
+      return {
+        ...state,
+        submissions: {
+          ...state.submissions,
+          [payload.submissionId]: types.UploadStatusEnum.Success,
+        },
+      };
+    case types.Action.UploadFailed:
+      return {
+        ...state,
+        submissions: {
+          ...state.submissions,
+          [payload.submissionId]: types.UploadStatusEnum.Erroneous,
+        },
+      };
   }
   return state;
 };
@@ -230,6 +268,7 @@ const reducers = {
   currentUser: currentUserReducer,
   selectedEnrollment: selectedEnrollmentReducer,
   selectedAssignment: selectedAssignmentReducer,
+  submission: submitStatusReducer,
 };
 
 export default combineReducers(reducers);

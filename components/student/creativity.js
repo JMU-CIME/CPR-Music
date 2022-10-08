@@ -1,14 +1,15 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { useDispatch, useSelector } from "react-redux"
-import dynamic from "next/dynamic";
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useMutation, useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import dynamic from 'next/dynamic';
 import Button from 'react-bootstrap/Button';
 import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaFrownOpen } from 'react-icons/fa';
-import { getStudentAssignments, mutateCreateSubmission } from "../../api";
-import Recorder from "../recorder";
-import { postRecording } from "../../actions";
+import { getStudentAssignments, mutateCreateSubmission } from '../../api';
+import Recorder from '../recorder';
+import { postRecording } from '../../actions';
+import { UploadStatusEnum } from '../../types';
 
 const FlatEditor = dynamic(() => import('../flatEditor'), {
   ssr: false,
@@ -21,12 +22,15 @@ export default function CreativityActivity() {
   const router = useRouter();
   const { slug, piece, actCategory } = router.query;
 
-  const { isLoading, error: assignmentsError, data: assignments } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug
-  })
+  const {
+    isLoading,
+    error: assignmentsError,
+    data: assignments,
+  } = useQuery('assignments', getStudentAssignments(slug), {
+    enabled: !!slug,
+  });
 
-  
-const mutation = useMutation(mutateCreateSubmission({ slug }));
+  const mutation = useMutation(mutateCreateSubmission({ slug }));
 
   if (isLoading) {
     return (
@@ -42,29 +46,43 @@ const mutation = useMutation(mutateCreateSubmission({ slug }));
     );
   }
 
-  let composition = '' // FIXME: why isn't this useState???
-  const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
-  console.log('currentassignment', currentAssignment)
+  let composition = ''; // FIXME: why isn't this useState???
+  // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
+  const currentAssignment =
+    assignments &&
+    Object.values(assignments)
+      .reduce((prev, current) => [...prev, ...current], [])
+      .filter(
+        (assn) =>
+          assn.part.piece.slug === piece &&
+          assn.activity.activity_type.category === actCategory
+      )?.[0];
   const currentTransposition = currentAssignment?.instrument.transposition;
-  const flatIOScoreForTransposition = currentAssignment?.part.transpositions.filter((partTransposition) => partTransposition.transposition.name === currentTransposition)?.[0]?.flatio
-  
-  
+  const flatIOScoreForTransposition =
+    currentAssignment?.part.transpositions.filter(
+      (partTransposition) =>
+        partTransposition.transposition.name === currentTransposition
+    )?.[0]?.flatio;
+
   const setJsonWrapper = (data) => {
     mutation.mutate({
       submission: { content: data },
       assignmentId: currentAssignment.id,
     });
-  }
-  const submitCreativity = ({ audio }) =>
-    dispatch(
+  };
+  const submitCreativity = ({ audio, submissionId }) => {
+    // setCreativityUploadStatus(UploadStatusEnum.Active);
+    return dispatch(
       postRecording({
         slug,
-        assignmentId: currentAssignment.id, 
+        assignmentId: currentAssignment.id,
         audio,
-        composition
+        composition,
+        submissionId,
       })
-    )
-      
+    );
+  };
+
   return (
     <>
       <FlatEditor score={JSON.parse(flatIOScoreForTransposition)} />
@@ -79,7 +97,7 @@ const mutation = useMutation(mutateCreateSubmission({ slug }));
         onSubmit={setJsonWrapper}
         submittingStatus={mutation.status}
         onUpdate={(data) => {
-          console.log('updated composition', data);
+          // console.log('updated composition', data);
           composition = data;
         }}
       />
