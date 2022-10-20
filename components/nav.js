@@ -15,7 +15,7 @@ function Navigation() {
   const currentEnrollment = slug && enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
   
   return (
-    <Navbar bg="light" expand="sm">
+    <Navbar bg="primary" variant="dark" expand="sm">
       <Container>
         <Link href="/" passHref>
           <Navbar.Brand>Music CPR</Navbar.Brand>

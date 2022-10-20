@@ -133,7 +133,9 @@ export default function Recorder({ submit, accompaniment }) {
     <Row>
       <Col>
         {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <audio src={accompaniment} ref={accompanimentRef} />
+        <audio ref={accompanimentRef}>
+          <source src={accompaniment} type="audio/mpeg" />
+        </audio>
         {blobInfo.length === 0 ? (
           <span>No takes yet. Click the microphone icon to record.</span>
         ) : (

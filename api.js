@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import { getSession } from 'next-auth/react';
 // https://allover.twodee.org/remote-state/fetching-memories/
 function assertResponse(response) {
@@ -88,20 +89,64 @@ export function getAssignedPieces(assignments) {
   return () => {
     console.log('getAssignedPieces', assignments);
     const pieces = {};
-    assignments.forEach((assignment) => {
-      const pieceSlug = assignment.part.piece.slug;
-      if (!(pieceSlug in pieces)) {
-        pieces[pieceSlug] = {
-          ...assignment.part.piece,
-          activities: {},
-        };
+    if (Object.values(assignments).length > 0) {
+      for (const pieceKey of Object.keys(assignments)) {
+        for (const pieceAssignment of assignments[pieceKey]) {
+          //   pieces[pieceAssignment.part.piece.id] = pieceAssignment.part.piece;
+          // }
+          if (!(pieceKey in pieces)) {
+            pieces[pieceKey] = {
+              ...pieceAssignment.part.piece,
+              activities: {},
+            };
+          }
+          console.log('pieceAssignment', pieceAssignment);
+          const actType = pieceAssignment.activity.activity_type;
+          pieces[pieceKey].activities[`${actType.category}-${actType.name}`] =
+            actType;
+        }
       }
-      const act_type = assignment.activity.activity_type;
-      pieces[pieceSlug].activities[`${act_type.category}-${act_type.name}`] =
-        act_type;
-    });
+    }
+    return pieces;
+    // console.log('foreach', Object.values(assignments));
+    // Object.values(assignments).forEach((assignment, i) => {
+    //   const pieceSlug = assignment?.part?.piece?.slug;
+    //   console.log('pieceslug', pieceSlug);
+    //   if (pieceSlug === undefined) {
+    //     console.log(assignments, assignment, i)
+    //   }
+    //   if (!(pieceSlug in pieces)) {
+    //     pieces[pieceSlug] = {
+    //       ...assignment.part.piece,
+    //       activities: {},
+    //     };
+    //   }
+    //   const act_type = assignment.activity.activity_type;
+    //   pieces[pieceSlug].activities[`${act_type.category}-${act_type.name}`] =
+    //     act_type;
+    // });
     return pieces;
   };
+  /**
+   * {
+    "air-for-band": {
+      actvities: {
+        "Perform-Melody":{
+          category: "Perform",​​
+          name: "Melody"
+        }
+      },
+      accompaniment: "http://localhost:8000/media/accompaniments/Air_for_Band_Accompaniment.mp3",
+      audio: ""​​​​.
+      composer: Object { name: "Frank Erickson", url: "" }​​​​.
+      date_composed: null​​​​.
+      ensemble_type: 1​​​​.
+      id: 1​​​​.
+      name: "Air for Band"​​​​.
+      slug: "air-for-band"​​​​.
+      video: "".
+    }
+   */
 }
 
 export function mutateAssignPiece(slug) {

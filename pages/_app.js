@@ -2,6 +2,7 @@ import { SessionProvider } from 'next-auth/react';
 import '../styles/global.css';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/bootstrap.min-musiccpr.css';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { wrapper } from '../store';

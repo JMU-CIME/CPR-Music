@@ -113,7 +113,12 @@ export default function GradePerform({ submissions }) {
           submissions.map((submission, submissionIdx) => {
             let reflection;
             let rte;
-            if (submission?.content) {
+            console.log('submission');
+            if (
+              submission?.assignment?.activity?.activity_type?.category ===
+                'Respond' &&
+              submission?.content
+            ) {
               const content = JSON.parse(submission.content);
               reflection = content.reflection;
               rte = { r: content.r, t: content.t, e: content.e };
@@ -143,7 +148,8 @@ export default function GradePerform({ submissions }) {
                             src={submission.attachments[0].file}
                             ref={audioRef}
                           />
-                        ) : (
+                        ) : submission?.assignment?.activity?.activity_type
+                            ?.category === 'Respond' && submission?.content ? (
                           <Row>
                             <Col>
                               <p>
@@ -153,14 +159,24 @@ export default function GradePerform({ submissions }) {
                             <Col xs={1}>
                               <dl>
                                 <dt>R</dt>
-                                <dd><code>{rte.r}</code></dd>
+                                <dd>
+                                  <code>{rte.r}</code>
+                                </dd>
                                 <dt>T</dt>
-                                <dd><code>{rte.t}</code></dd>
+                                <dd>
+                                  <code>{rte.t}</code>
+                                </dd>
                                 <dt>E</dt>
-                                <dd><code>{rte.e}</code></dd>
+                                <dd>
+                                  <code>{rte.e}</code>
+                                </dd>
                               </dl>
                             </Col>
                           </Row>
+                        ) : (
+                          submission?.assignment?.activity?.activity_type?.category.includes(
+                            'Connect'
+                          ) && <p>{submission?.content}</p>
                         )}
                       </Card.Text>
                     </Card.Body>

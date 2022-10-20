@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Spinner from 'react-bootstrap/Spinner';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 // import ListGroup from 'react-bootstrap/ListGroup';
@@ -62,6 +63,7 @@ export default function PerformMelody() {
         partTransposition.transposition.name ===
         assignment?.instrument?.transposition
     )?.[0]?.flatio;
+    console.log('assignment no score', assignment);
     if (score) {
       setParsedScore(JSON.parse(score));
     }
@@ -71,7 +73,22 @@ export default function PerformMelody() {
   // return assignment && assignment?.id && assignment?.part ? (
   return (
     <StudentAssignment assignment={assignment}>
-      {parsedScore !== undefined && <FlatEditor score={parsedScore} />}
+      {parsedScore === undefined ? (
+        <Alert variant="danger">
+          <Alert.Heading>
+            We don't have a score for this piece for your instrument.
+          </Alert.Heading>
+          <p>Please ask your teacher to contact us.</p>
+          <p>
+            If you already have the music from your teacher,{' '}
+            <strong>
+              you can still record your performance and submit it.
+            </strong>
+          </p>
+        </Alert>
+      ) : (
+        <FlatEditor score={parsedScore} />
+      )}
       {partType && (
         <Recorder
           accompaniment={assignment?.part?.piece?.accompaniment}

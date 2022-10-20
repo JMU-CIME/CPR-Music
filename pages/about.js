@@ -1,9 +1,31 @@
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import Layout from '../components/layout';
 
 function About() {
   return (
     <Layout>
-      <h1>About MusicCPR</h1>
+      <h1 className="mt-3">About MusicCPR</h1>
+      {/* <Row> */}
+      <Card style={{ width: '18rem' }} className="float-end ml-4">
+        <Card.Img
+          variant="top"
+          src="https://res.cloudinary.com/scalefunder/image/upload/c_crop,h_2938,w_5184,x_0,y_68/c_scale,h_170,w_300/f_auto,fl_lossy,q_auto/v1/James_Madison_University/q4uzdgpi5evlfvrcj3qz"
+        />
+        <Card.Body>
+          <Card.Title>Support us</Card.Title>
+          <Card.Text>
+            If you would be interested in supporting our project, click below.
+          </Card.Text>
+          <a
+            className="btn btn-success"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://dukesfunder.jmu.edu/project/30270"
+          >
+            Learn more
+          </a>
+        </Card.Body>
+      </Card>
       <p>
         MusicCPR is a free web-based platform to promote standards-based
         instrumental music education. MusicCPR aligns with four artistic
@@ -22,6 +44,8 @@ function About() {
         </a>
         ).
       </p>
+      {/* <Col> */}
+
       <p>
         We provide teachers with research-based and standards-aligned tools for
         facilitating and assessing individual students' music learning. These
@@ -53,6 +77,16 @@ function About() {
         team, don't hesitate to drop us a line at{' '}
         <a href="mailto:feedback@musiccpr.org">feedback@musiccpr.org</a>
       </p>
+      {/* </Col>
+        <Col sm={3}>
+          <h3>Support MusicCPR</h3>
+          <p>
+            If you would be interested in supporting our project, click below.
+          </p>
+          <a href="https://dukesfunder.jmu.edu/project/30270" target="_blank" rel="noopener noreferrer" className='btn btn-info'> Learn more</a>
+        </Col>
+      </Row> */}
+
       <h2>Investigators</h2>
 
       <ul>

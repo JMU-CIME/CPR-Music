@@ -46,7 +46,7 @@ export default function StudentAssignment({ children, assignment }) {
       {assignment && assignment?.id && assignment?.part ? (
         <Row>
           {/* piece subnav (navigate to next/other activity, else?) */}
-          <Col md={2}>
+          <Col md={3}>
             {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
             <h2>{assignment?.part?.piece?.name}</h2>
             {/* Piece Activities */}

@@ -47,16 +47,18 @@ export default function Layout({ children }) {
   return (
     <>
       <Head>
-        <link rel="icon" href="/teleband_logo.png" />
+        <link rel="icon" href="/favicon-16x16.png" />
         <meta name="description" content="Music CPR" />
       </Head>
       <Navigation />
-      {
-        !PUBLIC_PATHS.includes(router.pathname) && userLoaded && token || PUBLIC_PATHS.includes(router.pathname) ?
-          <Container>
-            <main className={styles.container}>{children}</main>
-          </Container> : <p>spinner</p>
-      }
+      {(!PUBLIC_PATHS.includes(router.pathname) && userLoaded && token) ||
+      PUBLIC_PATHS.includes(router.pathname) ? (
+        <Container>
+          <main className={styles.container}>{children}</main>
+        </Container>
+      ) : (
+        <p>spinner</p>
+      )}
     </>
   );
 }
