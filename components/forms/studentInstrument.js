@@ -16,16 +16,21 @@ function StudentInstrument({ enrollment, token, options: instruments }) {
   console.log('instruments in studentinstrument', instruments);
 
   const updateInstrument = (ev) => {
-    console.log('update instrument to ', instruments[ev.target.value].name);
+    // console.log('update instrument to ')
+    console.log(typeof ev.target.value, typeof instruments[0].id);
+    const instrumentObj = instruments.find((instr) => instr.id == ev.target.value);
 
+    if (instrumentObj) {
+      console.log('update instrument to ', instrumentObj.name);
     dispatch(
       updateEnrollmentInstrument({
         djangoToken: token,
         enrollmentId: enrollment.id,
-        instrument: instruments[ev.target.value],
+        instrument: instrumentObj,
       })
     );
     setInstrument(ev.target.value);
+    }
   };
 
   return (
