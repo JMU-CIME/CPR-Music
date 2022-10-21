@@ -18,7 +18,7 @@ function Index() {
       <Row>
         <Col>
           <p>
-            MusicCPR is a free web-based platform that facilitates music
+            MusicCPR is a free platform that facilitates music
             teachers' collection of individual student achievement data that
             aligns with ensemble repertoire and artistic processes (create,
             perform, respond, connect) described in National Standards for Arts
