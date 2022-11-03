@@ -103,3 +103,7 @@ a:nth-of-type(6) .card .card-color {
 .minWidth {
   min-width: 1rem;
 }
+
+nav.navbar.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255,255,255,.8);
+}

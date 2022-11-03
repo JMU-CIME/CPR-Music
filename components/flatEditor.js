@@ -53,11 +53,11 @@ function FlatEditor({
     if (edit) {
       embedParams.mode = 'edit';
       // console.log('height', height)
-      if (!height) {
-        computedHeight = 450;
-        // console.log('set height to 450')
-        // console.log('flatHeight', computedHeight)
-      }
+      // if (!height) {
+      //   computedHeight = 450;
+      //   // console.log('set height to 450')
+      //   // console.log('flatHeight', computedHeight)
+      // }
     } else if (height) {
       // console.log('set height to explicit')
       computedHeight = height;
