@@ -317,8 +317,8 @@ export function fetchActivities({ slug }) {
       .then(assertResponse)
       .then((response) => response.json())
       .then((activities) => dispatch(gotActivities({ activities, slug })))
-      .catch(() => {
-        console.log('caught')
+      .catch((e) => {
+        console.error('caught', e)
       });
   }
 }
@@ -494,24 +494,31 @@ export function selectAssignment(assignment) {
   };
 }
 
-export function beginUpload(submissionId) {
+export function beginUpload(id) {
+  console.log('begin upload', id);
   return {
     type: types.Action.BeginUpload,
-    payload: {submissionId}
+    payload: {id}
   };
 }
 
-export function uploadSucceeded(submissionId) {
+export function uploadSucceeded(id) {
   return {
     type: types.Action.UploadSucceeded,
-    payload: { submissionId },
+    payload: { id },
+  };
+}
+export function uploadDone(id) {
+  return {
+    type: types.Action.UploadFinished,
+    payload: { id },
   };
 }
 
-export function uploadFailed(submissionId) {
+export function uploadFailed(id) {
   return {
     type: types.Action.UploadFailed,
-    payload: { submissionId },
+    payload: { id },
   };
 }
 
@@ -573,6 +580,13 @@ export function postRecording({
       .then(() => {
         // success case
         dispatch(uploadSucceeded(submissionId));
+        const p = new Promise((resolve) => {
+          setTimeout(() => resolve, 1000);
+        });
+        return p;
+      })
+      .then(() => {
+        dispatch(uploadDone(submissionId));
       })
       .catch((err) => {
         dispatch(uploadFailed(submissionId));
@@ -607,6 +621,13 @@ export function postRespond({ slug, assignmentId, response }) {
       .then(() => {
         // success case
         dispatch(uploadSucceeded(assignmentId));
+        const p = new Promise((resolve) => {
+          setTimeout(() => resolve, 1000);
+        });
+        return p;
+      })
+      .then(() => {
+        dispatch(uploadDone(assignmentId));
       })
       .catch((err) => {
         dispatch(uploadFailed(assignmentId));
@@ -640,6 +661,13 @@ export function postConnect({ slug, assignmentId, response }) {
       .then(() => {
         // success case
         dispatch(uploadSucceeded(assignmentId));
+        const p = new Promise((resolve) => {
+          setTimeout(() => resolve, 1000);
+        });
+        return p;
+      })
+      .then(() => {
+        dispatch(uploadDone(assignmentId));
       })
       .catch((err) => {
         dispatch(uploadFailed(assignmentId));

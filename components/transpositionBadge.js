@@ -2,15 +2,15 @@ import Badge from 'react-bootstrap/Badge';
 
 export default function TranspositionBadge({ instrument }) {
   const transpositionMap = {
-    'F': 'primary',
-    'Eb': 'secondary',
-    'Concert Pitch TC 8va': 'success',
-    'Concert Pitch TC': 'danger',
-    'Concert Pitch BC 8vb': 'warning',
-    'Concert Pitch BC': 'info',
-    'Bb': 'light',
-    'Alto Clef': 'dark',
+    'F': {bg: 'primary', text:'white'},
+    'Eb': {bg: 'secondary', text:'white'},
+    'Concert Pitch TC 8va': {bg: 'success', text:'white'},
+    'Concert Pitch TC': {bg: 'danger', text:'white'},
+    'Concert Pitch BC 8vb': {bg: 'warning', text:'dark'},
+    'Concert Pitch BC': {bg: 'info', text:'white'},
+    'Bb': {bg: 'light', text:'dark'},
+    'Alto Clef': {bg: 'dark', text:'white'},
   }
-  const bg = transpositionMap[instrument.transposition]
-  return <Badge bg={bg} text={bg === 'light' ? 'dark' : 'light'}>{instrument.name}</Badge>
+  const colors = transpositionMap[instrument.transposition]
+  return <Badge bg={colors.bg} text={colors.text}>{instrument.name}</Badge>
 }

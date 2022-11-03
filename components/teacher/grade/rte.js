@@ -169,7 +169,7 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
       <Button variant="primary" type="submit" className="mb-3">
         Submit
       </Button>{' '}
-      <StatusIndicator />
+      <StatusIndicator statusId={submission?.id ?? 'respond'} />
     </Form>
   );
 }

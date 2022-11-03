@@ -27,7 +27,7 @@ export function getEnrollments() {
 
 export function getStudentAssignments(slug) {
   return () => {
-    console.log('getStudentAssignments');
+    // console.log('getStudentAssignments');
     return getSession()
       .then((session) => {
         const token = session.djangoToken;
@@ -43,7 +43,7 @@ export function getStudentAssignments(slug) {
       })
       .then((response) => response.json())
       .then((results) => {
-        console.log('results', results);
+        // console.log('results', results);
         return results;
       })
       .then((results) => {
@@ -61,7 +61,7 @@ export function getStudentAssignments(slug) {
         //     return a.activity.activity_type.order - b.activity.activity_type.order;
         //   });
         // }
-        console.log('grouped', grouped);
+        // console.log('grouped', grouped);
         return grouped;
         // Object.keys(grouped).sort()
       });
@@ -288,7 +288,7 @@ export function mutateCreateSubmission({ slug }) {
 }
 
 export function getMySubmissionsForAssignment({ slug, assignmentId }) {
-  console.log('getMySubmissionsForAssignment', assignmentId);
+  // console.log('getMySubmissionsForAssignment', assignmentId);
   return getSession()
     .then((session) => {
       const token = session.djangoToken;
@@ -305,11 +305,11 @@ export function getMySubmissionsForAssignment({ slug, assignmentId }) {
     .then(assertResponse)
     .then((response) => response.json())
     .then((resultsJson) => {
-      console.log(
-        'end: getMySubmissionsForAssignment',
-        resultsJson,
-        resultsJson.length
-      );
+      // console.log(
+      //   'end: getMySubmissionsForAssignment',
+      //   resultsJson,
+      //   resultsJson.length
+      // );
       return resultsJson;
     });
 }

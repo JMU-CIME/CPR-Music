@@ -17,7 +17,7 @@ export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
 
   const { slug, piece, actCategory, partType } = router.query;
-  console.log('slug, assignmentId', slug, assignment.id);
+  // console.log('slug, assignmentId', slug, assignment.id);
   const {
     isLoading,
     isIdle,
@@ -31,7 +31,7 @@ export default function StudentAssignment({ children, assignment }) {
     }
   );
 
-  console.log('submissions', submissions);
+  // console.log('submissions', submissions);
 
   // const
   const composer = assignment?.part?.piece?.composer?.name;
@@ -39,7 +39,7 @@ export default function StudentAssignment({ children, assignment }) {
   const connectLink = `Connect ${composerCheat}`;
   const hasCompose = ['Benjamin', 'Danyew', 'Green'].includes(composerCheat);
 
-  console.log(composer, composerCheat, connectLink, hasCompose)
+  // console.log(composer, composerCheat, connectLink, hasCompose)
 
   return (
     <Layout>

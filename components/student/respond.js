@@ -72,7 +72,7 @@ export default function RespondActivity() {
         }}
         style={{ width: '100%' }}
       />
-      <RTE submission={{}} submitAction={submitAction} />
+      <RTE submission={{id:assignmentId}} submitAction={submitAction} />
     </>
   );
 }

@@ -24,6 +24,7 @@ export const Action = Object.freeze({
   BeginUpload: 'BeginUpload',
   UploadSucceeded: 'UploadSucceeded',
   UploadFailed: 'UploadFailed',
+  UploadFinished: 'UploadFinished',
 });
 
 export const ActivityState = Object.freeze({

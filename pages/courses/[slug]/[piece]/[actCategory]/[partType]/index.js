@@ -40,7 +40,10 @@ export default function PerformMelody() {
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
-  const assignment = useSelector((state) => state.selectedAssignment);
+
+  const assignment = useSelector(
+    (state) => state.selectedAssignment
+  );
   useEffect(() => {
     if (loadedActivities) {
       dispatch(
@@ -63,7 +66,7 @@ export default function PerformMelody() {
         partTransposition.transposition.name ===
         assignment?.instrument?.transposition
     )?.[0]?.flatio;
-    console.log('assignment no score', assignment);
+    // console.log('assignment no score', assignment);
     if (score) {
       setParsedScore(JSON.parse(score));
     }

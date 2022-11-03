@@ -37,7 +37,7 @@ export default function Recorder({ submit, accompaniment }) {
   }, [partType]);
 
   const startRecording = (ev) => {
-    console.log('startRecording', ev);
+    // console.log('startRecording', ev);
     if (isBlocked) {
       console.error('cannot record, microphone permissions are blocked');
     } else {
@@ -50,7 +50,7 @@ export default function Recorder({ submit, accompaniment }) {
   };
 
   const stopRecording = (ev) => {
-    console.log('stopRecording', ev);
+    // console.log('stopRecording', ev);
     accompanimentRef.current.pause();
     accompanimentRef.current.load();
     recorder
@@ -91,7 +91,7 @@ export default function Recorder({ submit, accompaniment }) {
       navigator &&
       navigator.mediaDevices.getUserMedia
     ) {
-      console.log('navigator available');
+      // console.log('navigator available');
       navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then(() => {
@@ -130,51 +130,61 @@ export default function Recorder({ submit, accompaniment }) {
   }, [isRecording, sec]);
 
   return (
-    <Row>
-      <Col>
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <audio ref={accompanimentRef}>
-          <source src={accompaniment} type="audio/mpeg" />
-        </audio>
-        {blobInfo.length === 0 ? (
-          <span>No takes yet. Click the microphone icon to record.</span>
-        ) : (
-          <ListGroup as="ol" numbered>
-            {blobInfo.map((take, i) => (
-              <ListGroupItem
-                key={take.url}
-                as="li"
-                className="d-flex justify-content-between align-items-start"
-                style={{ fontSize: '1.5rem' }}
-              >
-                {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-                <audio style={{ height: '2.25rem' }} src={take.url} controls />
-                <Button
-                  onClick={() => submitRecording(i, `recording-take-${i}`)}
+    <>
+      <Row>
+        <Col>
+          {isRecording ? (
+            <Button onClick={stopRecording}>
+              <FaStop /> {String(min).padStart(2, '0')}:
+              {String(sec).padStart(2, '0')}
+            </Button>
+          ) : (
+            <Button onClick={startRecording}>
+              <FaMicrophone />
+            </Button>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          {/* <StatusIndicator statusId={`recording-take-test`} /> */}
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          <audio ref={accompanimentRef}>
+            <source src={accompaniment} type="audio/mpeg" />
+          </audio>
+          {blobInfo.length === 0 ? (
+            <span>No takes yet. Click the microphone icon to record.</span>
+          ) : (
+            <ListGroup as="ol" numbered>
+              {blobInfo.map((take, i) => (
+                <ListGroupItem
+                  key={take.url}
+                  as="li"
+                  className="d-flex justify-content-between align-items-start"
+                  style={{ fontSize: '1.5rem' }}
                 >
-                  <FaCloudUploadAlt />
-                </Button>
-                <StatusIndicator statusId={`recording-take-${i}`} />
-              </ListGroupItem>
-            ))}
-          </ListGroup>
-        )}
-      </Col>
-      <Col>
-        {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-        <audio src={blobURL} />
-
-        {isRecording ? (
-          <Button onClick={stopRecording}>
-            <FaStop /> {String(min).padStart(2, '0')}:
-            {String(sec).padStart(2, '0')}
-          </Button>
-        ) : (
-          <Button onClick={startRecording}>
-            <FaMicrophone />
-          </Button>
-        )}
-      </Col>
-    </Row>
+                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <audio
+                    style={{ height: '2.25rem' }}
+                    src={take.url}
+                    controls
+                  />
+                  <Button
+                    onClick={() => submitRecording(i, `recording-take-${i}`)}
+                  >
+                    <FaCloudUploadAlt />
+                  </Button>
+                  <div className="minWidth">
+                    <StatusIndicator statusId={`recording-take-${i}`} />
+                  </div>
+                </ListGroupItem>
+              ))}
+            </ListGroup>
+          )}
+          {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+          <audio src={blobURL} />
+        </Col>
+      </Row>
+    </>
   );
 }

@@ -211,12 +211,12 @@ const selectedAssignmentReducer = (
     case types.Action.SelectedAssignment:
       console.log('SelectedAssignment payload', payload);
       return payload;
-    case types.Action.BeginUpload:
-      return { ...state, uploadStatus: types.UploadStatusEnum.Active };
-    case types.Action.UploadSucceeded:
-      return { ...state, uploadStatus: types.UploadStatusEnum.Success };
-    case types.Action.UploadFailed:
-      return { ...state, uploadStatus: types.UploadStatusEnum.Erroneous };
+    // case types.Action.BeginUpload:
+    //   return { ...state, uploadStatus: types.UploadStatusEnum.Active };
+    // case types.Action.UploadSucceeded:
+    //   return { ...state, uploadStatus: types.UploadStatusEnum.Success };
+    // case types.Action.UploadFailed:
+    //   return { ...state, uploadStatus: types.UploadStatusEnum.Erroneous };
   }
   return state;
 };
@@ -227,13 +227,13 @@ const submitStatusReducer = (
 ) => {
   switch (type) {
     case types.Action.BeginUpload:
-      console.log("state", state);
-      console.log("payload", payload);
+      // console.log("state", state);
+      // console.log("payload", payload);
       return {
         ...state,
         submissions: {
           ...state.submissions,
-          [payload.submissionId]: types.UploadStatusEnum.Active,
+          [payload.id]: types.UploadStatusEnum.Active,
         },
       };
     case types.Action.UploadSucceeded:
@@ -241,7 +241,7 @@ const submitStatusReducer = (
         ...state,
         submissions: {
           ...state.submissions,
-          [payload.submissionId]: types.UploadStatusEnum.Success,
+          [payload.id]: types.UploadStatusEnum.Success,
         },
       };
     case types.Action.UploadFailed:
@@ -249,9 +249,17 @@ const submitStatusReducer = (
         ...state,
         submissions: {
           ...state.submissions,
-          [payload.submissionId]: types.UploadStatusEnum.Erroneous,
+          [payload.id]: types.UploadStatusEnum.Erroneous,
         },
       };
+    case types.Action.UploadFinished:
+      return {
+        ...state,
+        submissions: {
+          // ...Object.keys(state.submissions).filter((elem) => elem !== payload.id).reduce( (res, key) => (res[key] = state.submissions[key], res), {} )
+          ...Object.fromEntries(Object.entries(state.submissions).filter((elem) => elem !== payload.id))
+        }
+      }
   }
   return state;
 };

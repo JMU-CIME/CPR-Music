@@ -99,3 +99,7 @@ a:nth-of-type(6) .card .card-color {
 .card.student-piece-activity-group {
   min-width: 250px;
 }
+
+.minWidth {
+  min-width: 1rem;
+}

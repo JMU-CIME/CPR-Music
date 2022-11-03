@@ -1,3 +1,4 @@
+import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaSpinner, FaTimesCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { UploadStatusEnum } from '../types';
@@ -5,28 +6,25 @@ import { UploadStatusEnum } from '../types';
 export default function StatusIndicator({statusId}) {
   const { submissions } = useSelector((state) => state.submission);
 
-  const status = submissions[statusId];
-
+  console.log('statuses', submissions)
+  const status = submissions?.[statusId];
+  console.log('status', status)
   return (
     /* eslint-disable no-nested-ternary */
     status === UploadStatusEnum.Active ? (
-      <FaSpinner
-        className={
-          status === UploadStatusEnum.Active ? 'fa-spin' : 'hiding'
-        }
-      />
+      <Spinner
+        as="span"
+        animation="border"
+        size="sm"
+        role="status"
+        aria-hidden="true"
+      >
+        <span className="visually-hidden">Loading...</span>
+      </Spinner>
     ) : status === UploadStatusEnum.Erroneous ? (
-      <FaTimesCircle
-        className={
-          status === UploadStatusEnum.Erroneous ? 'show-out' : 'hiding'
-        }
-      />
+      <FaTimesCircle className="show-out" />
     ) : status === UploadStatusEnum.Success ? (
-      <FaCheck
-        className={
-          status === UploadStatusEnum.Success ? 'show-out' : 'hiding'
-        }
-      />
+      <FaCheck className="show-out" />
     ) : null
   );
 }
