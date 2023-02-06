@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -9,6 +9,7 @@ import { didInstrument, uploadRoster } from '../../actions';
 
 function UploadStudents() {
   const [file, setFile] = useState();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const router = useRouter();
@@ -25,7 +26,9 @@ function UploadStudents() {
     dispatch(didInstrument())
   }
 
-  const uploadStudents = (ev) => {
+  const uploadStudents = async (ev) => {
+    ev.preventDefault();
+    setLoading(true);
     console.log('add student ev', ev);
 
     const formData = new FormData();
@@ -46,10 +49,16 @@ function UploadStudents() {
         courseSlug: slug,
       })
     );
+    setLoading(false);
   };
+
+  useEffect(() => {
+    console.log(`Loading status: ${loading}`);
+  }, [loading]);
+
   return (
     <div className="my-5">
-      <h2>Add Multiple Students</h2>
+      <h2>Add Students</h2>
       <p>
         Create a <abbr title="Comma-Separated Value">CSV</abbr> file with format
         format <code>fullname,username,password,grade</code>
@@ -60,6 +69,12 @@ function UploadStudents() {
           this example roster csv file
         </a>{' '}
         in case it's easiest to just edit that.
+        {/* Plese use{' '}
+        <a target="_blank" rel="noopener noreferrer"
+          href="https://docs.google.com/spreadsheets/d/1Z2yauf5xqv6P2fBUM-l-0UeCRp5BPsHwt3_lkysibbw/edit?usp=sharing">
+          this template
+        </a>{' '}
+        from Google Sheets to create a CSV file for your class. */}
       </p>
       <Form onSubmit={uploadStudents}>
         <Form.Group as={Row} className="mb-3" controlId="formRosterCSV">
@@ -77,7 +92,9 @@ function UploadStudents() {
             />
           </Col>
         </Form.Group>
-        <Button type="submit">Upload</Button>
+        <Button type="submit" disabled={loading} className={loading ? "btn btn-secondary" : "btn btn-primary"}>
+          {loading ? "Uploading..." : "Upload"}
+        </Button>
       </Form>
     </div>
   );

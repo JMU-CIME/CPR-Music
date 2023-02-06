@@ -7,8 +7,10 @@ import Spinner from 'react-bootstrap/Spinner';
 import AddEditCourse from '../../../components/forms/addEditCourse';
 // import AddEditStudent from '../../../components/forms/addEditStudent';
 import UploadStudents from '../../../components/forms/uploadStudents';
+import StudentsWithInstruments from '../../../components/teacher/addStudentWithInstruments';
 import Layout from '../../../components/layout';
 import { getEnrollments, mutateCourse } from '../../../api';
+import Instruments from './instruments';
 
 export default function EditCourse() {
   const router = useRouter();
@@ -36,15 +38,18 @@ export default function EditCourse() {
   ) : (
     <Layout>
       <h1>Edit {currentEnrollment?.course?.name}</h1>
-
+      <AddEditCourse />
+      {/* <AddEditStudent /> */}
+      <UploadStudents />
       <Link href={`/courses/${slug}/instruments`}>
         <Button variant="primary">
           Set Instrument Assignments <FaMusic />
         </Button>
       </Link>
-      <AddEditCourse />
-      {/* <AddEditStudent /> */}
-      <UploadStudents />
+      <br/>
+      <br/>
+      <StudentsWithInstruments />
+      <br/>
     </Layout>
   );
 }
