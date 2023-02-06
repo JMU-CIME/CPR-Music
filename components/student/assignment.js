@@ -45,11 +45,8 @@ export default function StudentAssignment({ children, assignment }) {
     <Layout>
       {assignment && assignment?.id && assignment?.part ? (
         <Row>
-          {/* piece subnav (navigate to next/other activity, else?) */}
-          <Col md={3}>
-            {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
+          {/* <Col md={3}>
             <h2>{assignment?.part?.piece?.name}</h2>
-            {/* Piece Activities */}
             <Tab.Container
               id="list-group-tabs-example"
               defaultActiveKey="#link1"
@@ -141,7 +138,7 @@ export default function StudentAssignment({ children, assignment }) {
                 </Col>
               </Row>
             </Tab.Container>
-          </Col>
+          </Col> */}
           <Col>
             <h1>
               {/* {assignment?.activity?.part_type === 'Combined' &&
