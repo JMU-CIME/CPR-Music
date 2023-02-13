@@ -35,7 +35,7 @@ function StudentsWithInstruments() {
           Object.values(roster.items)
             .filter((e) => e.role !== 'Teacher')
             .map((enrollment, index) => (
-              <div className='row'>
+              <div className='row' key={enrollment.id}>
                 <div className='col-1'>{index + 1}. </div>
                 <div className='col-3'>{enrollment.user.name}</div>
                 <div className='col'>{
