@@ -1,7 +1,4 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Button from 'react-bootstrap/Button';
-import { FaMusic } from 'react-icons/fa';
 import { useQuery } from 'react-query';
 import Spinner from 'react-bootstrap/Spinner';
 import AddEditCourse from '../../../components/forms/addEditCourse';
@@ -9,8 +6,7 @@ import AddEditCourse from '../../../components/forms/addEditCourse';
 import UploadStudents from '../../../components/forms/uploadStudents';
 import StudentsWithInstruments from '../../../components/teacher/addStudentWithInstruments';
 import Layout from '../../../components/layout';
-import { getEnrollments, mutateCourse } from '../../../api';
-import Instruments from './instruments';
+import { getEnrollments } from '../../../api';
 
 export default function EditCourse() {
   const router = useRouter();
@@ -41,15 +37,8 @@ export default function EditCourse() {
       <AddEditCourse />
       {/* <AddEditStudent /> */}
       <UploadStudents />
-      <Link href={`/courses/${slug}/instruments`}>
-        <Button variant="primary">
-          Set Instrument Assignments <FaMusic />
-        </Button>
-      </Link>
-      <br/>
-      <br/>
+      
       <StudentsWithInstruments />
-      <br/>
     </Layout>
   );
 }
