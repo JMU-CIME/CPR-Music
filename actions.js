@@ -11,6 +11,13 @@ function assertResponse(response) {
   throw new Error(`${response.status}: ${response.statusText}`);
 }
 
+export function gotRoster(enrollments) {
+  return {
+    type: types.Action.GotRoster,
+    payload: enrollments,
+  };
+}
+
 export function gotEnrollments(courses) {
   return {
     type: types.Action.GotEnrollments,
@@ -110,6 +117,25 @@ export function addedFromRoster(courseSlug, enrollments) {
   };
 }
 
+export function fetchRoster({ courseSlug }) {
+  return (dispatch, getState) => {
+    const {
+      currentUser: { token },
+    } = getState();
+    fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${courseSlug}/roster/`,
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((enrollments) => dispatch(gotRoster(enrollments)));
+  };
+}
+
 export function uploadRoster({ body, courseSlug }) {
   return (dispatch, getState) => {
     const {
@@ -129,7 +155,10 @@ export function uploadRoster({ body, courseSlug }) {
       .then((response) => response.json())
       .then((res) => {
         dispatch(addedFromRoster(courseSlug, res));
-      });
+      })
+      .then(() =>
+        dispatch(fetchRoster({ djangoToken: token, courseSlug: courseSlug }))
+      );
   }
 }
 
@@ -161,31 +190,7 @@ export function fetchInstruments() {
   }
 }
 
-export function gotRoster(enrollments) {
-  return {
-    type: types.Action.GotRoster,
-    payload: enrollments,
-  };
-}
 
-export function fetchRoster({ courseSlug }) {
-  return (dispatch, getState) => {
-    const {
-      currentUser: { token },
-    } = getState();
-    fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${courseSlug}/roster/`,
-      {
-        headers: {
-          Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((enrollments) => dispatch(gotRoster(enrollments)));
-  }
-}
 
 export function enrollmentUpdated({ enrollment, instrument }) {
   return {
