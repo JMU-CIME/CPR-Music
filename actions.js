@@ -157,7 +157,7 @@ export function uploadRoster({ body, courseSlug }) {
         dispatch(addedFromRoster(courseSlug, res));
       })
       .then(() =>
-        dispatch(fetchRoster({ djangoToken: token, courseSlug: courseSlug }))
+        dispatch(fetchRoster({ djangoToken: token, courseSlug }))
       );
   }
 }
