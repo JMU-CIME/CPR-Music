@@ -128,6 +128,7 @@ function About() {
           Innovation Leader, Center for Inclusive Music Engagement; James
           Madison University)
         </li>
+        <li>Chris Hopkins (Undergraduate Student, James Madison University)</li>
         <li>
           Heidi Lucas, DMA (Visiting Assistant Professor of Brass and Music
           Education, University of Delaware)
