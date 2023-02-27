@@ -132,7 +132,7 @@ export function fetchRoster({ courseSlug }) {
       }
     )
       .then((response) => response.json())
-      .then((enrollments) => dispatch(gotRoster(enrollments)));
+      .then((enrollments) => dispatch(gotRoster({enrollments, courseSlug})));
   };
 }
 

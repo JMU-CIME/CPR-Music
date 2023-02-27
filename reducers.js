@@ -116,13 +116,13 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
     case types.Action.GotRoster:
       // console.log('GotRoster', payload);
       const items = {};
-      payload.forEach((item) => {
+      payload.enrollments.forEach((item) => {
         items[item.id] = {
           ...item,
           activityState: types.ActivityState.Inactive,
         };
       });
-      return { loaded: true, items };
+      return { loaded: true, items, courseSlug: payload.courseSlug };
     case types.Action.UpdatedEnrollmentInstrument:
       // console.log('UpdatedEnrollmentInstrument', payload);
       return {
@@ -257,9 +257,13 @@ const submitStatusReducer = (
         ...state,
         submissions: {
           // ...Object.keys(state.submissions).filter((elem) => elem !== payload.id).reduce( (res, key) => (res[key] = state.submissions[key], res), {} )
-          ...Object.fromEntries(Object.entries(state.submissions).filter((elem) => elem !== payload.id))
-        }
-      }
+          ...Object.fromEntries(
+            Object.entries(state.submissions).filter(
+              (elem) => elem !== payload.id
+            )
+          ),
+        },
+      };
   }
   return state;
 };
