@@ -7,6 +7,7 @@ import StudentAssignment from "../../../../../components/student/assignment";
 import ConnectActivity from "../../../../../components/student/connect";
 import CreativityActivity from "../../../../../components/student/creativity";
 import RespondActivity from "../../../../../components/student/respond";
+import TelephoneActivity from "../../../../../components/student/telephone";
 
 export default function CreateRespondActivity () {
 
@@ -23,13 +24,27 @@ export default function CreateRespondActivity () {
   // TODO: branch on actCategory
 
   /* eslint-disable no-nested-ternary */
-  return currentAssignment ? <StudentAssignment assignment={currentAssignment}>
-    {actCategory === 'Create' ? <CreativityActivity/> : actCategory === 'Respond' ? <RespondActivity/> : <ConnectActivity />}
-  </StudentAssignment> : <Spinner as="span"
-    animation="border"
-    size="sm"
-    role="status"
-    aria-hidden="true">
-    <span className="visually-hidden">Loading...</span>
-  </Spinner>
+  return /*currentAssignment*/ true ? (
+    <StudentAssignment assignment={currentAssignment}>
+      {actCategory === 'Telephone' ? (
+        <TelephoneActivity />
+      ) : actCategory === 'Create' ? (
+        <CreativityActivity />
+      ) : actCategory === 'Respond' ? (
+        <RespondActivity />
+      ) : (
+        <ConnectActivity />
+      )}
+    </StudentAssignment>
+  ) : (
+    <Spinner
+      as="span"
+      animation="border"
+      size="sm"
+      role="status"
+      aria-hidden="true"
+    >
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+  );
 }
