@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import { getEnrollments, getStudentAssignments } from '../../../api';
 import Layout from '../../../components/layout';
-import StudentCourseView from '../../../components/student/course';
+import StudentTelephoneCourseView from '../../../components/student/telephoneCourse';
 import TeacherCourseView from '../../../components/teacher/course';
 
 
@@ -24,12 +24,12 @@ export default function CourseDetails() {
         <>
           <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
           {currentEnrollment.role === 'Student' ? (
-            <p>
-              Please ask your teacher for the links to your activities.
-            </p>
-            // <StudentCourseView
-            //   enrollment={currentEnrollment}
-            // />
+            // <p>
+            //   Please ask your teacher for the links to your activities.
+            // </p>
+            <StudentTelephoneCourseView
+              enrollment={currentEnrollment}
+            />
           ) : (
             <div>
               <Link href={`/courses/${slug}/edit`}>
