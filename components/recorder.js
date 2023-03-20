@@ -10,8 +10,17 @@ import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import { UploadStatusEnum } from '../types';
 import StatusIndicator from './statusIndicator';
+
+
+const WaveDisplay = dynamic(
+  () => import('./audio/waveDisplay'),
+  {
+    ssr: false,
+  }
+);
 
 export default function Recorder({ submit, accompaniment }) {
   // const Mp3Recorder = new MicRecorder({ bitRate: 128 }); // 128 is default already
@@ -131,6 +140,7 @@ export default function Recorder({ submit, accompaniment }) {
 
   return (
     <>
+      <WaveDisplay></WaveDisplay>
       <Row>
         <Col>
           {isRecording ? (
