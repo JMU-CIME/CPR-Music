@@ -103,7 +103,7 @@ export default function Recorder({ submit, accompaniment }) {
           setIsBlocked(true);
         });
     }
-  }, []);
+  }, [isBlocked]);
 
   useEffect(() => {
     let interval = null;
@@ -133,16 +133,20 @@ export default function Recorder({ submit, accompaniment }) {
     <>
       <Row>
         <Col>
-          {isRecording ? (
-            <Button onClick={stopRecording}>
-              <FaStop /> {String(min).padStart(2, '0')}:
-              {String(sec).padStart(2, '0')}
-            </Button>
-          ) : (
-            <Button onClick={startRecording}>
-              <FaMicrophone />
-            </Button>
-          )}
+          {!isBlocked ? (
+            isRecording ? (
+              <Button onClick={stopRecording}>
+                <FaStop /> {String(min).padStart(2, '0')}:
+                {String(sec).padStart(2, '0')}
+              </Button>
+            ) : (
+              <Button onClick={startRecording}>
+                <FaMicrophone />
+              </Button>
+            ))
+            : (
+              <p>Microphone Permissions Needed</p>
+            )}
         </Col>
       </Row>
       <Row>
@@ -153,7 +157,13 @@ export default function Recorder({ submit, accompaniment }) {
             <source src={accompaniment} type="audio/mpeg" />
           </audio>
           {blobInfo.length === 0 ? (
-            <span>No takes yet. Click the microphone icon to record.</span>
+            <span>
+              No takes yet.
+              {!isBlocked ?
+                (" Click the microphone icon to record.") :
+                (" Microphone permissions are needed to record.")
+              }
+            </span>
           ) : (
             <ListGroup as="ol" numbered>
               {blobInfo.map((take, i) => (
