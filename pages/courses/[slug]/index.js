@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { getEnrollments, getStudentAssignments } from '../../../api';
 import Layout from '../../../components/layout';
 import StudentTelephoneCourseView from '../../../components/student/telephoneCourse';
+import StudentCourseView from '../../../components/student/course';
 import TeacherCourseView from '../../../components/teacher/course';
 
 
@@ -27,7 +28,7 @@ export default function CourseDetails() {
             // <p>
             //   Please ask your teacher for the links to your activities.
             // </p>
-            <StudentTelephoneCourseView
+            <StudentCourseView
               enrollment={currentEnrollment}
             />
           ) : (
