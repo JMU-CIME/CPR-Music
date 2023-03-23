@@ -1,7 +1,7 @@
 // with thanks to https://medium.com/front-end-weekly/recording-audio-in-mp3-using-reactjs-under-5-minutes-5e960defaf10
 
 import MicRecorder from 'mic-recorder-to-mp3';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { FaMicrophone, FaStop, FaCloudUploadAlt, FaSpinner, FaTimesCircle, FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,7 +16,7 @@ import StatusIndicator from './statusIndicator';
 
 
 const WaveDisplay = dynamic(
-  () => import('./audio/waveDisplay'),
+  () => import('./audio/WaveDisplay'),
   {
     ssr: false,
   }
@@ -138,9 +138,22 @@ export default function Recorder({ submit, accompaniment }) {
     };
   }, [isRecording, sec]);
 
+  // const wavesurferRef = useRef();
+  // const handleWSMount = useCallback(
+  //   (wavesurfer) => {
+  //     wavesurferRef.current = wavesurfer;
+
+  //     if (wavesurferRef.current) {
+  //       wavesurferRef.current.on('ready', () => {
+  //         console.log('wavesurfer ready');
+  //       });
+  //       wavesurferRef.current.load(wavesurferRef.current.audioFile);
+  //     };
+  //   }, []
+  // );
+
   return (
     <>
-      <WaveDisplay></WaveDisplay>
       <Row>
         <Col>
           {isRecording ? (
@@ -174,6 +187,7 @@ export default function Recorder({ submit, accompaniment }) {
                   style={{ fontSize: '1.5rem' }}
                 >
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
+                  <WaveDisplay audioFile={take.url} />
                   <audio
                     style={{ height: '2.25rem' }}
                     src={take.url}
@@ -192,7 +206,6 @@ export default function Recorder({ submit, accompaniment }) {
             </ListGroup>
           )}
           {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
-          <audio src={blobURL} />
         </Col>
       </Row>
     </>

@@ -14,7 +14,7 @@
     "date-fns": "^2.28.0",
     "flat-embed": "^1.4.0",
     "mic-recorder-to-mp3": "^2.2.2",
-    "next": "12.0.9",
+    "next": "^12.3.4",
     "next-auth": "^4.0.6",
     "next-redux-wrapper": "^7.0.5",
     "react": "^17.0.2",
@@ -26,8 +26,10 @@
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
+    "styled-components": "^5.3.9",
     "swr": "^1.1.2",
-    "wavesurfer-react": "^2.2.2"
+    "wavesurfer-react": "^2.2.2",
+    "wavesurfer.js": "^6.6.1"
   },
   "devDependencies": {
     "@types/node": "^18.15.3",
