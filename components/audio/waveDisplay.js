@@ -7,45 +7,54 @@ import { useEffect, useRef, useState } from 'react';
 
 export function WaveDisplay({ audioFile }) {
   const [playing, setPlaying] = useState(false);
-  var waveform = useRef(null);
+  // const [refId, setRefId] = useState();
+  const waveRef = useRef();
+  const [waveObj, setWaveObj] = useState();
 
   useEffect(() => {
-    waveform.current = WaveSurfer.create({
-      barWidth: 3,
-      barRadius: 3,
-      barGap: 2,
-      barMinHeight: 1,
-      cursorWidth: 1,
-      container: "#waveform",
-      backend: "WebAudio",
-      height: 80,
-      progressColor: "#FE6E00",
-      responsive: true,
-      waveColor: "#C4C4C4",
-      cursorColor: "transparent"
-    });
+    if(waveRef && !waveObj){
+      setWaveObj(WaveSurfer.create({
+        barWidth: 3,
+        barRadius: 3,
+        barGap: 2,
+        barMinHeight: 1,
+        cursorWidth: 1,
+        container: waveRef.current,
+        backend: "WebAudio",
+        height: 80,
+        progressColor: "#450084",
+        responsive: true,
+        waveColor: "#C4C4C4",
+        cursorColor: "transparent"
+      }));
+    
+      console.log(
+        "waveRef", waveRef,
+        "waveObj", waveObj
+      )
+      if(waveObj)
+        waveObj.load(audioFile);
+    }
 
-    waveform.current.load(audioFile);
-  }, []);
+  }, [waveRef, audioFile]);
 
   useEffect(() => {
-    if (waveform.current) {
-      waveform.current.on('finish', () => {
+    if (waveObj) {
+      waveObj.on('finish', () => {
         setPlaying(false);
-        waveform.current.pause();
-        waveform.current.seekTo(0);
+        waveObj.pause();
+        waveObj.seekTo(0);
       });
     }
   });
 
   const handlePlay = () => {
     setPlaying(!playing);
-    waveform.current.playPause();
+    waveObj.playPause();
   };
 
   return (
-    // <div>jeff</div>
-    <WaveformContianer>
+    <WaveformContianer ref={waveRef}>
       <Button onClick={handlePlay}>
         {!playing ? <FaPlay /> : <FaPause />}
       </Button>

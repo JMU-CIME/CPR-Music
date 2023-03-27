@@ -186,13 +186,12 @@ export default function Recorder({ submit, accompaniment }) {
                   className="d-flex justify-content-between align-items-start"
                   style={{ fontSize: '1.5rem' }}
                 >
-                  {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                   <WaveDisplay audioFile={take.url} />
-                  <audio
+                  {/* <audio
                     style={{ height: '2.25rem' }}
                     src={take.url}
                     controls
-                  />
+                  /> */}
                   <Button
                     onClick={() => submitRecording(i, `recording-take-${i}`)}
                   >

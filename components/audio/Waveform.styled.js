@@ -7,13 +7,14 @@ export const WaveformContianer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  height: 100px;
-  width: 100%;
+  width: 80%;
   background: transparent;
   gap: 2rem;
+  // padding: 0 0 50px;
 `;
 
 export const Wave = styled.div`
   width: 100%;
-  height: 90px;
+  // height: 65px;
+  // padding: 0 0 50px;
 `;
