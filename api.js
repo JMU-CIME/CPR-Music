@@ -25,6 +25,71 @@ export function getEnrollments() {
   });
 }
 
+export function getTelephoneGroup() {
+  return getSession().then((session) => {
+    if (!session || !session.djangoToken) {
+      return {};
+    }
+    return {
+      "Melody" : {
+        // enrollment.instrument
+        // enrollment.user.name
+        // assn submission content for flat.io
+        // assn submission attachment (for recording url)
+        // order??
+        instrument: {
+          id: 1,
+          name: "Trumpet",
+        },
+        user: {
+          name: "MelodyName",
+          username: "demomelody",
+        },
+        content: "",
+        // audio: "",
+        order: 1
+      },
+      "Bassline" : {
+        instrument: {
+          id: 1,
+          name: "Trombone",
+        },
+        user: {
+          name: "BassUser",
+          username: "demomike",
+        },
+        content: "",
+        audio: "Bassurl",
+        order: 0
+
+      },
+      "Creativity" : {
+        instrument: {
+          id: 1,
+          name: "Trumpet",
+        },
+        user: {
+          name: "CreateUser"
+        },
+        content: "",
+        audio: "Createurl",
+        order: 3
+
+      },
+    };
+    const token = session.djangoToken;
+    // return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assnId}`, {
+    //   headers: {
+    //     Authorization: `Token ${token}`,
+    //     'Content-Type': 'application/json',
+    //   },
+    // }).then((response, ...rest) => {
+    //   const results = response.json();
+    //   return results;
+    // });
+  });
+}
+
 export function getStudentAssignments(slug) {
   return () => {
     // console.log('getStudentAssignments');

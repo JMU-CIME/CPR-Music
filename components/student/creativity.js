@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import Button from 'react-bootstrap/Button';
 import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaFrownOpen } from 'react-icons/fa';
-import { getStudentAssignments, mutateCreateSubmission, getTelephoneGroup } from '../../api';
+import { getStudentAssignments, mutateCreateSubmission } from '../../api';
 import Recorder from '../recorder';
 import { postRecording } from '../../actions';
 import { UploadStatusEnum } from '../../types';
@@ -16,23 +16,9 @@ const FlatEditor = dynamic(() => import('../flatEditor'), {
 });
 
 export default function CreativityActivity() {
-  const [sortedTelephoneGroup, setSortedTelephoneGroup] = useState([]);
-  const { groupIsLoading, error, data: telephoneGroup } = useQuery('telephoneGroup', getTelephoneGroup);
   const dispatch = useDispatch();
-  // I think this should show the melody for the current piece, but in the student's transposition
-  // need to get the student's current assignment
   const router = useRouter();
   const { slug, piece, actCategory } = router.query;
-
-  useEffect(() => {
-    if (telephoneGroup && sortedTelephoneGroup)
-      setSortedTelephoneGroup(Object.entries(telephoneGroup)
-        .sort(([, a], [, b]) => a.order - b.order)
-        .map(([act_type, value]) => ({ ...value, act_type })));
-    // console.log('sortedTelephoneGroup', Object.entries(telephoneGroup)
-    // .sort(([, a], [, b]) => a.order - b.order)
-    // .map(([act_type, value]) => ({ ...value, act_type })));
-  }, [telephoneGroup]);
 
   const {
     isLoading,
@@ -44,7 +30,7 @@ export default function CreativityActivity() {
 
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  if (isLoading || groupIsLoading) {
+  if (isLoading) {
     return (
       <Spinner
         as="span"
@@ -69,7 +55,11 @@ export default function CreativityActivity() {
           assn.part.piece.slug === piece &&
           assn.activity.activity_type.category === actCategory
       )?.[0];
+
+  console.log('currentAssignment', currentAssignment);
   const currentTransposition = currentAssignment?.instrument.transposition;
+  console.log('currentTransposition', currentTransposition);
+
   const flatIOScoreForTransposition =
     currentAssignment?.part.transpositions.filter(
       (partTransposition) =>
@@ -95,7 +85,6 @@ export default function CreativityActivity() {
     );
   };
 
-  console.log('currentAssignment.enrollment.user.username', currentAssignment.enrollment.user.username);
   return (
     <>
       <FlatEditor score={JSON.parse(flatIOScoreForTransposition)} />
@@ -118,22 +107,6 @@ export default function CreativityActivity() {
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
       />
-
-      
-      {/* Check if the current user's assignment is the first in the order */}
-      {currentAssignment.enrollment.user.username === sortedTelephoneGroup[0]?.user?.username ? '' :
-        // Display the audio for the previous student's submission
-        sortedTelephoneGroup.slice(0, sortedTelephoneGroup.findIndex(
-          student => student.user.username === currentAssignment.enrollment.user.username)).map((student, index) => (
-          <div key={index}>
-            <strong>Listen to your classmate's {(student.act_type).toLowerCase()}.</strong>
-            <br />
-            <audio controls src={student.audio} />
-          </div>
-        ))
-      }
-
-
     </>
   );
 
