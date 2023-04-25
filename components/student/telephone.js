@@ -1,15 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
-import Button from 'react-bootstrap/Button';
 import { Spinner } from 'react-bootstrap';
-import { FaCheck, FaFrownOpen } from 'react-icons/fa';
 import { getStudentAssignments, mutateCreateSubmission, getTelephoneGroup } from '../../api';
 import Recorder from '../recorder';
 import { postRecording } from '../../actions';
-import { UploadStatusEnum } from '../../types';
+import GroupWork from './groupWork';
 
 const FlatEditor = dynamic(() => import('../flatEditor'), {
   ssr: false,
@@ -19,8 +17,6 @@ export default function TelephoneActivity() {
   const [sortedTelephoneGroup, setSortedTelephoneGroup] = useState([]);
   const { groupIsLoading, error, data: telephoneGroup } = useQuery('telephoneGroup', getTelephoneGroup);
   const dispatch = useDispatch();
-  // I think this should show the melody for the current piece, but in the student's transposition
-  // need to get the student's current assignment
   const router = useRouter();
   const { slug, piece, actCategory } = router.query;
 
@@ -104,37 +100,13 @@ export default function TelephoneActivity() {
     <>
       <FlatEditor score={JSON.parse(flatIOScoreForTransposition)} />
       {/* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */}
-
-      {/* {currentAssignment.activity <FlatEditor
-        edit
-        score={{
-          scoreId: '62689806be1cd400126c158a',
-          sharingKey:
-            'fc580b58032c2e32d55543ad748043c3fd7f5cd90d764d3cbf01355c5d79a7acdd5c0944cd2127ef6f0b47138a074477c337da654712e73245ed674ffc944ad8',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          // console.log('updated composition', data);
-          composition = data;
-        }}
-      />} */}
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
       />
-      {/* Check if the current user's assignment is the first in the order */}
-      {/* {currentAssignment.enrollment.user.username === sortedTelephoneGroup?.[0]?.user?.username ? '' : */}
-        {/* // Display the audio for the previous student's submission */}
-       { sortedTelephoneGroup.map((student, index) => (
-          <div key={index}>
-            {student.audio ? <strong>Listen to {student.user.name}'s {(student.act_type).toLowerCase()}.</strong> :
-              <strong>{student.user.name} has not submitted their {(student.act_type).toLowerCase()} yet.</strong>}
-            <br />
-            {student.audio && <audio controls src={student.audio} />}
-          </div>
-        ))
-      }
+      <br />
+      <GroupWork currentAssignment={currentAssignment} />
+
     </>
   );
 }
