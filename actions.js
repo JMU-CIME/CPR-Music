@@ -460,6 +460,13 @@ export function gotMyProfile(myProfile) {
   };
 }
 
+export function newTake(take) {
+  return {
+    type: types.Actions.NewTelephoneTake,
+    payload: take,
+  };
+}
+
 export function getUserProfile() {
   return (dispatch, getState) => {
     const {

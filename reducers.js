@@ -221,6 +221,17 @@ const selectedAssignmentReducer = (
   return state;
 };
 
+const telephoneReducer = (state = { takes: [] }, { type, payload }) => {
+  console.log('telephoneReducer', type, payload);
+  
+  switch (type) {
+    case types.Action.NewTelephoneTake:
+      console.log('takes', payload);
+      return { ...state, takes: [...state.takes, payload] };
+  }
+  return state;
+};
+
 const submitStatusReducer = (
   state = { submissions: {} },
   { type, payload }
@@ -281,6 +292,7 @@ const reducers = {
   selectedEnrollment: selectedEnrollmentReducer,
   selectedAssignment: selectedAssignmentReducer,
   submission: submitStatusReducer,
+  telephone: telephoneReducer,
 };
 
 export default combineReducers(reducers);

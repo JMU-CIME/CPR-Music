@@ -12,6 +12,8 @@ import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
 import { UploadStatusEnum } from '../types';
 import StatusIndicator from './statusIndicator';
+import '../actions';
+import {newTake} from '../actions';
 
 export default function Recorder({ submit, accompaniment }) {
   // const Mp3Recorder = new MicRecorder({ bitRate: 128 }); // 128 is default already
@@ -50,7 +52,7 @@ export default function Recorder({ submit, accompaniment }) {
   };
 
   const stopRecording = (ev) => {
-    // console.log('stopRecording', ev);
+    console.log('stopRecording', ev);
     accompanimentRef.current.pause();
     accompanimentRef.current.load();
     recorder
@@ -68,6 +70,11 @@ export default function Recorder({ submit, accompaniment }) {
           },
         ]);
         setIsRecording(false);
+        dispatch(
+          newTake({
+            url, data: blob,
+          })
+        );
       })
       .catch((e) => console.error('error stopping recording', e));
   };
@@ -175,6 +182,7 @@ export default function Recorder({ submit, accompaniment }) {
                 >
                   {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
                   <audio
+                    key={`recording-take-${i}`}
                     style={{ height: '2.25rem' }}
                     src={take.url}
                     controls
