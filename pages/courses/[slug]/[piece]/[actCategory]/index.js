@@ -28,6 +28,7 @@ export default function CreateRespondActivity () {
     <StudentAssignment assignment={currentAssignment}>
       {actCategory === 'Telephone' ? (
         <TelephoneActivity />
+        // <CreativityActivity />
       ) : actCategory === 'Create' ? (
         <CreativityActivity />
       ) : actCategory === 'Respond' ? (

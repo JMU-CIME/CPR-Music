@@ -46,7 +46,7 @@ export function getTelephoneGroup() {
           username: "demomelody",
         },
         content: "",
-        // audio: "",
+        audio: "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3",
         order: 1
       },
       "Bassline" : {
@@ -59,7 +59,7 @@ export function getTelephoneGroup() {
           username: "demomike",
         },
         content: "",
-        audio: "Bassurl",
+        // audio: "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3",
         order: 0
 
       },
@@ -72,7 +72,7 @@ export function getTelephoneGroup() {
           name: "CreateUser"
         },
         content: "",
-        audio: "Createurl",
+        audio: "http://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3",
         order: 3
 
       },

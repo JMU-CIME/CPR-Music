@@ -462,7 +462,7 @@ export function gotMyProfile(myProfile) {
 
 export function newTake(take) {
   return {
-    type: types.Actions.NewTelephoneTake,
+    type: types.Action.NewTelephoneTake,
     payload: take,
   };
 }

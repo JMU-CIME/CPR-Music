@@ -6,9 +6,9 @@ import { UploadStatusEnum } from '../types';
 export default function StatusIndicator({statusId}) {
   const { submissions } = useSelector((state) => state.submission);
 
-  console.log('statuses', submissions)
+  // console.log('statuses', submissions)
   const status = submissions?.[statusId];
-  console.log('status', status)
+  // console.log('status', status)
   return (
     /* eslint-disable no-nested-ternary */
     status === UploadStatusEnum.Active ? (

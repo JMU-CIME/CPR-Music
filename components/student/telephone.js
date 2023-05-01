@@ -25,9 +25,6 @@ export default function TelephoneActivity() {
       setSortedTelephoneGroup(Object.entries(telephoneGroup)
         .sort(([, a], [, b]) => a.order - b.order)
         .map(([act_type, value]) => ({ ...value, act_type })));
-    // console.log('sortedTelephoneGroup', Object.entries(telephoneGroup)
-    // .sort(([, a], [, b]) => a.order - b.order)
-    // .map(([act_type, value]) => ({ ...value, act_type })));
   }, [telephoneGroup]);
 
   const {
@@ -66,9 +63,9 @@ export default function TelephoneActivity() {
           assn.activity.activity_type.category === actCategory
       )?.[0];
 
-  console.log('currentAssignment', currentAssignment);
+  // console.log('currentAssignment', currentAssignment);
   const currentTransposition = currentAssignment?.instrument.transposition;
-  console.log('currentTransposition', currentTransposition);
+  // console.log('currentTransposition', currentTransposition);
 
   const flatIOScoreForTransposition =
     currentAssignment?.part.transpositions.filter(

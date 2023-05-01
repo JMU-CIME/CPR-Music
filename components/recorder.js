@@ -12,7 +12,6 @@ import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
 import { UploadStatusEnum } from '../types';
 import StatusIndicator from './statusIndicator';
-import '../actions';
 import {newTake} from '../actions';
 
 export default function Recorder({ submit, accompaniment }) {
@@ -79,6 +78,7 @@ export default function Recorder({ submit, accompaniment }) {
       .catch((e) => console.error('error stopping recording', e));
   };
 
+  //Current error: Uncaught (in promise) DOMException: The fetching process for the media resource was aborted by the user agent at the user's request.
   const submitRecording = (i, submissionId) => {
     const formData = new FormData(); // TODO: make filename reflect assignment
     formData.append(

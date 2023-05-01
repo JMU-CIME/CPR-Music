@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import Button from 'react-bootstrap/Button';
+import { Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { Spinner } from 'react-bootstrap';
 import { FaPause, FaStop, FaPlay } from 'react-icons/fa';
 import { getStudentAssignments, getTelephoneGroup } from '../../api';
@@ -10,9 +10,11 @@ import { useSelector } from 'react-redux';
 
 export default function GroupWork({ currentAssignment }) {
   const [sortedTelephoneGroup, setSortedTelephoneGroup] = useState([]);
+  const [currentTake, setCurrentTake] = useState(-1);
   const { groupIsLoading, error, data: telephoneGroup } = useQuery('telephoneGroup', getTelephoneGroup);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRefs = useRef([]);
+  const oldAudioRefs = useRef([]);
+  const selectedTakeRef = useRef(null);
   const router = useRouter();
   const { slug } = router.query;
 
@@ -28,27 +30,32 @@ export default function GroupWork({ currentAssignment }) {
 
   const handlePlayAll = () => {
     if (!isPlaying) {
-      audioRefs.current.forEach((audio) => {
-        audio.play();
+      oldAudioRefs?.current?.forEach((audio) => {
+        audio?.play();
       });
+      selectedTakeRef?.current?.play();
       setIsPlaying(true);
     }
   };
 
   const handlePauseAll = () => {
     if (isPlaying) {
-      audioRefs.current.forEach((audio) => {
-        audio.pause();
+      oldAudioRefs?.current?.forEach((audio) => {
+        audio?.pause();
       });
+      selectedTakeRef?.current?.pause();
       setIsPlaying(false);
     }
   };
 
   const handleStopAll = () => {
-    audioRefs.current.forEach((audio) => {
-      audio.pause();
+    oldAudioRefs?.current?.forEach((audio) => {
+      audio?.pause();
       audio.currentTime = 0;
     });
+    selectedTakeRef?.current?.pause();
+    if(selectedTakeRef?.current?.currentTime)
+      selectedTakeRef.current.currentTime = 0;
     setIsPlaying(false);
   };
 
@@ -76,12 +83,35 @@ export default function GroupWork({ currentAssignment }) {
     );
   }
 
+  function currentTakeDropdown() {
+    console.log("oldAudioRefs", oldAudioRefs);
+    return (
+      <Dropdown>
+        <Dropdown.Toggle className="dropdown-itm" id="currentTakeDropdown">
+          {currentTake == -1 ? "Pick Your Current Take" : "Take " + (currentTake + 1)}
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          {takes.map((take, index) => (
+            <Dropdown.Item onClick={(() => {
+              console.log('take', take);
+              console.log('index', index);
+              setCurrentTake(index);
+            })}
+            key={`take-${index}`}>Take {index + 1}</Dropdown.Item>
+          ))}
+          {/* <DropdownDivider /> */}
+          <Dropdown.Item onClick={(() => {setCurrentTake(-1);})}>None</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    );
+  }
+
   //   console.log('currentAssignment.enrollment.user.username', currentAssignment.enrollment.user.username);
-  console.log('takes', takes);
+  // console.log('takes', takes);
   return (
     <>
       <h2>Listen to Your Group's Submissions</h2>
-      {/* Check if the current user's assignment is the first in the order */}
       {/* {currentAssignment.enrollment.user.username === sortedTelephoneGroup?.[0]?.user?.username ? '' : */}
       {/* Display the audio for the previous student's submission */}
       {sortedTelephoneGroup.map((student, index) => (
@@ -89,17 +119,26 @@ export default function GroupWork({ currentAssignment }) {
           {student.audio ? <strong>Listen to {student.user.name}'s {(student.act_type).toLowerCase()}.</strong> :
             <strong>{student.user.name} has not submitted their {(student.act_type).toLowerCase()} yet.</strong>}
           <br />
-          {/* {student.audio && <audio controls key={student.act_type} src={student.audio} ref={e => (audioRefs.current[student.act_type] = e)} />} */}
+          {/* {student.audio && <audio controls key={student.act_type} src={student.audio} ref={e => (oldAudioRefs.current[student.act_type] = e)} />} */}
           {student.audio && <audio
             controls key={index}
             src={student.audio}
             preload='auto'
-            ref={e => (audioRefs.current[index] = e)} />}
+            ref={e => (oldAudioRefs.current[index] = e)} />}
         </div>
       ))
       }
-      {/* <Button onClick={handlePlayAll} disabled={!allLoaded}>{isPlaying ? "Stop All" : "Play All"}</Button> */}
-      {/* <Button onClick={handlePlayAll} >{isPlaying ? <FaPause>Pause All</FaPause> : <FaPlay />}</Button> */}
+
+      {takes.length > 0 && 
+      <>
+        {currentTakeDropdown()}
+        {currentTake > -1 &&
+        <audio controls src={takes[currentTake].url} ref={selectedTakeRef} preload='auto'></audio>}
+        {/* ref={`currentTake${currentTake}`} */}
+      </>
+      }
+      <br />
+
       {isPlaying ?
         <>
           <Button onClick={handlePauseAll} ><FaPause /> Pause</Button >

@@ -107,3 +107,31 @@ a:nth-of-type(6) .card .card-color {
 nav.navbar.navbar-dark .navbar-nav .nav-link {
   color: rgba(255,255,255,.8);
 }
+
+.link-btn {      
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 0 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #ffffff;
+  background-color: #450084;  
+  border-radius: 6px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.link-btn:hover{      
+  color: #ffffff;
+  background-color: #6b1ab7;  
+  border-radius: 6px;
+  outline: none;
+}
+
+.telephone-group-entry{
+  text-align: center;
+}
+
+.dropdown-item {
+  color: #450084;
+}

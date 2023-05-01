@@ -31,6 +31,15 @@ export default function PerformMelody() {
   const dispatch = useDispatch();
   const [parsedScore, setParsedScore] = useState();
 
+  function playall() {
+    console.log('playall');
+    console.log('elements', document.getElementsByTagName('audio'));
+    Array.from(document.getElementsByTagName('audio')).forEach(element => {
+      element.play();
+    });
+
+  }
+
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
     if (slug && userInfo.token) {
@@ -108,6 +117,8 @@ export default function PerformMelody() {
           }
         />
       )}
+
+      <Button onClick={playall}>Hello</Button>
     </StudentAssignment>
   );
   // ) : (

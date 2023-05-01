@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
 import { getEnrollments, getStudentAssignments } from '../../../api';
 import Layout from '../../../components/layout';
-import StudentTelephoneCourseView from '../../../components/student/telephoneCourse';
+import StudentTelephoneCourseView from '../../../components/student/telephoneCourseView';
 import StudentCourseView from '../../../components/student/course';
 import TeacherCourseView from '../../../components/teacher/course';
 
@@ -13,7 +13,7 @@ import TeacherCourseView from '../../../components/teacher/course';
 // student vs the teacher, notice the branch in the rendering
 
 export default function CourseDetails() {
-  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
+  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments);
   const router = useRouter();
   const { slug } = router.query;
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
@@ -28,9 +28,15 @@ export default function CourseDetails() {
             // <p>
             //   Please ask your teacher for the links to your activities.
             // </p>
+            <>
             <StudentCourseView
               enrollment={currentEnrollment}
             />
+            <br />
+            <StudentTelephoneCourseView
+              enrollment={currentEnrollment}
+            />
+            </>
           ) : (
             <div>
               <Link href={`/courses/${slug}/edit`}>
