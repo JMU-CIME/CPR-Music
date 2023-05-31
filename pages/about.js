@@ -117,6 +117,7 @@ function About() {
           <a target="_blank" rel="noopener noreferrer" href="https://portfolium.com/AlexDumo" >Alex Dumouchelle</a>{' '}
           (Undergraduate Student, James Madison University)
         </li>
+        <li>Zoey Fox (Consultant)</li>
         <li>Jonah Giblin (Undergraduate Student, James Madison University)</li>
         <li>
           <a target="_blank" rel="noopener noreferrer" href="http://benguerrero.com/">Benjamin Guerrero, MM</a> (Preparing
