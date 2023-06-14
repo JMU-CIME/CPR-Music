@@ -1,6 +1,6 @@
 import Badge from 'react-bootstrap/Badge';
 
-export default function TranspositionBadge({ instrument }) {
+export default function TranspositionBadge({ instrument, transposition }) {
   const transpositionMap = {
     'F': {bg: 'primary', text:'white'},
     'Eb': {bg: 'secondary', text:'white'},
@@ -11,6 +11,6 @@ export default function TranspositionBadge({ instrument }) {
     'Bb': {bg: 'light', text:'dark'},
     'Alto Clef': {bg: 'dark', text:'white'},
   }
-  const colors = transpositionMap[instrument.transposition]
-  return <Badge bg={colors.bg} text={colors.text}>{instrument.name}</Badge>
+  const colors = transpositionMap[transposition]
+  return <Badge bg={colors.bg} text={colors.text}>{instrument}</Badge>
 }

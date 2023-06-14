@@ -33,8 +33,9 @@ export default function StudentCourseView({ enrollment }) {
       Reflection: 4,
       Connect: 5,
     };
-    const c = a.activity.activity_type.name.split(' ')[0];
-    const d = b.activity.activity_type.name.split(' ')[0];
+    console.log(a, b)
+    const c = a.activity_type_name.split(' ')[0];
+    const d = b.activity_type_name.split(' ')[0];
     return ordering[c] - ordering[d];
   };
 
@@ -70,17 +71,17 @@ export default function StudentCourseView({ enrollment }) {
                         <Link
                           passHref
                           href={`${enrollment.course.slug}/${
-                            assignment.part.piece.slug
-                          }/${assignment.activity.activity_type.category}${
-                            assignment.activity.activity_type.category ===
+                            assignment.piece_slug
+                          }/${assignment.activity_type_category}${
+                            assignment.activity_type_category ===
                             'Perform'
-                              ? `/${assignment.activity.part_type}`
+                              ? `/${assignment.part_type}`
                               : ''
                           }`}
                         >
                           <a>
                             {
-                              assignment.activity.activity_type.name.split(
+                              assignment.activity_type_name.split(
                                 ' '
                               )[0]
                             }
@@ -88,6 +89,7 @@ export default function StudentCourseView({ enrollment }) {
                         </Link>
                         <TranspositionBadge
                           instrument={assignment.instrument}
+                          transposition={assignment.transposition}
                         />
                       </ListGroupItem>
                     ))}
