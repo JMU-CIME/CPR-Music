@@ -48,7 +48,7 @@ export function getStudentAssignments(slug) {
       })
       .then((results) => {
         const grouped = results.reduce((acc, obj) => {
-          const key = obj.part.piece.name;
+          const key = obj.piece_name;
           if (!acc[key]) {
             acc[key] = [];
           }
@@ -90,22 +90,26 @@ export function getAssignedPieces(assignments) {
     console.log('getAssignedPieces', assignments);
     const pieces = {};
     if (Object.values(assignments).length > 0) {
+      console.log('assignments', assignments);
       for (const pieceKey of Object.keys(assignments)) {
         for (const pieceAssignment of assignments[pieceKey]) {
           //   pieces[pieceAssignment.part.piece.id] = pieceAssignment.part.piece;
           // }
           if (!(pieceKey in pieces)) {
             pieces[pieceKey] = {
-              ...pieceAssignment.part.piece,
+              id: pieceAssignment.piece_id,
+              name: pieceAssignment.piece_name,
               activities: {},
             };
           }
           console.log('pieceAssignment', pieceAssignment);
-          const actType = pieceAssignment.activity.activity_type;
-          pieces[pieceKey].activities[`${actType.category}-${actType.name}`] =
-            actType;
+          const actType = pieceAssignment.activity_type_name;
+          const actCat = pieceAssignment.activity_type_category;
+          pieces[pieceKey].activities[`${actCat}-${actType}`] =
+            {name: actType, category: actCat};
         }
       }
+      console.log('pieces', pieces);
     }
     return pieces;
     // console.log('foreach', Object.values(assignments));

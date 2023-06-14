@@ -46,14 +46,15 @@ export default function PerformMelody() {
   );
   useEffect(() => {
     if (loadedActivities) {
+      console.log('dispatch', activities);
       dispatch(
         fetchSingleStudentAssignment({
           slug,
           assignmentId: activities[slug].filter(
             (assn) =>
-              assn.part.piece.slug === piece &&
-              assn.activity.part_type === partType &&
-              assn.activity.activity_type.category === actCategory
+              assn.piece_slug === piece &&
+              assn.part_type === partType &&
+              assn.activity_type_category === actCategory
           )?.[0]?.id,
         })
       );
