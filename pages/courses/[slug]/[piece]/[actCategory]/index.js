@@ -18,7 +18,7 @@ export default function CreateRespondActivity () {
   const { isLoading: loaded, error: assignmentsError, data: assignments } = useQuery('assignments', getStudentAssignments(slug), {
     enabled: !!slug
   })
-  const currentAssignment = assignments && Object.values(assignments).reduce((prev, current) => [...prev, ...current], []).filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
+  const currentAssignment = assignments && Object.values(assignments).reduce((prev, current) => [...prev, ...current], []).filter((assn) => assn.piece_slug === piece && assn.activity_type_category === actCategory)?.[0]
   
   // TODO: branch on actCategory
 
