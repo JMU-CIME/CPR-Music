@@ -3,12 +3,13 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useQuery } from 'react-query';
 import { getStudentAssignments } from '../../../../../api';
 import StudentAssignment from '../../../../../components/student/assignment';
-import CreativityActivity from '../../../../../components/student/create/aural';
+import CreativityAuralActivity from '../../../../../components/student/create/aural';
 
 export default function CreateAuralActivityPage() {
   const router = useRouter();
   const { slug, piece } = router.query;
   const actCategory = 'Create';
+  console.log('got into aural page', slug, piece, actCategory);
   // I think this should show the melody for the current piece, but in the student's transposition
   // need to get the student's current assignment
   const {
@@ -22,18 +23,28 @@ export default function CreateAuralActivityPage() {
     assignments &&
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
-      .filter(
-        (assn) =>
-          assn.part.piece.slug === piece &&
-          assn.activity.activity_type.category === actCategory
-      )?.[0];
+      .filter((assn) => {
+        console.log('assn', assn);
+        console.log(
+          'assn.piece_slug === piece && assn.activity_type_category === actCategory',
+          assn.piece_slug === piece &&
+            assn.activity_type_category === actCategory
+        );
+        return (
+          assn.piece_slug === piece &&
+          assn.activity_type_category === actCategory
+        );
+      })?.[0];
+
+  if (currentAssignment) {
+    console.log('have current assn', currentAssignment);
+  }
 
   // TODO: branch on actCategory
 
-  /* eslint-disable no-nested-ternary */
   return currentAssignment ? (
     <StudentAssignment assignment={currentAssignment}>
-      <CreativityActivity />
+      <CreativityAuralActivity/>
     </StudentAssignment>
   ) : (
     <Spinner

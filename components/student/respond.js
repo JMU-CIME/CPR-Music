@@ -33,8 +33,8 @@ export default function RespondActivity() {
     activities?.[slug] &&
     activities?.[slug].filter(
       (assn) =>
-        assn.part.piece.slug === piece &&
-        assn.activity.activity_type.category === actCategory
+        assn.piece_slug === piece &&
+        assn.activity_type_category === actCategory
     )?.[0]?.id;
   console.log('RespondActivity::assignmentid', assignmentId);
   useEffect(() => {
