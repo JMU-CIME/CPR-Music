@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -8,7 +8,11 @@ import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaFrownOpen } from 'react-icons/fa';
 import { getStudentAssignments, mutateCreateSubmission } from '../../api';
 import Recorder from '../recorder';
-import { postRecording } from '../../actions';
+import {
+  fetchActivities,
+  fetchSingleStudentAssignment,
+  postRecording,
+} from '../../actions';
 import { UploadStatusEnum } from '../../types';
 
 const FlatEditor = dynamic(() => import('../flatEditor'), {
@@ -22,44 +26,41 @@ export default function CreativityActivity() {
   const router = useRouter();
   const { slug, piece, actCategory } = router.query;
 
-  const {
-    isLoading,
-    error: assignmentsError,
-    data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
-  });
+  const userInfo = useSelector((state) => state.currentUser);
+  
+  useEffect(() => {
+    if (slug && userInfo.token) {
+      // console.log('dispatching getStudentAssignments ', slug);
+      dispatch(getStudentAssignments(slug));
+    }
+  }, [slug, userInfo.token]);
+  const { items: assignments, loaded: loadedAssignments } = useSelector(
+    (state) => state.assignments
+  );
+
+  const assignment = useSelector(
+    (state) => state.selectedAssignment
+  );
+
+  useEffect(() => {
+    if (loadedAssignments) {
+      console.log('dispatch', activities);
+      dispatch(
+        fetchSingleStudentAssignment({
+          slug,
+          assignmentId: assignment.id,
+        })
+      );
+    }
+  }, [slug, loadedAssignments, assignment]);
 
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  if (isLoading) {
-    return (
-      <Spinner
-        as="span"
-        animation="border"
-        size="sm"
-        role="status"
-        aria-hidden="true"
-      >
-        <span className="visually-hidden">Loading...</span>
-      </Spinner>
-    );
-  }
-
   let composition = ''; // FIXME: why isn't this useState???
-  // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
-  const currentAssignment =
-    assignments &&
-    Object.values(assignments)
-      .reduce((prev, current) => [...prev, ...current], [])
-      .filter(
-        (assn) =>
-          assn.part.piece.slug === piece &&
-          assn.activity.activity_type.category === actCategory
-      )?.[0];
-  const currentTransposition = currentAssignment?.instrument.transposition;
+ 
+  const currentTransposition = assignment?.instrument.transposition;
   const flatIOScoreForTransposition =
-    currentAssignment?.part.transpositions.filter(
+  assignment?.part.transpositions.filter(
       (partTransposition) =>
         partTransposition.transposition.name === currentTransposition
     )?.[0]?.flatio;
@@ -75,7 +76,7 @@ export default function CreativityActivity() {
     return dispatch(
       postRecording({
         slug,
-        assignmentId: currentAssignment.id,
+        assignmentId: assignment.id,
         audio,
         composition,
         submissionId,
@@ -103,7 +104,7 @@ export default function CreativityActivity() {
       />
       <Recorder
         submit={submitCreativity}
-        accompaniment={currentAssignment?.part?.piece?.accompaniment}
+        accompaniment={assignment?.part?.piece?.accompaniment}
       />
     </>
   );
