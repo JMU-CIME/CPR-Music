@@ -124,6 +124,9 @@ function About() {
           University of Rochester)
         </li>
         <li>
+          Luke Hennessy (Undergraduate, James Madison University)
+        </li>
+        <li>
           Thomas Hassett (Undergraduate Student Alumnus, School of Music;
           Innovation Leader, Center for Inclusive Music Engagement; James
           Madison University)
