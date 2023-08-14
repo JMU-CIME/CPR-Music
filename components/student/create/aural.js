@@ -6,12 +6,12 @@ import dynamic from 'next/dynamic';
 import Button from 'react-bootstrap/Button';
 import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaFrownOpen } from 'react-icons/fa';
-import { getStudentAssignments, mutateCreateSubmission } from '../../api';
-import Recorder from '../recorder';
-import { postRecording } from '../../actions';
-import { UploadStatusEnum } from '../../types';
+import { getStudentAssignments, mutateCreateSubmission } from '../../../api';
+import Recorder from '../../recorder';
+import { postRecording } from '../../../actions';
+import { UploadStatusEnum } from '../../../types';
 
-const FlatEditor = dynamic(() => import('../flatEditor'), {
+const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
@@ -20,7 +20,8 @@ export default function CreativityActivity() {
   // I think this should show the melody for the current piece, but in the student's transposition
   // need to get the student's current assignment
   const router = useRouter();
-  const { slug, piece, actCategory } = router.query;
+  const { slug, piece } = router.query;
+  const actCategory = 'Create';
 
   const {
     isLoading,
@@ -58,6 +59,8 @@ export default function CreativityActivity() {
           assn.activity.activity_type.category === actCategory
       )?.[0];
   const currentTransposition = currentAssignment?.instrument.transposition;
+  console.log('currentAssignment', currentAssignment);
+  console.log('currentTransposition', currentTransposition);
   const flatIOScoreForTransposition =
     currentAssignment?.part.transpositions.filter(
       (partTransposition) =>

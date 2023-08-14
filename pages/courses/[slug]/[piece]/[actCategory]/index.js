@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStudentAssignments } from "../../../../../api";
 import StudentAssignment from "../../../../../components/student/assignment";
 import ConnectActivity from "../../../../../components/student/connect";
-import CreativityActivity from "../../../../../components/student/creativity";
+import CreativityActivity from "../../../../../components/student/create/aural";
 import RespondActivity from "../../../../../components/student/respond";
 
 export default function CreateRespondActivity () {
