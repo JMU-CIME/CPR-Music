@@ -24,12 +24,9 @@ export default function CourseDetails() {
         <>
           <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
           {currentEnrollment.role === 'Student' ? (
-            <p>
-              Please ask your teacher for the links to your activities.
-            </p>
-            // <StudentCourseView
-            //   enrollment={currentEnrollment}
-            // />
+            <StudentCourseView
+              enrollment={currentEnrollment}
+            />
           ) : (
             <div>
               <Link href={`/courses/${slug}/edit`}>
