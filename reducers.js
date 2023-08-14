@@ -30,7 +30,8 @@ const assignedPiecesReducer = (
   switch (type) {
     case types.Action.GotActivities:
       let pieces = payload.activities.map(
-        (assignment) => assignment.part.piece
+        (assignment) => ({id: assignment.piece_id,
+           name: assignment.piece_name})
       );
       pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
       pieces = pieces.filter((piece, i, arr) =>

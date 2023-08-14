@@ -28,15 +28,16 @@ export default function ConnectActivity() {
     (state) => state.activities
   );
   console.log('ConnectActivity::activities', activities);
-  // const assignment = useSelector((state) => state.selectedAssignment);
+  const currentAssignment = useSelector((state) => state.selectedAssignment);
+  console.log('ConnectActivity::currentAssignment', currentAssignment);
   const assignment =
     loadedActivities &&
     activities &&
     activities?.[slug] &&
     activities?.[slug].filter(
       (assn) =>
-        assn.part.piece.slug === piece &&
-        assn.activity.activity_type.category.startsWith(actCategory)
+        assn.piece_slug === piece &&
+        assn.activity_type_category.startsWith(actCategory)
     )?.[0];
   const assignmentId = assignment?.id;
   console.log('ConnectActivity::assignmentid', assignmentId);
@@ -68,9 +69,9 @@ export default function ConnectActivity() {
 
   return (
     <>
-      {assignment && assignment?.part?.piece?.video && (
+      {currentAssignment && currentAssignment?.part?.piece?.video && (
         <iframe
-          src={assignment.part.piece.video}
+          src={currentAssignment.part.piece.video}
           width="560"
           height="315"
           title="YouTube video player"

@@ -16,7 +16,8 @@ import { getMySubmissionsForAssignment } from '../../api';
 export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
 
-  const { slug, piece, actCategory, partType } = router.query;
+  const { slug, piece, actCategory='Create', partType } = router.query;
+  console.log('StudentAssignmentPage', slug, piece, actCategory, partType, assignment);
   // console.log('slug, assignmentId', slug, assignment.id);
   const {
     isLoading,
@@ -43,10 +44,13 @@ export default function StudentAssignment({ children, assignment }) {
 
   return (
     <Layout>
-      {assignment && assignment?.id && assignment?.part ? (
+      {assignment && assignment?.id && assignment?.piece_name ? (
         <Row>
-          {/* <Col md={3}>
-            <h2>{assignment?.part?.piece?.name}</h2>
+          {/* piece subnav (navigate to next/other activity, else?) */}
+          <Col md={3}>
+            {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
+            <h2>{assignment?.piece_name}</h2>
+            {/* Piece Activities */}
             <Tab.Container
               id="list-group-tabs-example"
               defaultActiveKey="#link1"
@@ -138,12 +142,12 @@ export default function StudentAssignment({ children, assignment }) {
                 </Col>
               </Row>
             </Tab.Container>
-          </Col> */}
+          </Col>
           <Col>
             <h1>
               {/* {assignment?.activity?.part_type === 'Combined' &&
                 `${assignment?.activity?.activity_type.category} `} */}
-              {assignment?.activity?.activity_type.name} Activity
+              {assignment?.activity_type_name} Activity
             </h1>
             {/* {assignment?.activity?.part_type !== "Combined" && <h1>{`${assignment?.activity?.part_type} Activity`}</h1>} */}
             {/* instructions */}
