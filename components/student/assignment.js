@@ -32,24 +32,22 @@ export default function StudentAssignment({ children, assignment }) {
     }
   );
 
-  // console.log('submissions', submissions);
-
   // const
   const composer = assignment?.part?.piece?.composer?.name;
   const composerCheat = composer?.split(' ').pop();
   const connectLink = `Connect ${composerCheat}`;
   const hasCompose = ['Benjamin', 'Danyew', 'Green'].includes(composerCheat);
 
-  // console.log(composer, composerCheat, connectLink, hasCompose)
+  const pieceName = assignment?.piece_name ?? assignment?.part?.piece?.name;
 
   return (
     <Layout>
-      {assignment && assignment?.id && assignment?.piece_name ? (
+      {assignment && assignment?.id && pieceName ? (
         <Row>
           {/* piece subnav (navigate to next/other activity, else?) */}
           <Col md={3}>
             {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
-            <h2>{assignment?.piece_name}</h2>
+            <h2>{pieceName}</h2>
             {/* Piece Activities */}
             <Tab.Container
               id="list-group-tabs-example"
@@ -145,12 +143,10 @@ export default function StudentAssignment({ children, assignment }) {
           </Col>
           <Col>
             <h1>
-              {/* {assignment?.activity?.part_type === 'Combined' &&
-                `${assignment?.activity?.activity_type.category} `} */}
-              {assignment?.activity_type_name} Activity
+              {(actCategory == 'Perform' || actCategory == 'Create') &&
+                `${actCategory} `}
+              {assignment?.activity?.activity_type?.name} Activity
             </h1>
-            {/* {assignment?.activity?.part_type !== "Combined" && <h1>{`${assignment?.activity?.part_type} Activity`}</h1>} */}
-            {/* instructions */}
             <Instructions body={assignment?.activity?.body} />
             {/* tasks */}
             {children}

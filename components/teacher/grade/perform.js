@@ -100,8 +100,8 @@ export default function GradePerform({ submissions }) {
       <Col>
         {submissions ? (
           <h2>
-            Grading: {submissions?.[0].assignment?.part?.piece?.name} -{' '}
-            {submissions?.[0].assignment.activity.activity_type.category}{' '}
+            Grading: {submissions?.[0]?.assignment?.part?.piece?.name} -{' '}
+            {submissions?.[0]?.assignment?.activity?.activity_type?.category}{' '}
             Activity
           </h2>
         ) : (
