@@ -45,6 +45,8 @@ function FlatEditor({
     const embedParams = {
       // sharingKey: score.sharingKey,
       appId: '60a51c906bcde01fc75a3ad0',
+      branding: false,
+      themePrimary: '#450084',
       controlsPosition: 'bottom',
       // controlsDisplay: false, // these are paid embed features?? https://flat.io/embed#pricing
       // controlsPlay: false,
