@@ -97,13 +97,16 @@ export default function CreativityAuralActivity() {
         submissionId,
       })
     );
-console.log('flatIOScoreForTransposition', flatIOScoreForTransposition);
-const scoreJSON = JSON.parse(flatIOScoreForTransposition)
+  console.log('flatIOScoreForTransposition', flatIOScoreForTransposition);
+  let scoreJSON;
+  if (flatIOScoreForTransposition) {
+    scoreJSON = JSON.parse(flatIOScoreForTransposition);
+  }
 
-// const origJSON
+  // const origJSON
   return flatIOScoreForTransposition ? (
     <>
-      <FlatEditor score={scoreJSON} giveJSON={setJson}/>
+      <FlatEditor score={scoreJSON} giveJSON={setJson} />
       {/* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */}
       <FlatEditor
         edit

@@ -3,7 +3,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { useQuery } from 'react-query';
 import { getStudentAssignments } from '../../../../../api';
 import StudentAssignment from '../../../../../components/student/assignment';
-import ExploratoryCreativityActivity from '../../../../../components/student/create/explore';
+import CreativityActivity from '../../../../../components/student/create/explore'
 
 export default function CreateExploratoryActivityPage() {
   const router = useRouter();
@@ -18,14 +18,16 @@ export default function CreateExploratoryActivityPage() {
   } = useQuery('assignments', getStudentAssignments(slug), {
     enabled: !!slug,
   });
+  console.log('assingments', assignments , piece, actCategory)
   const currentAssignment =
     assignments &&
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter(
-        (assn) =>
-          assn.part.piece.slug === piece &&
-          assn.activity.activity_type.category === actCategory
+        (assn) =>{
+          console.log('assn', assn);
+          return assn.piece_slug === piece &&
+          assn.activity_type_category === actCategory}
       )?.[0];
 
   // TODO: branch on actCategory
@@ -33,7 +35,7 @@ export default function CreateExploratoryActivityPage() {
   /* eslint-disable no-nested-ternary */
   return currentAssignment ? (
     <StudentAssignment assignment={currentAssignment}>
-      <ExploratoryCreativityActivity />
+      <CreativityActivity></CreativityActivity>
     </StudentAssignment>
   ) : (
     <Spinner
@@ -46,4 +48,5 @@ export default function CreateExploratoryActivityPage() {
       <span className="visually-hidden">Loading...</span>
     </Spinner>
   );
+  // return <h1>hiiiii</h1>
 }
