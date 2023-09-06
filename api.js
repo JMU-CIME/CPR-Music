@@ -100,6 +100,7 @@ export function getAssignedPieces(assignments) {
               id: pieceAssignment.piece_id,
               name: pieceAssignment.piece_name,
               activities: {},
+              slug: pieceAssignment.piece_slug
             };
           }
           console.log('pieceAssignment', pieceAssignment);
