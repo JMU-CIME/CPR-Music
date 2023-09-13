@@ -35,7 +35,9 @@ export default function TeacherCourseView() {
     isLoading,
     error,
     data: allPieces,
-  } = useQuery('allPieces', getAllPieces);
+  } = useQuery('allPieces', getAllPieces(slug), {
+    enabled: !!slug,
+  });
   const {
     isLoading: loaded,
     error: assignmentsError,
