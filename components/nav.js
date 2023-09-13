@@ -16,7 +16,7 @@ function Navigation() {
   
   return (
     <Navbar bg="primary" variant="dark" expand="sm">
-      <Container>
+      <Container fluid>
         <Link href="/" passHref>
           <Navbar.Brand>Music CPR</Navbar.Brand>
         </Link>

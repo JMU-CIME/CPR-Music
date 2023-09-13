@@ -68,7 +68,7 @@ export default function Layout({ children }) {
       <Navigation />
       {(!PUBLIC_PATHS.includes(router.pathname) && userLoaded && token) ||
       PUBLIC_PATHS.includes(router.pathname) ? (
-        <Container>
+        <Container fluid>
           <main className={styles.container}>{children}</main>
         </Container>
       ) : (
