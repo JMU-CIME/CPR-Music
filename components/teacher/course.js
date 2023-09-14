@@ -126,7 +126,7 @@ export default function TeacherCourseView() {
       // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
     },
   });
-  const assign = (piece) => assignMutation.mutate(piece);
+  const assign = (piecePlan) => assignMutation.mutate(piecePlan);
   if (isLoading || isLoadingAssignedActs || !assignedPieces)
     return 'Loading...';
   if (error || errorAssignedActs)
@@ -174,7 +174,7 @@ export default function TeacherCourseView() {
                     className="d-flex justify-content-between align-items-center"
                   >
                     <div>{piece.name}</div>
-                    <Button onClick={() => assign(piece)}>
+                    <Button onClick={() => assign(piece.piece_plan_id)}>
                       Assign <FaPlus />
                     </Button>
                   </ListGroupItem>

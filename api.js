@@ -87,8 +87,7 @@ export function getAllPieces(courseSlug) {
         .then((json) => {
           // console.log('end: getAllPieces')
           const result = json;
-          // console.log('all pieces', result);
-          return result.map((r) => r.piece);
+          return result.map((r) => ({...r.piece, piece_plan_id: r.id}));
         });
     });
 }
@@ -164,19 +163,19 @@ export function getAssignedPieces(assignments) {
 }
 
 export function mutateAssignPiece(slug) {
-  return (piece) =>
+  return (piecePlanId) =>
     getSession().then((session) => {
       const token = session.djangoToken;
       // console.log('assignpiece now', token, slug, piece)
       return fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assign/`,
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assign_piece_plan/`,
         {
           headers: {
             Authorization: `Token ${token}`,
             'Content-Type': 'application/json',
           },
           method: 'POST',
-          body: JSON.stringify({ piece_id: piece.id }),
+          body: JSON.stringify({ piece_plan_id: piecePlanId }),
           // body: data,
         }
       )
