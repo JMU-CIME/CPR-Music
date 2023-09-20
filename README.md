@@ -24,3 +24,7 @@
 1. `pm2 start npm --name "fe-dev" -- start`
 1. `pm2 save`
 
+## Deploying PROD
+
+1. package.json needs to specify the different port
+1. .env files may need to be copied from prior versions 
