@@ -91,7 +91,17 @@ export default function PerformMelody() {
           </p>
         </Alert>
       ) : (
-        <FlatEditor score={parsedScore} />
+        <>
+          <FlatEditor score={parsedScore} />
+          {assignment?.part?.sample_audio && (
+            <dl>
+              <dt>Sample Recording</dt>
+              <dd>
+                <audio controls src={assignment.part.sample_audio} />
+              </dd>
+            </dl>
+          )}
+        </>
       )}
       {partType && (
         <Recorder
