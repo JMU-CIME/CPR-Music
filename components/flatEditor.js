@@ -123,11 +123,15 @@ function FlatEditor({
     const embedParams = {
       // sharingKey: score.sharingKey,
       appId: '60a51c906bcde01fc75a3ad0',
+      layout: 'responsive',
       branding: false,
       themePrimary: '#450084',
-      controlsPosition: 'bottom',
-      // controlsDisplay: false, // these are paid embed features?? https://flat.io/embed#pricing
-      // controlsPlay: false,
+      controlsDisplay: false,
+      controlsPlay: false,
+      controlsFullscreen: false,
+      controlsZoom: false,
+      controlsPrint: false,
+      toolsetId: '64be80de738efff96cc27edd',
     };
     let computedHeight = 300;
     if (edit) {
