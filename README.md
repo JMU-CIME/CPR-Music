@@ -22,6 +22,7 @@
     * ln -s /home/ec2-user/fe-dev-versions/<v0.2.2> live
 1. cd /home/ec2-user/fe-dev-versions/live
 1. `pm2 start npm --name "fe-dev" -- start`
+    `pm2 start npm --name "fe-prod" -- start``
 1. `pm2 save`
 
 ## Deploying PROD

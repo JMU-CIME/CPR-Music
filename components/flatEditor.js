@@ -5,82 +5,25 @@ import Button from 'react-bootstrap/Button';
 import Embed from 'flat-embed';
 import { Spinner } from 'react-bootstrap';
 import { FaCheck, FaFrownOpen } from 'react-icons/fa';
+import { pitchesToRests, trimScore } from '../lib/flat';
 
-const pitchesToRests = (pieceScoreJSON) => {
-  const getMeasureTimeSignature = (measure, current) => {
-    let duration = 8; // default to 8 because i reasoned it might be a quarter in some cases
-    let maxRests = 4; // bc 4 is a common denominator for musicians
-    let updated = false;
-    if (measure.attributes) {
-      measure.attributes.forEach((attribute) => {
-        if (attribute.divisions) {
-          duration = attribute.divisions;
-          updated = true;
-        }
-        if (attribute.time) {
-          if (attribute.time.beats) {
-            maxRests = attribute.time.beats;
-            updated = true;
-          }
-        }
-      });
-    }
-    if (updated) {
-      return { duration, maxRests };
-    }
-    return current;
-  };
-  console.log('pieceScoreJSON', pieceScoreJSON);
-  const composeScoreJSON = pieceScoreJSON;
-  // nathan!
-  const duration = 8; // default to 8 becasue i reasoned it might be a quarter in some cases
-  const maxRests = 4; // bc 4 is a common denominator for musicians
+const validateScore = (proposedScore, permittedPitches) => {
+  const result = {ok:true, errors:[]}
+  proposedScore["score-partwise"].forEach((part, i) => {
+    part.measure.forEach((measure, j) => {
+      measure.note.forEach((note, k) => {
+        if (note.pitch && !permittedPitches.includes(note.pitch.step)) {
+          result.ok = false
+          result.errors.push({note, part:i, measure:j, note:k})
+        }  
+      })
+    })
+  })
+  return result
 
-  let currentTimeSig = {
-    duration,
-    maxRests,
-  };
-  // if (composeScoreJSON["score-partwise"].part[0].measure[0]) {
-  //   const firstMeasure = composeScoreJSON["score-partwise"].part[0].measure[0];
+}
 
-  // }
-  composeScoreJSON['score-partwise'].part[0].measure.forEach((measure) => {
-    currentTimeSig = getMeasureTimeSignature(measure, currentTimeSig); // FIXME: this overwrites later measures with the default
-    if (measure.direction) {
-      measure.direction.forEach((directionObj) => {
-        if (directionObj['direction-type']) {
-          directionObj['direction-type'] = undefined;
-        }
-        if (directionObj.sound) {
-          directionObj.sound = undefined;
-        }
-      });
-    }
 
-    // const bucketColors = ['#E75B5C', '#265C5C', '#4390E2'];
-
-    // measure.note = Array(currentTimeSig.maxRests).fill({rest: {}, duration:currentTimeSig.duration})
-    measure.note = Array.from({ length: currentTimeSig.maxRests }, (i, j) => ({
-      rest: {},
-      duration: currentTimeSig.duration.toString(),
-      '$adagio-location': {
-        timePos: j * duration,
-      },
-      // '$color': bucketColors[j%bucketColors.length],
-    }));
-
-    // measure.note.forEach((note) => {
-    //   note.rest = {}
-    //   note.pitch = undefined
-    //   note.beam = undefined;
-    //   note.dot = undefined;
-    //   note.tie = undefined;
-    //   note.notations = undefined;
-    // })
-  });
-  console.log('composeScoreJSON', composeScoreJSON);
-  return composeScoreJSON;
-};
 
 function FlatEditor({
   edit = false,
@@ -181,9 +124,9 @@ function FlatEditor({
           if (score.scoreId === 'blank' && orig) {
             console.log('embed', embed);
             return (
-              edit &&
+              // edit &&
               score.scoreId === 'blank' &&
-              embed.loadJSON(pitchesToRests(JSON.parse(orig)))
+              embed.loadJSON(trimScore(pitchesToRests(JSON.parse(orig)), 1))
             );
           }
           return embed;
@@ -193,31 +136,45 @@ function FlatEditor({
             embed
               .loadFlatScore(loadParams)
               .then(() => {
-                embed.getJSON().then((jsonData) => {
-                  giveJSON(JSON.stringify(jsonData));
-                });
+                embed.getJSON().then((jsonData) => giveJSON && giveJSON(JSON.stringify(jsonData)));
                 // console.log('score loaded from scoreId', score.scoreId)
                 setRefId(score.scoreId);
-                if (edit) {
-                  embed.off('noteDetails');
-                  embed.on('noteDetails', (info) => {
-                    // console.log('noteDetails', info);
-                    // console.log('pitch', info.pitches)
-                    embed.getJSON().then((jsonData) => {
-                      const data = JSON.stringify(jsonData);
-                      setJson(data);
-                      if (onUpdate) {
-                        onUpdate(data);
-                      }
-                    });
-                  });
-                }
+                
               })
               .catch((e) => {
                 console.error('score not loaded from scoreId');
                 console.error(e);
               })
-        ));
+        )).then(()=>{
+          if (edit) {
+            console.log('edit mode');
+            embed.off('measureDetails');
+            embed.on('measureDetails', (info) => {
+              console.log('measureDetails', info);
+              // embed.getJSON().then((jsonData) => {
+              //   const data = JSON.stringify(jsonData);
+              //   setJson(data);
+              //   if (onUpdate) {
+              //     onUpdate(data);
+              //   }
+              // });
+            })
+            embed.off('noteDetails');
+            embed.on('noteDetails', (info) => {
+              console.log('noteDetails', info);
+              console.log('pitch', info.pitches);
+              embed.getJSON().then((jsonData) => {
+
+                const data = JSON.stringify(jsonData);
+                // validateScore(jsonData, [])
+                setJson(data);
+                if (onUpdate) {
+                  onUpdate(data);
+                }
+              });
+            });
+          }
+        })
     } else if (scoreJSON && embed) {
       // this is currently for the grade creativity screen
       // console.log('loadJSON', scoreJSON)

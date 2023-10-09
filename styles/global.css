@@ -107,3 +107,8 @@ a:nth-of-type(6) .card .card-color {
 nav.navbar.navbar-dark .navbar-nav .nav-link {
   color: rgba(255,255,255,.8);
 }
+
+.accordion-button:not(.collapsed) {
+  color: #450084;
+  background-color: #EDD9FF;
+}
