@@ -78,7 +78,7 @@ export default function RespondActivity() {
       />
       <RTE submission={{ id: assignmentId }} submitAction={submitAction} />
       <h3>Rating Scales</h3>
-      <Accordion defaultActiveKey="0" alwaysOpen>
+      <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Rhythm</Accordion.Header>
           <Accordion.Body>
@@ -138,10 +138,15 @@ export default function RespondActivity() {
             Give yourself one point for each skill you achieved.
             <ol>
               <li>I performed with accurate articulation.</li>
-              <li>I performed with a sense of phrasing, tension, and release.</li>
+              <li>
+                I performed with a sense of phrasing, tension, and release.
+              </li>
               <li>I performed with characteristic tone quality.</li>
               <li>I performed with appropriate dynamics.</li>
-              <li>I performed with a sense of movement that can be felt by listeners.</li>
+              <li>
+                I performed with a sense of movement that can be felt by
+                listeners.
+              </li>
             </ol>
           </Accordion.Body>
         </Accordion.Item>

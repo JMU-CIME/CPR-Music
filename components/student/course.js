@@ -7,7 +7,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import Spinner from 'react-bootstrap/Spinner';
-import TranspositionBadge from '../transpositionBadge';
+// import TranspositionBadge from '../transpositionBadge';
+import SubmissionStatusBadge from '../submissionStatusBadge';
 import { getStudentAssignments } from '../../api';
 // on the student's course view:
 // show the name of the course
@@ -73,24 +74,18 @@ export default function StudentCourseView({ enrollment }) {
                           href={`${enrollment.course.slug}/${
                             assignment.piece_slug
                           }/${assignment.activity_type_category}${
-                            assignment.activity_type_category ===
-                            'Perform'
+                            assignment.activity_type_category === 'Perform'
                               ? `/${assignment.part_type}`
                               : ''
                           }`}
                         >
-                          <a>
-                            {
-                              assignment.activity_type_name.split(
-                                ' '
-                              )[0]
-                            }
-                          </a>
+                          <a>{assignment.activity_type_name.split(' ')[0]}</a>
                         </Link>
-                        <TranspositionBadge
+                        {/* <TranspositionBadge
                           instrument={assignment.instrument}
                           transposition={assignment.transposition}
-                        />
+                        /> */}
+                        <SubmissionStatusBadge assn={assignment}></SubmissionStatusBadge>
                       </ListGroupItem>
                     ))}
                 </ListGroup>

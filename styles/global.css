@@ -95,7 +95,6 @@ a:nth-of-type(6) .card .card-color {
   gap: 1rem;
 }
 
-
 .card.student-piece-activity-group {
   min-width: 250px;
 }
@@ -105,10 +104,53 @@ a:nth-of-type(6) .card .card-color {
 }
 
 nav.navbar.navbar-dark .navbar-nav .nav-link {
-  color: rgba(255,255,255,.8);
+  color: rgba(255, 255, 255, 0.8);
 }
 
-.accordion-button:not(.collapsed) {
+.cpr-create .accordion-button:not(.collapsed) {
   color: #450084;
-  background-color: #EDD9FF;
+  background-color: #edd9ff;
 }
+
+.cpr-create ul.nav-underline li button.nav-link {
+  color: white;
+  border: none;
+  border-bottom: 0.25rem solid #450084;
+}
+
+.cpr-create ul.nav-underline li button.nav-link.active {
+  color: white;
+  border: 0.25rem solid #450084;
+  border-bottom: none;
+}
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='tonic-palette'] {
+  background-color: #e75b5c;
+}
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='subdominant-palette'] {
+  background-color: #265c5c;
+}
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='dominant-palette'] {
+  background-color: #4390e2;
+}
+.most-recent-sub-card {
+  max-width: 21.25rem;
+}
+
+.most-recent-sub-card audio {
+  margin-block-end: -1.25rem;
+}
+
+.respond-preview {
+  display: block;
+  width: 100%;
+}
+

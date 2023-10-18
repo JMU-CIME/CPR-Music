@@ -12,12 +12,21 @@ import { useQuery } from 'react-query';
 import Layout from '../layout';
 import Instructions from './instructions';
 import { getMySubmissionsForAssignment } from '../../api';
+import RecentSubmission from './recentSubmission';
+import { Accordion } from 'react-bootstrap';
 
 export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
 
-  const { slug, piece, actCategory='Create', partType } = router.query;
-  console.log('StudentAssignmentPage', slug, piece, actCategory, partType, assignment);
+  const { slug, piece, actCategory = 'Create', partType } = router.query;
+  console.log(
+    'StudentAssignmentPage',
+    slug,
+    piece,
+    actCategory,
+    partType,
+    assignment
+  );
   // console.log('slug, assignmentId', slug, assignment.id);
   const {
     isLoading,
@@ -148,8 +157,23 @@ export default function StudentAssignment({ children, assignment }) {
               {assignment?.activity?.activity_type?.name} Activity
             </h1>
             <Instructions body={assignment?.activity?.body} />
-            {/* tasks */}
-            {children}
+            {assignment.submissions.length > 0 ? (
+              <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>Current Submission</Accordion.Header>
+                  <Accordion.Body>
+                    <RecentSubmission assn={assignment} />
+                  </Accordion.Body>
+                </Accordion.Item>
+                {/* tasks */}
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>Submit Again?</Accordion.Header>
+                  <Accordion.Body>{children}</Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            ) : (
+              children
+            )}
           </Col>
         </Row>
       ) : (
