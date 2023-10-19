@@ -24,12 +24,12 @@ export default function CreateAuralActivityPage() {
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter((assn) => {
-        console.log('assn', assn);
-        console.log(
-          'assn.piece_slug === piece && assn.activity_type_category === actCategory',
-          assn.piece_slug === piece &&
-            assn.activity_type_category === actCategory
-        );
+        // console.log('assn', assn);
+        // console.log(
+        //   'assn.piece_slug === piece && assn.activity_type_category === actCategory',
+        //   assn.piece_slug === piece &&
+        //     assn.activity_type_category === actCategory
+        // );
         return (
           assn.piece_slug === piece &&
           assn.activity_type_category === actCategory

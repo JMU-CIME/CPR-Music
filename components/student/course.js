@@ -34,7 +34,7 @@ export default function StudentCourseView({ enrollment }) {
       Reflection: 4,
       Connect: 5,
     };
-    console.log(a, b)
+    // console.log(a, b)
     const c = a.activity_type_name.split(' ')[0];
     const d = b.activity_type_name.split(' ')[0];
     return ordering[c] - ordering[d];

@@ -1,29 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import Embed from 'flat-embed';
-import { Spinner } from 'react-bootstrap';
-import { FaCheck, FaFrownOpen } from 'react-icons/fa';
 import { pitchesToRests, trimScore } from '../lib/flat';
 
 const validateScore = (proposedScore, permittedPitches) => {
-  const result = {ok:true, errors:[]}
-  proposedScore["score-partwise"].forEach((part, i) => {
+  const result = { ok: true, errors: [] };
+  proposedScore['score-partwise'].forEach((part, i) => {
     part.measure.forEach((measure, j) => {
       measure.note.forEach((note, k) => {
         if (note.pitch && !permittedPitches.includes(note.pitch.step)) {
-          result.ok = false
-          result.errors.push({note, part:i, measure:j, note:k})
-        }  
-      })
-    })
-  })
-  return result
-
-}
-
-
+          result.ok = false;
+          result.errors.push({ note, part: i, measure: j, note: k });
+        }
+      });
+    });
+  });
+  return result;
+};
 
 function FlatEditor({
   edit = false,
@@ -39,12 +33,40 @@ function FlatEditor({
   onUpdate,
   orig,
   giveJSON,
+  trim,
+  colors,
 }) {
-  console.log('flat io embed log', scoreJSON, orig);
+  // console.log('flat io embed log', scoreJSON, orig);
   const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
   const editorRef = React.createRef();
+  const [addingNote, setAddingNote] = useState(false);
+
+  /**
+   *  Given a measure, and a string consisting of "rgbgrb..." we match the notes of the corresponding measure to that value.
+   *  For example, given a measure (1,2,3) and a string "rgb", the first measure would be colored red, second would be green, third would be green.
+   */
+  const colorMeasures = (measures, colorSpecs) => {
+    /**
+     * Colors an array of notes to a given hex color attribute.
+     */
+    const colorNotes = (notes, color) => {
+      for (let i = 0; i < notes.length; i++) {
+        notes[i].$color = color;
+      }
+    };
+    const BLACK = '#000000';
+    const ORANGE = '#f5bd1f';
+    for (let i = 0; i < measures.length; i++) {
+      if (colorSpecs && colorSpecs[i]) {
+        colorNotes(measures[i].note, colorSpecs[i]);
+      } else {
+        colorNotes(measures[i], BLACK);
+      }
+    }
+    return measures;
+  };
 
   // const getComposition = () => {
   //   return embed.getJSON().then((jsonData) => {
@@ -117,64 +139,107 @@ function FlatEditor({
       if (score.sharingKey) {
         loadParams.sharingKey = score.sharingKey;
       }
-      console.log('loadFlatScore', loadParams);
+      // console.log('loadFlatScore', loadParams);
       embed
         .ready()
         .then(() => {
           if (score.scoreId === 'blank' && orig) {
-            console.log('embed', embed);
+            // console.log('embed', embed);
+            let result = pitchesToRests(JSON.parse(orig));
+            if (trim) {
+              result = trimScore(result, trim);
+            }
+            if (colors) {
+              result['score-partwise'].part[0].measure = colorMeasures(
+                result['score-partwise'].part[0].measure,
+                colors
+              );
+            }
             return (
               // edit &&
               score.scoreId === 'blank' &&
-              embed.loadJSON(trimScore(pitchesToRests(JSON.parse(orig)), 1))
+              embed.loadJSON(result).then(() => {
+                embed.off('noteDetails');
+                embed.on('noteDetails', (info) => {
+                  // console.log('noteDetails', info);
+                  embed.getJSON().then((jd) => {
+                    const jsonData = jd;
+                    console.log('on noteDetails', JSON.stringify(jsonData));
+                    // console.log('jsonData', jsonData);
+                    // console.log(jsonData['score-partwise'].part[0].measure.flatMap((m) => m.note.map((n) => n.$color)))
+                    if (
+                      colors &&
+                      jsonData['score-partwise'].part[0].measure.some((m) =>
+                        m.note.some((n) => !n.$color || n.$color === '#000000')
+                      )
+                    ) {
+                      console.log('we need to recolor');
+                      jsonData['score-partwise'].part[0].measure =
+                        colorMeasures(
+                          jsonData['score-partwise'].part[0].measure,
+                          colors
+                        );
+                      embed.getCursorPosition().then((position) => embed
+                        .loadJSON(jsonData)
+                        .then(() => embed.setCursorPosition(position)));
+                    }
+                    const data = JSON.stringify(jsonData);
+                    // validateScore(jsonData, [])
+                    setJson(data);
+                    if (onUpdate) {
+                      onUpdate(data);
+                    }
+                  });
+                });
+              })
             );
           }
           return embed;
         })
-        .then(() => (
-          score.scoreId !== 'blank' &&
+        .then(
+          () =>
+            score.scoreId !== 'blank' &&
             embed
               .loadFlatScore(loadParams)
               .then(() => {
-                embed.getJSON().then((jsonData) => giveJSON && giveJSON(JSON.stringify(jsonData)));
+                embed
+                  .getJSON()
+                  .then(
+                    (jsonData) => giveJSON && giveJSON(JSON.stringify(jsonData))
+                  );
                 // console.log('score loaded from scoreId', score.scoreId)
                 setRefId(score.scoreId);
-                
               })
               .catch((e) => {
                 console.error('score not loaded from scoreId');
                 console.error(e);
               })
-        )).then(()=>{
+        )
+        .then(() => {
           if (edit) {
-            console.log('edit mode');
-            embed.off('measureDetails');
-            embed.on('measureDetails', (info) => {
-              console.log('measureDetails', info);
-              // embed.getJSON().then((jsonData) => {
-              //   const data = JSON.stringify(jsonData);
-              //   setJson(data);
-              //   if (onUpdate) {
-              //     onUpdate(data);
-              //   }
-              // });
-            })
-            embed.off('noteDetails');
-            embed.on('noteDetails', (info) => {
-              console.log('noteDetails', info);
-              console.log('pitch', info.pitches);
-              embed.getJSON().then((jsonData) => {
-
-                const data = JSON.stringify(jsonData);
-                // validateScore(jsonData, [])
-                setJson(data);
-                if (onUpdate) {
-                  onUpdate(data);
-                }
-              });
-            });
+            // embed.off('measureDetails');
+            // embed.on('measureDetails', (info) => {
+            //   console.log('measureDetails', info);
+            //   // if (colors && addingNote) {
+            //   //   embed.getJSON().then((jd) => {
+            //   //     const jsonData = jd;
+            //   //     jsonData['score-partwise'].part[0].measure = colorMeasures(
+            //   //       jsonData['score-partwise'].part[0].measure,
+            //   //       colors
+            //   //     );
+            //   //     const data = JSON.stringify(jsonData);
+            //   //     if (json !== data) {
+            //   //       if (addingNote) {
+            //   //         setAddingNote(false);
+            //   //         embed.loadJSON(jsonData);
+            //   //       }
+            //   //     }
+            //   //   });
+            //   //   setAddingNote(true);
+            //   // }
+            // });
           }
-        })
+        });
     } else if (scoreJSON && embed) {
       // this is currently for the grade creativity screen
       // console.log('loadJSON', scoreJSON)
@@ -183,27 +248,9 @@ function FlatEditor({
         .then(() => {
           // console.log('score loaded from json')
           setRefId(score.scoreId);
-          // console.log(editorRef.current.querySelector('*'))
-          // embed.on('playbackPosition', (info) => {
-          //   console.log('playbackPosition', info);
-          // });
-          // embed.on('scoreLoaded', (info) => {
-          //   console.log('scoreLoaded', info);
-          // });
-          // embed.on('cursorPosition', (info) => {
-          //   console.log('cursorPosition', info);
-          // });
-          // embed.on('cursorContext', (info) => {
-          //   console.log('cursorContext', info);
-          // });
-          // embed.on('measureDetails', (info) => {
-          //   console.log('measureDetails', info);
-          // });
           if (edit) {
             embed.off('noteDetails');
             embed.on('noteDetails', (info) => {
-              // console.log('noteDetails', info);
-              // console.log('pitch', info.pitches)
               embed.getJSON().then((jsonData) => {
                 const data = JSON.stringify(jsonData);
                 setJson(data);
@@ -213,21 +260,6 @@ function FlatEditor({
               });
             });
           }
-          // embed.on('rangeSelection', (info) => {
-          //   console.log('rangeSelection', info);
-          // });
-          // embed.on('fullscreen', (info) => {
-          //   console.log('fullscreen', info);
-          // });
-          // embed.on('play', (info) => {
-          //   console.log('play', info);
-          // });
-          // embed.on('pause', (info) => {
-          //   console.log('pause', info);
-          // });
-          // embed.on('stop', (info) => {
-          //   console.log('stop', info);
-          // });
         })
         .catch((e) => {
           console.error('score not loaded from json');
@@ -243,23 +275,6 @@ function FlatEditor({
           <div ref={editorRef} />
         </Col>
       </Row>
-      {/* {edit && (
-        <Row>
-          <Col style={{ maxWidth: '40%', whiteSpace: 'pre-wrap' }}>
-            <Button onClick={refreshJSON} disabled={submittingStatus === 'loading'}>
-              Submit { submittingStatus === 'loading' && <Spinner as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true">
-                <span className="visually-hidden">Loading...</span>
-              </Spinner> } { submittingStatus  === 'success' ? 
-                <FaCheck /> : submittingStatus === 'error' && <FaFrownOpen />
-              }
-            </Button>
-          </Col>
-        </Row>
-      )} */}
     </>
   );
 }

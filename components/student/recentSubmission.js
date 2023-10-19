@@ -10,15 +10,15 @@ export default function RecentSubmission(assn) {
   const {
     assn: { activity_type_category = null, submissions, activity = null },
   } = assn;
-  console.log('RecentSubmission::assn:', assn);
-  console.log('RecentSubmission::submissions:', submissions);
+  // console.log('RecentSubmission::assn:', assn);
+  // console.log('RecentSubmission::submissions:', submissions);
   if (!submissions || submissions.length === 0) return '';
   const mostRecent = submissions?.reduce((recent, current) =>
     new Date(recent.submitted) > new Date(current.submitted) ? recent : current
   );
   const { submitted, content, attachments } = mostRecent;
   const ctgy = activity_type_category ?? activity.activity_type.category;
-  console.log('activity ctgy', ctgy);
+  // console.log('activity ctgy', ctgy);
   // eg assn.submissions:
   // [
   //   {

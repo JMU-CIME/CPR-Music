@@ -18,14 +18,14 @@ export default function CreateExploratoryActivityPage() {
   } = useQuery('assignments', getStudentAssignments(slug), {
     enabled: !!slug,
   });
-  console.log('assingments', assignments , piece, actCategory)
+  // console.log('assingments', assignments , piece, actCategory)
   const currentAssignment =
     assignments &&
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter(
         (assn) =>{
-          console.log('assn', assn);
+          // console.log('assn', assn);
           return assn.piece_slug === piece &&
           assn.activity_type_category === actCategory}
       )?.[0];

@@ -44,7 +44,12 @@ export default function Recorder({ submit, accompaniment }) {
       accompanimentRef.current.play();
       recorder
         .start()
-        .then(setIsRecording(true))
+        .then(()=>{
+          setIsRecording(true);
+          console.log('tracks', recorder.activeStream.getAudioTracks());
+          console.log(recorder.activeStream.getAudioTracks()[0].getConstraints());
+          console.log(recorder.activeStream.getAudioTracks()[0].getSettings());
+        })
         .catch((err) => console.error('problem starting recording', err));
     }
   };
@@ -53,6 +58,7 @@ export default function Recorder({ submit, accompaniment }) {
     // console.log('stopRecording', ev);
     accompanimentRef.current.pause();
     accompanimentRef.current.load();
+    
     recorder
       .stop()
       .getMp3()
@@ -93,9 +99,9 @@ export default function Recorder({ submit, accompaniment }) {
     ) {
       // console.log('navigator available');
       navigator.mediaDevices
-        .getUserMedia({ audio: true })
+        .getUserMedia({ audio: {echoCancellation:false, noiseSuppression: false} })
         .then(() => {
-          console.log('Permission Granted');
+          // console.log('Permission Granted');
           setIsBlocked(false);
         })
         .catch(() => {
