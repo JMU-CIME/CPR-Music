@@ -20,7 +20,7 @@ import { UploadStatusEnum } from '../../../types';
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
-
+// test.
 const bucketColors = {
   tonic: '#E75B5C',
   subdominant: '#265C5C',
