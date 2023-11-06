@@ -3,7 +3,9 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { FaCalendarDay } from 'react-icons/fa';
-import FlatEditor from '../flatEditor';
+const FlatEditor = dynamic(() => import('../flatEditor'), {
+  ssr: false,
+});
 
 export default function RecentSubmission(assn) {
   // console.log('recent sub::', submitted, content, attachments);
