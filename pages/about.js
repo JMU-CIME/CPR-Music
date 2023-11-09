@@ -173,6 +173,7 @@ function About() {
           <a target="_blank" rel="noopener noreferrer" href="https://laurenyz.github.io/portfolio/">Lauren Yu</a> (Web
           Developer)
         </li>
+        <li>Matt Wolffe (Undergraduate Student, James Madison University)</li>
       </ul>
     </Layout>
   );
