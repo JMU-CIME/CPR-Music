@@ -17,17 +17,35 @@ import {
   postRecording,
 } from '../../../actions';
 import { UploadStatusEnum } from '../../../types';
-import { notes, tonicScoreJSON } from '../../../lib/flat';
+import { dominantScoreJSON, notes, tonicScoreJSON } from '../../../lib/flat';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
-const bucketColors = {tonic:'#E75B5C', subdominant:'#265C5C', dominant:'#4390E2'};
+const ChordScaleBucketScore = dynamic(
+  () => import('../../chordScaleBucketScore'),
+  {
+    ssr: false,
+  }
+);
+
+const VariationsFromMotiveScore = dynamic(
+  () => import('../../variationsFromMotiveScore'),
+  {
+    ssr: false,
+  }
+);
+
+const bucketColors = {
+  tonic: '#E75B5C',
+  subdominant: '#265C5C',
+  dominant: '#4390E2',
+};
 
 export default function CreativityActivity() {
   const tonicNotes = notes(tonicScoreJSON);
-  
+
   // console.log('got into aural component');
   const dispatch = useDispatch();
   // I think this should show the melody for the current piece, but in the student's transposition
@@ -38,7 +56,10 @@ export default function CreativityActivity() {
   const [melodyJson, setMelodyJson] = useState('');
   const [tonicJson, setTonicJson] = useState('');
   const [subdominantJson, setSubdominantJson] = useState('');
-  const [DominantJson, setDominantJson] = useState('');
+  const [dominantJson, setDominantJson] = useState('');
+  const [startedVariationGeneration, setStartedVariationGeneration] =
+    useState(false);
+  const [someVar, setSomeVar] = useState(false);
 
   const userInfo = useSelector((state) => state.currentUser);
 
@@ -70,7 +91,10 @@ export default function CreativityActivity() {
 
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  const composition = ''; // FIXME: why isn't this useState???
+  let composition = ''; // FIXME: why isn't this useState???
+  let tonicMotiveScore = '';
+  let subDominantMotiveScore = '';
+  let dominantMotiveScore = '';
   // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
     assignments &&
@@ -114,6 +138,22 @@ export default function CreativityActivity() {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
 
+  function generateVariations() {
+    console.log('generate', tonicMotiveScore && startedVariationGeneration);
+    setTonicJson(tonicMotiveScore);
+    setStartedVariationGeneration(true);
+    console.log('generate', tonicMotiveScore && startedVariationGeneration);
+    console.log('tonicMotiveScore', tonicMotiveScore)
+    console.log('tonicJson', tonicJson);
+    setSomeVar(true);
+    // console.log(
+    //   'scores',
+    //   tonicMotiveScore,
+    //   subDominantMotiveScore,
+    //   dominantMotiveScore
+    // );
+  }
+
   // const origJSON
   return flatIOScoreForTransposition ? (
     <>
@@ -128,13 +168,12 @@ export default function CreativityActivity() {
                 pitches. You can use rests or note durations from 1/8 - 1/2.
               </div>
               <div className="col-md-6">
-                <FlatEditor
+                <ChordScaleBucketScore
                   height={150}
-                  score={{
-                    scoreId: '65241135b67581e78952d1b1',
-                    sharingKey:
-                      '223faaebf63c6ff5c964fb74737554f58d86b99262bc62bac15195b66d3ee566f8ff923f6d094e611a610105b3d9582cea55e183cf60ab8683986fc29d7a1f37',
-                  }}
+                  referenceScoreJSON={melodyJson}
+                  chordScaleBucket="tonic"
+                  colors={bucketColors.tonic}
+                  instrumentName={currentAssignment?.instrument}
                 />
               </div>
             </div>
@@ -147,6 +186,10 @@ export default function CreativityActivity() {
               submittingStatus={mutation.status}
               orig={melodyJson}
               trim={1}
+              onUpdate={(data) => {
+                tonicMotiveScore = data;
+                // console.log('tonicMotiveScore', tonicMotiveScore);
+              }}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -159,13 +202,12 @@ export default function CreativityActivity() {
                 pitches. You can use rests or note durations from 1/8 - 1/2.
               </div>
               <div className="col-md-6">
-                <FlatEditor
+                <ChordScaleBucketScore
                   height={150}
-                  score={{
-                    scoreId: '6524114afc390c181375fdc8',
-                    sharingKey:
-                      'ea5a2d5bdb5b8c570cb0796add8188d50757c7a06d2636f1b7c088b905aa7716b8a8eaf0a0b12802d8a02852691b0420bff1adef17e7250bbe6f03b442131fda',
-                  }}
+                  referenceScoreJSON={melodyJson}
+                  chordScaleBucket="subdominant"
+                  colors={bucketColors.subdominant}
+                  instrumentName={currentAssignment?.instrument}
                 />
               </div>
             </div>
@@ -178,6 +220,10 @@ export default function CreativityActivity() {
               submittingStatus={mutation.status}
               orig={melodyJson}
               trim={1}
+              onUpdate={(data) => {
+                subDominantMotiveScore = data;
+                console.log('subDominantMotiveScore', subDominantMotiveScore);
+              }}
             />
           </Accordion.Body>
         </Accordion.Item>
@@ -190,13 +236,12 @@ export default function CreativityActivity() {
                 pitches. You can use rests or note durations from 1/8 - 1/2.
               </div>
               <div className="col-md-6">
-                <FlatEditor
+                <ChordScaleBucketScore
                   height={150}
-                  score={{
-                    scoreId: '6524114e605572ddb1c1090f',
-                    sharingKey:
-                      '895d5f93344d05f47252535852e3f9f9ec638b94b3237278508cf6b085671dc56791d83fba37fc1c0285fec49a70a417a461d49f4ec48c520a96a6b076bab21f',
-                  }}
+                  referenceScoreJSON={melodyJson}
+                  chordScaleBucket="dominant"
+                  colors={bucketColors.dominant}
+                  instrumentName={currentAssignment?.instrument}
                 />
               </div>
             </div>
@@ -209,12 +254,19 @@ export default function CreativityActivity() {
               submittingStatus={mutation.status}
               orig={melodyJson}
               trim={1}
+              onUpdate={(data) => {
+                dominantMotiveScore = data;
+                console.log('dominantMotiveScore', dominantMotiveScore);
+              }}
             />
           </Accordion.Body>
         </Accordion.Item>
         <Accordion.Item eventKey="3">
           <Accordion.Header>Step 4 - Compose</Accordion.Header>
           <Accordion.Body>
+            <Button variant="primary" onClick={generateVariations}>
+              Begin Composing
+            </Button>
             <Tabs
               defaultActiveKey="tonic-palette"
               id="justify-tab-example"
@@ -223,14 +275,15 @@ export default function CreativityActivity() {
               variant="underline"
             >
               <Tab eventKey="tonic-palette" title="Tonic" className="tonic">
-                <FlatEditor
-                  height={300}
-                  score={{
-                    scoreId: '65241552b27a2d20324d3d18',
-                    sharingKey:
-                      '43e1cbbb26a024e4379df964e78b205361d1b0463589069068cc02a4d596f85c39ee47332fd901599d41c7a716c3fb6366479d7b51ba92d9753226fb02332876',
-                  }}
-                />
+                {someVar && (
+                  <div>
+                    somevar is happening {someVar}
+                    <VariationsFromMotiveScore
+                      referenceScoreJSON={tonicJson}
+                      height={300}
+                    />
+                  </div>
+                )}
               </Tab>
               <Tab
                 eventKey="subdominant-palette"
@@ -247,6 +300,7 @@ export default function CreativityActivity() {
                 Tab content for Loooonger Tab
               </Tab>
             </Tabs>
+
             <FlatEditor
               edit
               score={{
@@ -255,24 +309,29 @@ export default function CreativityActivity() {
               onSubmit={setJsonWrapper}
               submittingStatus={mutation.status}
               orig={melodyJson}
-              colors={[
-                'tonic',
-                'tonic',
-                'subdominant',
-                'tonic',
-                'tonic',
-                'subdominant',
-                'dominant',
-                'tonic',
-                'tonic',
-                'subdominant',
-                'dominant',
-                'tonic',
-                'subdominant',
-                'subdominant',
-                'dominant',
-                'tonic',
-              ].map((color) => bucketColors[color])}
+              colors={
+                currentAssignment?.part?.chord_scale_pattern.map(
+                  (color) => bucketColors[color]
+                ) ??
+                [
+                  'tonic',
+                  'tonic',
+                  'subdominant',
+                  'tonic',
+                  'tonic',
+                  'subdominant',
+                  'dominant',
+                  'tonic',
+                  'tonic',
+                  'subdominant',
+                  'dominant',
+                  'tonic',
+                  'subdominant',
+                  'subdominant',
+                  'dominant',
+                  'tonic',
+                ].map((color) => bucketColors[color])
+              }
             />
           </Accordion.Body>
         </Accordion.Item>
