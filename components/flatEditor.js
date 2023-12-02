@@ -114,36 +114,16 @@ function FlatEditor({
         },
       })
     );
-    // const template = templt
     // change the notes in the score from whatever they are in tonic and eb to what we're given
     const scorePart =
       template?.['score-partwise']?.['part-list']?.['score-part']?.[0];
     scorePart['part-name'] = instrName; //embed.instrumentName;
     scorePart['part-abbreviation'] = instrName; //embed.instrumentAbbreviation;
     scorePart['score-instrument']['instrument-name'] = instrName; //embed.instrumentName;
-    // console.log("bucket", bucket); //FIXME????
-
-    // // change the notes from tonic eb to whatever
-    // template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach(
-    //   (note, i) => {
-    //     note.pitch.step = bucket[i].step;
-    //     note.pitch.octave = bucket[i].octave;
-    //     if (bucket[i].alter) {
-    //       note.pitch.alter = bucket[i].alter;
-    //     } else if (note.pitch.alter) {
-    //       delete note.pitch.alter;
-    //     }
-    //     console.log('note.pitch', note.pitch)
-    //   }
-    // );
 
     // start from bucket, create the notes, add them to measure
     template['score-partwise'].part[0].measure[0].note = bucket.map(
       ({ alter, octave, step, $color = '#00000' }) => {
-        // console.log('\n\n\n\nmake note')
-        // console.log('alter, octave, step' );
-        // console.log(alter, octave, step );
-        // const  = noteInfo
         const note = {
           staff: '1',
           voice: '1',
@@ -158,8 +138,6 @@ function FlatEditor({
         return note;
       }
     );
-    // console.log('\n\n\n\n\ntemplate["score-partwise"].part[0].measure[0].note');
-    // console.log(template["score-partwise"].part[0].measure[0].note);
 
     // change the key signature in the score from whatever it is in tonic and eb to what we're given
     template?.['score-partwise']?.part?.[0]?.measure?.[0]?.attributes?.forEach(
@@ -530,26 +508,8 @@ function FlatEditor({
     }
     return measures;
   };
-
-  // const getComposition = () => {
-  //   return embed.getJSON().then((jsonData) => {
-  //     const data = JSON.stringify(jsonData);
-  //     setJson(data);
-  //   })
-  // }
-
-  const refreshJSON = () => {
-    embed.getJSON().then((jsonData) => {
-      const data = JSON.stringify(jsonData);
-      setJson(data);
-      if (onSubmit) {
-        onSubmit(data);
-      }
-    });
-  };
   useEffect(() => {
     const embedParams = {
-      // sharingKey: score.sharingKey,
       appId: '60a51c906bcde01fc75a3ad0',
       layout: 'responsive',
       branding: false,
@@ -564,38 +524,25 @@ function FlatEditor({
     let computedHeight = 300;
     if (edit) {
       embedParams.mode = 'edit';
-      // console.log('height', height)
-      // if (!height) {
-      //   computedHeight = 450;
-      //   // console.log('set height to 450')
-      //   // console.log('flatHeight', computedHeight)
-      // }
     } else if (height) {
-      // console.log('set height to explicit')
       computedHeight = height;
     }
 
-    // console.log('computedHeight', computedHeight)
     const allParams = {
       height: `${computedHeight}`,
       width: '100%',
       embedParams,
     };
-    // console.log('allp', allParams)
-
-    // embed = new Embed(editorRef.current, allParams);
     console.log('allParams', allParams);
     setEmbed(new Embed(editorRef.current, allParams));
   }, [edit, height]);
 
   useEffect(() => {
-    // console.log('flat useeffect:: score: ', score, " embed: ", embed)
     if (
       score.scoreId &&
       (score.scoreId === 'blank' || score.sharingKey) &&
       embed
     ) {
-      // console.log('got score as param', score)
       const loadParams = {
         score: score.scoreId,
       };
@@ -627,28 +574,26 @@ function FlatEditor({
                   // console.log('noteDetails', info);
                   embed.getJSON().then((jd) => {
                     const jsonData = jd;
-                    // console.log('on noteDetails', JSON.stringify(jsonData));
-                    // console.log('jsonData', jsonData);
-                    // console.log(jsonData['score-partwise'].part[0].measure.flatMap((m) => m.note.map((n) => n.$color)))
+                    //try to let the outer context know when this thing has data
+                    
                     if (
                       colors &&
                       jsonData['score-partwise'].part[0].measure.some((m) =>
                         m.note.some((n) => !n.$color || n.$color === '#000000')
                       )
                     ) {
-                      // console.log('we need to recolor');
                       jsonData['score-partwise'].part[0].measure =
                         colorMeasures(
                           jsonData['score-partwise'].part[0].measure,
                           colors
                         );
-                      embed
-                        .getCursorPosition()
-                        .then((position) =>
-                          embed
-                            .loadJSON(jsonData)
-                            .then(() => embed.setCursorPosition(position))
-                        );
+                      embed.getCursorPosition().then((position) =>
+                        embed.loadJSON(jsonData).then(() => {
+                          if (edit) {
+                            embed.setCursorPosition(position);
+                          }
+                        })
+                      );
                     }
                     const data = JSON.stringify(jsonData);
                     // validateScore(jsonData, [])
@@ -674,7 +619,6 @@ function FlatEditor({
                   .then(
                     (jsonData) => giveJSON && giveJSON(JSON.stringify(jsonData))
                   );
-                // console.log('score loaded from scoreId', score.scoreId)
                 setRefId(score.scoreId);
               })
               .catch((e) => {
@@ -684,7 +628,6 @@ function FlatEditor({
         );
     } else if (scoreJSON && embed) {
       // this is currently for the grade creativity screen
-      // console.log('loadJSON', scoreJSON)
       embed
         .loadJSON(scoreJSON)
         .then(() => {
