@@ -9,11 +9,11 @@ import Tab from 'react-bootstrap/Tab';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
+import { Accordion } from 'react-bootstrap';
 import Layout from '../layout';
 import Instructions from './instructions';
 import { getMySubmissionsForAssignment } from '../../api';
 import RecentSubmission from './recentSubmission';
-import { Accordion } from 'react-bootstrap';
 
 export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
@@ -156,7 +156,7 @@ export default function StudentAssignment({ children, assignment }) {
                 `${actCategory} `}
               {assignment?.activity?.activity_type?.name} Activity
             </h1>
-            <Instructions body={assignment?.activity?.body} />
+            <Instructions body={assignment?.activity_body} />
             {assignment.submissions.length > 0 ? (
               <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
                 <Accordion.Item eventKey="0">
