@@ -3,6 +3,7 @@ import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { FaCalendarDay } from 'react-icons/fa';
+import dynamic from 'next/dynamic'
 const FlatEditor = dynamic(() => import('../flatEditor'), {
   ssr: false,
 });
