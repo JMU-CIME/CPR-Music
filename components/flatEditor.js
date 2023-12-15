@@ -22,6 +22,7 @@ const validateScore = (proposedScore, permittedPitches) => {
 function FlatEditor({
   edit = false,
   height,
+  width='100%',
   score = {
     // scoreId: '61e09029dffcd50014571a80',
     // sharingKey:
@@ -533,7 +534,7 @@ function FlatEditor({
 
     const allParams = {
       height: `${computedHeight}`,
-      width: '100%',
+      width: width,
       embedParams,
     };
     console.log('allParams', allParams);
