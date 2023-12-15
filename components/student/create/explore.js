@@ -17,7 +17,6 @@ import {
   postRecording,
 } from '../../../actions';
 import { UploadStatusEnum } from '../../../types';
-import { dominantScoreJSON, notes, tonicScoreJSON } from '../../../lib/flat';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
@@ -44,7 +43,6 @@ const bucketColors = {
 };
 
 export default function CreativityActivity() {
-  const tonicNotes = notes(tonicScoreJSON);
 
   // console.log('got into aural component');
   const dispatch = useDispatch();
@@ -93,7 +91,7 @@ export default function CreativityActivity() {
 
   let composition = ''; // FIXME: why isn't this useState???
   let tonicMotiveScore = '';
-  let subDominantMotiveScore = '';
+  let subdominantMotiveScore = '';
   let dominantMotiveScore = '';
   // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
@@ -143,9 +141,9 @@ export default function CreativityActivity() {
     setTonicJson(tonicMotiveScore);
     setStartedVariationGeneration(true);
     console.log('generate', tonicMotiveScore && startedVariationGeneration);
-    console.log('tonicMotiveScore', tonicMotiveScore)
+    console.log('tonicMotiveScore', tonicMotiveScore);
     console.log('tonicJson', tonicJson);
-    setSomeVar(true);
+    // setSomeVar(true);
     // console.log(
     //   'scores',
     //   tonicMotiveScore,
@@ -154,6 +152,22 @@ export default function CreativityActivity() {
     // );
   }
 
+  function doneTonic() {
+    console.log('doneTonic', tonicMotiveScore);
+    setTonicJson(tonicMotiveScore);
+  }
+
+  function doneSubdominant() {
+    console.log('doneSubdominant', subdominantMotiveScore);
+    setSubdominantJson(subdominantMotiveScore);
+  }
+
+  function doneDominant() {
+    console.log('doneDominant', dominantMotiveScore);
+    setDominantJson(dominantMotiveScore);
+  }
+
+  // console.log('\n\n\n\ntonicJson\n\n\n===========', tonicJson);
   // const origJSON
   return flatIOScoreForTransposition ? (
     <>
@@ -177,22 +191,43 @@ export default function CreativityActivity() {
                 />
               </div>
             </div>
-            <FlatEditor
-              edit
-              score={{
-                scoreId: 'blank',
-              }}
-              onSubmit={setJsonWrapper}
-              submittingStatus={mutation.status}
-              orig={melodyJson}
-              trim={1}
-              onUpdate={(data) => {
-                tonicMotiveScore = data;
-                // console.log('tonicMotiveScore', tonicMotiveScore);
-              }}
-            />
+            {tonicJson ? (
+              <FlatEditor
+                edit
+                scoreJSON={tonicJson}
+                onSubmit={setJsonWrapper}
+                submittingStatus={mutation.status}
+                orig={melodyJson}
+                trim={1}
+                onUpdate={(data) => {
+                  console.log('data', data);
+                  tonicMotiveScore = data;
+                  console.log('tonicMotiveScore', tonicMotiveScore);
+                }}
+              />
+            ) : (
+              <FlatEditor
+                edit
+                score={{
+                  scoreId: 'blank',
+                }}
+                onSubmit={setJsonWrapper}
+                submittingStatus={mutation.status}
+                orig={melodyJson}
+                trim={1}
+                onUpdate={(data) => {
+                  console.log('data', data);
+                  tonicMotiveScore = data;
+                  console.log('tonicMotiveScore', tonicMotiveScore);
+                }}
+              />
+            )}
+            <Button variant="primary" onClick={doneTonic}>
+              Next
+            </Button>
           </Accordion.Body>
         </Accordion.Item>
+
         <Accordion.Item eventKey="1">
           <Accordion.Header>Step 2 - Subdominant</Accordion.Header>
           <Accordion.Body>
@@ -221,12 +256,16 @@ export default function CreativityActivity() {
               orig={melodyJson}
               trim={1}
               onUpdate={(data) => {
-                subDominantMotiveScore = data;
-                console.log('subDominantMotiveScore', subDominantMotiveScore);
+                subdominantMotiveScore = data;
+                console.log('subdominantMotiveScore', subdominantMotiveScore);
               }}
             />
+            <Button variant="primary" onClick={doneSubdominant}>
+              Next
+            </Button>
           </Accordion.Body>
         </Accordion.Item>
+
         <Accordion.Item eventKey="2">
           <Accordion.Header>Step 3 - Dominant</Accordion.Header>
           <Accordion.Body>
@@ -259,9 +298,13 @@ export default function CreativityActivity() {
                 console.log('dominantMotiveScore', dominantMotiveScore);
               }}
             />
+            <Button variant="primary" onClick={doneDominant}>
+              Next
+            </Button>
           </Accordion.Body>
         </Accordion.Item>
-        <Accordion.Item eventKey="3">
+
+        {/* <Accordion.Item eventKey="3">
           <Accordion.Header>Step 4 - Compose</Accordion.Header>
           <Accordion.Body>
             <Button variant="primary" onClick={generateVariations}>
@@ -275,14 +318,11 @@ export default function CreativityActivity() {
               variant="underline"
             >
               <Tab eventKey="tonic-palette" title="Tonic" className="tonic">
-                {someVar && (
-                  <div>
-                    somevar is happening {someVar}
-                    <VariationsFromMotiveScore
-                      referenceScoreJSON={tonicJson}
-                      height={300}
-                    />
-                  </div>
+                {tonicJson && (
+                  <VariationsFromMotiveScore
+                    referenceScoreJSON={tonicJson}
+                    height={300}
+                  />
                 )}
               </Tab>
               <Tab
@@ -290,14 +330,24 @@ export default function CreativityActivity() {
                 title="Subdominant"
                 className="subdominant"
               >
-                Tab content for Profile
+                {subdominantJson && (
+                  <VariationsFromMotiveScore
+                    referenceScoreJSON={subdominantJson}
+                    height={300}
+                  />
+                )}
               </Tab>
               <Tab
                 eventKey="dominant-palette"
                 title="Dominant"
                 className="dominant"
               >
-                Tab content for Loooonger Tab
+                {dominantJson && (
+                  <VariationsFromMotiveScore
+                    referenceScoreJSON={dominantJson}
+                    height={300}
+                  />
+                )}
               </Tab>
             </Tabs>
 
@@ -309,32 +359,12 @@ export default function CreativityActivity() {
               onSubmit={setJsonWrapper}
               submittingStatus={mutation.status}
               orig={melodyJson}
-              colors={
-                currentAssignment?.part?.chord_scale_pattern.map(
-                  (color) => bucketColors[color]
-                ) ??
-                [
-                  'tonic',
-                  'tonic',
-                  'subdominant',
-                  'tonic',
-                  'tonic',
-                  'subdominant',
-                  'dominant',
-                  'tonic',
-                  'tonic',
-                  'subdominant',
-                  'dominant',
-                  'tonic',
-                  'subdominant',
-                  'subdominant',
-                  'dominant',
-                  'tonic',
-                ].map((color) => bucketColors[color])
-              }
+              colors={currentAssignment?.part?.chord_scale_pattern?.map(
+                (color) => bucketColors[color]
+              )}
             />
           </Accordion.Body>
-        </Accordion.Item>
+        </Accordion.Item> */}
       </Accordion>
     </>
   ) : (

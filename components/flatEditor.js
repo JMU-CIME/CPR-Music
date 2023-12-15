@@ -39,7 +39,10 @@ function FlatEditor({
   chordScaleBucket,
   instrumentName,
 }) {
-  // console.log('flat io embed log', scoreJSON, orig);
+  // if (orig) {
+  //   console.log('orig', JSON.stringify(orig));
+  // }
+  console.log('flat io embed log', scoreJSON, orig);
   const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
