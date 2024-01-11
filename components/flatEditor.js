@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
-import { pitchesToRests, trimScore } from '../lib/flat';
+import {
+  pitchesToRests,
+  trimScore,
+  sliceScore,
+  nthScoreSlice,
+  nthSliceIdxs,
+} from '../lib/flat';
 
 const validateScore = (proposedScore, permittedPitches) => {
   const result = { ok: true, errors: [] };
@@ -39,11 +45,9 @@ function FlatEditor({
   referenceScoreJSON,
   chordScaleBucket,
   instrumentName,
+  slice,
+  sliceIdx,
 }) {
-  // if (orig) {
-  //   console.log('orig', JSON.stringify(orig));
-  // }
-  console.log('flat io embed log', scoreJSON, orig);
   const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
@@ -478,11 +482,14 @@ function FlatEditor({
         colorNotes(bucket, colors);
       }
 
-      console.log('current JSON', copyJSON);
-      console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
+      //console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
       embedTransposed(bucket, embed, keySignature, instrumentName);
     }
   }, [referenceScoreJSON, chordScaleBucket]);
+
+  function colorNotesForBucket(bucket, ) {
+    
+  }
 
   function colorNotes(notes, color) {
     for (let i = 0; i < notes.length; i++) {
@@ -537,7 +544,7 @@ function FlatEditor({
       width: width,
       embedParams,
     };
-    console.log('allParams', allParams);
+    // console.log('allParams', allParams);
     setEmbed(new Embed(editorRef.current, allParams));
   }, [edit, height]);
 
@@ -563,7 +570,20 @@ function FlatEditor({
             if (trim) {
               result = trimScore(result, trim);
             }
-            if (colors) {
+            if (slice) {
+              result = sliceScore(result, slice)
+            }
+            if (sliceIdx !== undefined) {
+              const [colorStart, colorStop] = nthSliceIdxs(result, sliceIdx);
+              result = nthScoreSlice(result, sliceIdx);
+              if (colors) {
+                result['score-partwise'].part[0].measure = colorMeasures(
+                  result['score-partwise'].part[0].measure,
+                  colors.slice(colorStart, colorStop)
+                );
+              }
+            }
+            else if (colors) {
               result['score-partwise'].part[0].measure = colorMeasures(
                 result['score-partwise'].part[0].measure,
                 colors

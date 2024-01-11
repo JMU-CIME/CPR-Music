@@ -534,6 +534,7 @@ export function postRecording({
   audio,
   composition,
   submissionId,
+  index=0
 }) {
   console.log(
     'postRecording',
@@ -541,7 +542,8 @@ export function postRecording({
     assignmentId,
     audio,
     composition,
-    submissionId
+    submissionId,
+    index
   );
   return (dispatch, getState) => {
     const {
@@ -549,10 +551,14 @@ export function postRecording({
     } = getState();
 
     dispatch(beginUpload(submissionId));
-    let body = '{"content":"N/A for Perform submissions"}';
+    // let body = ''
+    let bodyObj = {"content":"N/A for Perform submissions"};
     if (composition) {
-      body = JSON.stringify({ content: composition });
+      bodyObj = { content: composition };
     }
+    
+    bodyObj.index = index;
+    let body = JSON.stringify(bodyObj);
     return fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
       {

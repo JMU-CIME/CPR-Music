@@ -171,7 +171,7 @@ export default function CreativityActivity() {
   return flatIOScoreForTransposition ? (
     <>
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
-      <Accordion className="cpr-create" defaultActiveKey="0">
+      <Accordion className="cpr-create" defaultActiveKey="0" alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Step 1 - Tonic</Accordion.Header>
           <Accordion.Body>

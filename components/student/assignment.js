@@ -19,15 +19,7 @@ export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
 
   const { slug, piece, actCategory = 'Create', partType } = router.query;
-  console.log(
-    'StudentAssignmentPage',
-    slug,
-    piece,
-    actCategory,
-    partType,
-    assignment
-  );
-  // console.log('slug, assignmentId', slug, assignment.id);
+  
   const {
     isLoading,
     isIdle,
