@@ -4,11 +4,13 @@ import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
 import { pitchesToRests, trimScore } from '../lib/flat';
 import {
-  elevenVariations,
+  // elevenVariations,
+  mwCreateVariations,
   mwMelodicShift,
   mwRhythmicMelodicShift,
   mwRhythmicShift,
-  reverseFlatScore,
+  // reverseFlatScore,
+  mwRetrograde
 } from '../lib/variations';
 
 function VariationsFromMotiveScore({
@@ -363,7 +365,7 @@ function VariationsFromMotiveScore({
     if (createdEmbed) {
       createdEmbed.ready().then(() => {
         console.log('ready hereeeee');
-        createdEmbed.loadJSON(elevenVariations(referenceScoreJSON));
+        createdEmbed.loadJSON(mwCreateVariations(referenceScoreJSON));
       });
     }
     // const reversed = reverseFlatScore(referenceScoreJSON)
