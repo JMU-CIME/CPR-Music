@@ -572,7 +572,7 @@ function FlatEditor({
             }
             if (slice) {
               result = sliceScore(result, slice)
-            }
+            } // FIXME: should slice and sliceIdx be mutually exclusive?
             if (sliceIdx !== undefined) {
               const [colorStart, colorStop] = nthSliceIdxs(result, sliceIdx);
               result = nthScoreSlice(result, sliceIdx);
