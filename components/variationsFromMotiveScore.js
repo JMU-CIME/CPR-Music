@@ -364,8 +364,11 @@ function VariationsFromMotiveScore({
     setEmbed(createdEmbed);
     if (createdEmbed) {
       createdEmbed.ready().then(() => {
+        
         console.log('ready hereeeee');
-        createdEmbed.loadJSON(mwCreateVariations(referenceScoreJSON));
+        const variations = mwCreateVariations(referenceScoreJSON);
+        console.log('algortihmically generated variations', variations);
+        createdEmbed.loadJSON(variations);
       });
     }
     // const reversed = reverseFlatScore(referenceScoreJSON)

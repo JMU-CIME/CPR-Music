@@ -413,7 +413,7 @@ function ChordScaleBucketScore({
         };
       });
     }
-
+    console.log('chord scale bucket generated json scoure output', template)
     const resultTransposed = transposeEmbed
       .ready()
       .then(() => transposeEmbed.loadJSON(template));

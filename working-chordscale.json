@@ -1,0 +1,134 @@
+{
+  "score-partwise": {
+    "part-list": {
+      "score-part": [
+        {
+          "part-name": "Trombone",
+          "voiceMapping": {
+            "0": [
+              0
+            ]
+          },
+          "staffMapping": [
+            {
+              "mainVoiceIdx": 0,
+              "voices": [
+                0
+              ],
+              "staffUuid": "staffUuid"
+            }
+          ],
+          "voiceIdxToUuidMapping": {
+            "0": "voiceUuid"
+          },
+          "voiceUuidToIdxMapping": {
+            "voiceUuid": 0
+          },
+          "part-abbreviation": "Trombone",
+          "score-instrument": {
+            "instrument-name": "Trombone",
+            "$id": "P1-I1"
+          },
+          "$id": "P1",
+          "uuid": "P1"
+        }
+      ]
+    },
+    "part": [
+      {
+        "measure": [
+          {
+            "note": [
+              {
+                "staff": "1",
+                "voice": "1",
+                "duration": "1",
+                "pitch": {
+                  "octave": "3",
+                  "step": "E",
+                  "alter": "-1"
+                },
+                "type": "quarter",
+                "$color": "#E75B5C"
+              },
+              {
+                "staff": "1",
+                "voice": "1",
+                "duration": "1",
+                "pitch": {
+                  "octave": "3",
+                  "step": "F"
+                },
+                "type": "quarter",
+                "$color": "#E75B5C"
+              },
+              {
+                "staff": "1",
+                "voice": "1",
+                "duration": "1",
+                "pitch": {
+                  "octave": "3",
+                  "step": "G"
+                },
+                "type": "quarter",
+                "$color": "#E75B5C"
+              },
+              {
+                "staff": "1",
+                "voice": "1",
+                "duration": "1",
+                "pitch": {
+                  "octave": "3",
+                  "step": "B",
+                  "alter": "-1"
+                },
+                "type": "quarter",
+                "$color": "#E75B5C"
+              },
+              {
+                "staff": "1",
+                "voice": "1",
+                "duration": "1",
+                "pitch": {
+                  "octave": "4",
+                  "step": "C"
+                },
+                "type": "quarter",
+                "$color": "#E75B5C"
+              }
+            ],
+            "$number": "1",
+            "barline": {
+              "bar-style": "light-heavy",
+              "noteBefore": 4
+            },
+            "attributes": [
+              {
+                "time": {
+                  "beats": "5",
+                  "beat-type": "4"
+                },
+                "clef": {
+                  "sign": "F",
+                  "line": "4"
+                },
+                "key": {
+                  "fifths": "-3"
+                },
+                "staff-details": {
+                  "staff-lines": "5"
+                },
+                "transpose": {
+                  "chromatic": "0",
+                  "octave-change": "undefined"
+                }
+              }
+            ]
+          }
+        ],
+        "$id": "P1",
+        "uuid": "P1"
+      }
+    ]
+  }
+}
