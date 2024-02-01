@@ -136,6 +136,9 @@ export default function CreativityActivity() {
   }
 
   function generateVariations() {
+    doneTonic();
+    doneSubdominant();
+    doneDominant();
     console.log('generate', tonicMotiveScore && startedVariationGeneration);
     setTonicJson(tonicMotiveScore);
     setStartedVariationGeneration(true);
@@ -171,207 +174,164 @@ export default function CreativityActivity() {
   return flatIOScoreForTransposition ? (
     <>
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
-      <Accordion className="cpr-create" defaultActiveKey="0" alwaysOpen>
+      {/* <Accordion className="cpr-create" defaultActiveKey="0" alwaysOpen>
         <Accordion.Item eventKey="0">
           <Accordion.Header>Step 1 - Tonic</Accordion.Header>
-          <Accordion.Body>
-            <div className="row">
-              <div className="col-md-6">
-                Create a melody one measure in length using only these 5
-                pitches. You can use rests or note durations from 1/8 - 1/2.
-              </div>
-              <div className="col-md-6">
-                <ChordScaleBucketScore
-                  height={150}
-                  referenceScoreJSON={melodyJson}
-                  chordScaleBucket="tonic"
-                  colors={bucketColors.tonic}
-                  instrumentName={currentAssignment?.instrument}
-                />
-              </div>
-            </div>
-            <FlatEditor
-              edit
-              score={
-                tonicJson
-                  ? {}
-                  : {
-                      scoreId: 'blank',
-                    }
+          <Accordion.Body> */}
+      <div className="row">
+        <div className="col-md-6">
+          Create a melody one measure in length using only these 5 pitches. You
+          can use rests or note durations from 1/8 - 1/2.
+        </div>
+        <div className="col-md-6">
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="tonic"
+            colors={bucketColors.tonic}
+            instrumentName={currentAssignment?.instrument}
+          />
+        </div>
+      </div>
+      <FlatEditor
+        edit
+        score={
+          tonicJson
+            ? {}
+            : {
+                scoreId: 'blank',
               }
-              scoreJSON={tonicJson}
-              onSubmit={setJsonWrapper}
-              submittingStatus={mutation.status}
-              orig={melodyJson}
-              trim={1}
-              onUpdate={(data) => {
-                console.log('data', data);
-                tonicMotiveScore = data;
-                console.log('tonicMotiveScore', tonicMotiveScore);
-              }}
-            />
-            <Button variant="primary" onClick={doneTonic}>
+        }
+        scoreJSON={tonicJson}
+        onSubmit={setJsonWrapper}
+        submittingStatus={mutation.status}
+        orig={melodyJson}
+        trim={1}
+        onUpdate={(data) => {
+          console.log('data', data);
+          tonicMotiveScore = data;
+          console.log('tonicMotiveScore', tonicMotiveScore);
+        }}
+      />
+      {/* <Button variant="primary" onClick={doneTonic}>
               Next
-            </Button>
-          </Accordion.Body>
-        </Accordion.Item>
+            </Button> */}
+      {/* </Accordion.Body>
+        </Accordion.Item> */}
 
-        {tonicJson && (
-          <Accordion.Item eventKey="1">
-            <Accordion.Header>Step 2 - Subdominant</Accordion.Header>
-            <Accordion.Body>
-              <div className="row">
-                <div className="col-md-6">
-                  Create a melody one measure in length using only these 5
-                  pitches. You can use rests or note durations from 1/8 - 1/2.
-                </div>
-                <div className="col-md-6">
-                  <ChordScaleBucketScore
-                    height={150}
-                    referenceScoreJSON={melodyJson}
-                    chordScaleBucket="subdominant"
-                    colors={bucketColors.subdominant}
-                    instrumentName={currentAssignment?.instrument}
-                  />
-                </div>
-              </div>
-              <FlatEditor
-                edit
-                score={
-                  subdominantJson
-                    ? {}
-                    : {
-                        scoreId: 'blank',
-                      }
-                }
-                scoreJSON={subdominantJson}
-                onSubmit={setJsonWrapper}
-                submittingStatus={mutation.status}
-                orig={melodyJson}
-                trim={1}
-                onUpdate={(data) => {
-                  subdominantMotiveScore = data;
-                  console.log('subdominantMotiveScore', subdominantMotiveScore);
-                }}
-              />
-              <Button variant="primary" onClick={doneSubdominant}>
+      <div className="row">
+        <div className="col-md-6">
+          Create a melody one measure in length using only these 5 pitches. You
+          can use rests or note durations from 1/8 - 1/2.
+        </div>
+        <div className="col-md-6">
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="subdominant"
+            colors={bucketColors.subdominant}
+            instrumentName={currentAssignment?.instrument}
+          />
+        </div>
+      </div>
+      <FlatEditor
+        edit
+        score={
+          subdominantJson
+            ? {}
+            : {
+                scoreId: 'blank',
+              }
+        }
+        scoreJSON={subdominantJson}
+        onSubmit={setJsonWrapper}
+        submittingStatus={mutation.status}
+        orig={melodyJson}
+        trim={1}
+        onUpdate={(data) => {
+          subdominantMotiveScore = data;
+          console.log('subdominantMotiveScore', subdominantMotiveScore);
+        }}
+      />
+      {/* <Button variant="primary" onClick={doneSubdominant}>
                 Next
-              </Button>
-            </Accordion.Body>
-          </Accordion.Item>
-        )}
-        {subdominantJson && (
-          <Accordion.Item eventKey="2">
-            <Accordion.Header>Step 3 - Dominant</Accordion.Header>
-            <Accordion.Body>
-              <div className="row">
-                <div className="col-md-6">
-                  Create a melody one measure in length using only these 5
-                  pitches. You can use rests or note durations from 1/8 - 1/2.
-                </div>
-                <div className="col-md-6">
-                  <ChordScaleBucketScore
-                    height={150}
-                    referenceScoreJSON={melodyJson}
-                    chordScaleBucket="dominant"
-                    colors={bucketColors.dominant}
-                    instrumentName={currentAssignment?.instrument}
-                  />
-                </div>
-              </div>
-              <FlatEditor
-                edit
-                score={
-                  dominantJson
-                    ? {}
-                    : {
-                        scoreId: 'blank',
-                      }
-                }
-                scoreJSON={dominantJson}
-                onSubmit={setJsonWrapper}
-                submittingStatus={mutation.status}
-                orig={melodyJson}
-                trim={1}
-                onUpdate={(data) => {
-                  dominantMotiveScore = data;
-                  console.log('dominantMotiveScore', dominantMotiveScore);
-                }}
-              />
-              <Button variant="primary" onClick={doneDominant}>
+              </Button> */}
+
+      <div className="row">
+        <div className="col-md-6">
+          Create a melody one measure in length using only these 5 pitches. You
+          can use rests or note durations from 1/8 - 1/2.
+        </div>
+        <div className="col-md-6">
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="dominant"
+            colors={bucketColors.dominant}
+            instrumentName={currentAssignment?.instrument}
+          />
+        </div>
+      </div>
+      <FlatEditor
+        edit
+        score={
+          dominantJson
+            ? {}
+            : {
+                scoreId: 'blank',
+              }
+        }
+        scoreJSON={dominantJson}
+        onSubmit={setJsonWrapper}
+        submittingStatus={mutation.status}
+        orig={melodyJson}
+        trim={1}
+        onUpdate={(data) => {
+          dominantMotiveScore = data;
+          console.log('dominantMotiveScore', dominantMotiveScore);
+        }}
+      />
+      {/* <Button variant="primary" onClick={doneDominant}>
                 Next
-              </Button>
-            </Accordion.Body>
-          </Accordion.Item>
-        )}
+              </Button> */}
+      <Button variant="primary" onClick={generateVariations}>
+        Begin Composing
+      </Button>
 
-        {dominantJson && (
-          <Accordion.Item eventKey="3">
-            <Accordion.Header>Step 4 - Compose</Accordion.Header>
-            <Accordion.Body>
-              <Button variant="primary" onClick={generateVariations}>
-                Begin Composing
-              </Button>
-              <Tabs
-                defaultActiveKey="tonic-palette"
-                id="justify-tab-example"
-                className="mb-3"
-                justify
-                variant="underline"
-              >
-                <Tab eventKey="tonic-palette" title="Tonic" className="tonic">
-                  {tonicJson && (
-                    <VariationsFromMotiveScore
-                      referenceScoreJSON={tonicJson}
-                      height={300}
-                      width={700}
-                    />
-                  )}
-                </Tab>
-                <Tab
-                  eventKey="subdominant-palette"
-                  title="Subdominant"
-                  className="subdominant"
-                >
-                  {subdominantJson && (
-                    <VariationsFromMotiveScore
-                      referenceScoreJSON={subdominantJson}
-                      height={300}
-                      width={700}
-                    />
-                  )}
-                </Tab>
-                <Tab
-                  eventKey="dominant-palette"
-                  title="Dominant"
-                  className="dominant"
-                >
-                  {dominantJson && (
-                    <VariationsFromMotiveScore
-                      referenceScoreJSON={dominantJson}
-                      height={300}
-                      width={700}
-                    />
-                  )}
-                </Tab>
-              </Tabs>
+      {tonicJson && (
+        <VariationsFromMotiveScore
+          referenceScoreJSON={tonicJson}
+          height={300}
+          width={700}
+        />
+      )}
+      {subdominantJson && (
+        <VariationsFromMotiveScore
+          referenceScoreJSON={subdominantJson}
+          height={300}
+          width={700}
+        />
+      )}
+      {dominantJson && (
+        <VariationsFromMotiveScore
+          referenceScoreJSON={dominantJson}
+          height={300}
+          width={700}
+        />
+      )}
 
-              <FlatEditor
-                edit
-                score={{
-                  scoreId: 'blank',
-                }}
-                onSubmit={setJsonWrapper}
-                submittingStatus={mutation.status}
-                orig={melodyJson}
-                colors={currentAssignment?.part?.chord_scale_pattern?.map(
-                  (color) => bucketColors[color]
-                )}
-              />
-            </Accordion.Body>
-          </Accordion.Item>
+      <FlatEditor
+        edit
+        score={{
+          scoreId: 'blank',
+        }}
+        onSubmit={setJsonWrapper}
+        submittingStatus={mutation.status}
+        orig={melodyJson}
+        colors={currentAssignment?.part?.chord_scale_pattern?.map(
+          (color) => bucketColors[color]
         )}
-      </Accordion>
+      />
     </>
   ) : (
     <Spinner
