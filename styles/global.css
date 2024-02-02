@@ -126,20 +126,39 @@ nav.navbar.navbar-dark .navbar-nav .nav-link {
 .cpr-create
   ul.nav-underline
   li
-  button.nav-link[data-rr-ui-event-key='tonic-palette'] {
+  button.nav-link.active[data-rr-ui-event-key='tonic-palette'] {
   background-color: #e75b5c;
 }
 .cpr-create
   ul.nav-underline
   li
-  button.nav-link[data-rr-ui-event-key='subdominant-palette'] {
+  button.nav-link.active[data-rr-ui-event-key='subdominant-palette'] {
   background-color: #265c5c;
 }
 .cpr-create
   ul.nav-underline
   li
-  button.nav-link[data-rr-ui-event-key='dominant-palette'] {
+  button.nav-link.active[data-rr-ui-event-key='dominant-palette'] {
   background-color: #4390e2;
+}
+
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='tonic-palette']:not(.active) {
+  color: #e75b5c;
+}
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='subdominant-palette']:not(.active) {
+  color: #265c5c;
+}
+.cpr-create
+  ul.nav-underline
+  li
+  button.nav-link[data-rr-ui-event-key='dominant-palette']:not(.active) {
+  color: #4390e2;
 }
 .most-recent-sub-card {
   max-width: 21.25rem;

@@ -19,6 +19,7 @@ function VariationsFromMotiveScore({
   referenceScoreJSON, //original motive from student
   // chordScaleBucket,
   instrumentName,
+  onSelect
 }) {
   console.log('got in variations', referenceScoreJSON);
   // console.log('flat io embed log', scoreJSON, orig);
@@ -364,23 +365,23 @@ function VariationsFromMotiveScore({
     setEmbed(createdEmbed);
     if (createdEmbed) {
       createdEmbed.ready().then(() => {
-        
-        console.log('ready hereeeee');
+        // listen for cursor position
+        if (onSelect) {
+          createdEmbed.off('cursorPosition');
+          createdEmbed.on('cursorPosition', (ev) =>{
+            console.log('curosrpos', ev, ev.measureIdx)
+            onSelect(ev.measureIdx);
+          }) ;
+          
+        }
+
         const variations = mwCreateVariations(referenceScoreJSON);
         console.log('algortihmically generated variations', variations);
         createdEmbed.loadJSON(variations);
+
+
       });
     }
-    // const reversed = reverseFlatScore(referenceScoreJSON)
-    // const rhymic1 = mwRhythmicShift(referenceScoreJSON, 1)
-    // const rhymic2 = mwRhythmicShift(referenceScoreJSON, 2)
-    // const rhymic3 = mwRhythmicShift(referenceScoreJSON, 3)
-    // const melodic1 = mwMelodicShift(referenceScoreJSON, 1);
-    // const melodic2 = mwMelodicShift(referenceScoreJSON, 2);
-    // const melodic3 = mwMelodicShift(referenceScoreJSON, 3);
-    // const rhythmicMelodic1 = mwRhythmicMelodicShift(referenceScoreJSON, 1);
-    // const rhythmicMelodic2 = mwRhythmicMelodicShift(referenceScoreJSON, 2);
-    // const rhythmicMelodic3 = mwRhythmicMelodicShift(referenceScoreJSON, 3);
   }, [height, referenceScoreJSON]);
 
   return (

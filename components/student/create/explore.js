@@ -58,6 +58,10 @@ export default function CreativityActivity() {
     useState(false);
   const [someVar, setSomeVar] = useState(false);
 
+  const [selectedTonicMeasure, setSelectedTonicMeasure] = useState(-1);
+  const [selectedDominantMeasure, setSelectedDominantMeasure] = useState(-1);
+  const [selectedSubdominantMeasure, setSelectedSubdominantMeasure] = useState(-1);
+
   const userInfo = useSelector((state) => state.currentUser);
 
   const {
@@ -172,7 +176,7 @@ export default function CreativityActivity() {
   // console.log('\n\n\n\ntonicJson\n\n\n===========', tonicJson);
   // const origJSON
   return flatIOScoreForTransposition ? (
-    <>
+    <div className="cpr-create">
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
       {/* <Accordion className="cpr-create" defaultActiveKey="0" alwaysOpen>
         <Accordion.Item eventKey="0">
@@ -298,41 +302,64 @@ export default function CreativityActivity() {
         Begin Composing
       </Button>
 
-      {tonicJson && (
-        <VariationsFromMotiveScore
-          referenceScoreJSON={tonicJson}
-          height={300}
-          width={700}
-        />
-      )}
-      {subdominantJson && (
-        <VariationsFromMotiveScore
-          referenceScoreJSON={subdominantJson}
-          height={300}
-          width={700}
-        />
-      )}
-      {dominantJson && (
-        <VariationsFromMotiveScore
-          referenceScoreJSON={dominantJson}
-          height={300}
-          width={700}
-        />
-      )}
+      <Tabs
+        defaultActiveKey="tonic-palette"
+        id="justify-tab-example"
+        className="mb-3"
+        justify
+        variant="underline"
+      >
+        <Tab eventKey="tonic-palette" title={`Tonic ${selectedTonicMeasure}`} className="tonic">
+          {tonicJson && (
+            <VariationsFromMotiveScore
+              referenceScoreJSON={tonicJson}
+              height={300}
+              width={700}
+              onSelect={setSelectedTonicMeasure}
+            />
+          )}
+        </Tab>
+        <Tab
+          eventKey="subdominant-palette"
+          title={`Subdominant ${selectedSubdominantMeasure}`}
+          className="subdominant"
+        >
+          {subdominantJson && (
+            <VariationsFromMotiveScore
+              referenceScoreJSON={subdominantJson}
+              height={300}
+              width={700}
+              onSelect={setSelectedSubdominantMeasure}
+            />
+          )}
+        </Tab>
+        <Tab eventKey="dominant-palette" title={`Dominant ${selectedDominantMeasure}`} className="dominant">
+          {dominantJson && (
+            <VariationsFromMotiveScore
+              referenceScoreJSON={dominantJson}
+              height={300}
+              width={700}
+              onSelect={setSelectedDominantMeasure}
+            />
+          )}
+        </Tab>
+      </Tabs>
 
-      {dominantJson && (<FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-      />)}
-    </>
+      
+        <FlatEditor
+          edit
+          score={{
+            scoreId: 'blank',
+          }}
+          onSubmit={setJsonWrapper}
+          submittingStatus={mutation.status}
+          orig={melodyJson}
+          colors={currentAssignment?.part?.chord_scale_pattern?.map(
+            (color) => bucketColors[color]
+          )}
+        />
+
+    </div>
   ) : (
     <Spinner
       as="span"
