@@ -20,7 +20,7 @@ function VariationsFromMotiveScore({
   // chordScaleBucket,
   instrumentName,
 }) {
-  console.log('got in variations', referenceScoreJSON);
+  // console.log('got in variations', referenceScoreJSON);
   // console.log('flat io embed log', scoreJSON, orig);
   // const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();

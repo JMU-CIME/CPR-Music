@@ -139,11 +139,11 @@ export default function CreativityActivity() {
     doneTonic();
     doneSubdominant();
     doneDominant();
-    console.log('generate', tonicMotiveScore && startedVariationGeneration);
+    // console.log('generate', tonicMotiveScore && startedVariationGeneration);
     setTonicJson(tonicMotiveScore);
     setStartedVariationGeneration(true);
     console.log('generate', tonicMotiveScore && startedVariationGeneration);
-    console.log('tonicMotiveScore', tonicMotiveScore);
+    // console.log('tonicMotiveScore', tonicMotiveScore);
     console.log('tonicJson', tonicJson);
     // setSomeVar(true);
     // console.log(
@@ -155,17 +155,17 @@ export default function CreativityActivity() {
   }
 
   function doneTonic() {
-    console.log('doneTonic', tonicMotiveScore);
+    // console.log('doneTonic', tonicMotiveScore);
     setTonicJson(tonicMotiveScore);
   }
 
   function doneSubdominant() {
-    console.log('doneSubdominant', subdominantMotiveScore);
+    // console.log('doneSubdominant', subdominantMotiveScore);
     setSubdominantJson(subdominantMotiveScore);
   }
 
   function doneDominant() {
-    console.log('doneDominant', dominantMotiveScore);
+    // console.log('doneDominant', dominantMotiveScore);
     setDominantJson(dominantMotiveScore);
   }
 
@@ -208,9 +208,9 @@ export default function CreativityActivity() {
         orig={melodyJson}
         trim={1}
         onUpdate={(data) => {
-          console.log('data', data);
+          // console.log('data', data);
           tonicMotiveScore = data;
-          console.log('tonicMotiveScore', tonicMotiveScore);
+          // console.log('tonicMotiveScore', tonicMotiveScore);
         }}
       />
       {/* <Button variant="primary" onClick={doneTonic}>
@@ -250,7 +250,7 @@ export default function CreativityActivity() {
         trim={1}
         onUpdate={(data) => {
           subdominantMotiveScore = data;
-          console.log('subdominantMotiveScore', subdominantMotiveScore);
+          // console.log('subdominantMotiveScore', subdominantMotiveScore);
         }}
       />
       {/* <Button variant="primary" onClick={doneSubdominant}>
@@ -288,7 +288,7 @@ export default function CreativityActivity() {
         trim={1}
         onUpdate={(data) => {
           dominantMotiveScore = data;
-          console.log('dominantMotiveScore', dominantMotiveScore);
+          // console.log('dominantMotiveScore', dominantMotiveScore);
         }}
       />
       {/* <Button variant="primary" onClick={doneDominant}>
