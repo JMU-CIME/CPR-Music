@@ -320,7 +320,7 @@ export default function CreativityActivity() {
         />
       )}
 
-      <FlatEditor
+      {dominantJson && (<FlatEditor
         edit
         score={{
           scoreId: 'blank',
@@ -331,7 +331,7 @@ export default function CreativityActivity() {
         colors={currentAssignment?.part?.chord_scale_pattern?.map(
           (color) => bucketColors[color]
         )}
-      />
+      />)}
     </>
   ) : (
     <Spinner
