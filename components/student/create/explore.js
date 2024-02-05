@@ -29,6 +29,13 @@ const ChordScaleBucketScore = dynamic(
   }
 );
 
+const ExploratoryCompose = dynamic(
+  () => import('../../exploratoryCompose'),
+  {
+    ssr: false,
+  }
+);
+
 const VariationsFromMotiveScore = dynamic(
   () => import('../../variationsFromMotiveScore'),
   {
@@ -51,7 +58,10 @@ export default function CreativityActivity() {
   const { slug, piece } = router.query;
   const actCategory = 'Create';
   const [melodyJson, setMelodyJson] = useState('');
+  
+  const [tonicEditorJson, setTonicEditorJson] = useState('');
   const [tonicJson, setTonicJson] = useState('');
+
   const [subdominantJson, setSubdominantJson] = useState('');
   const [dominantJson, setDominantJson] = useState('');
   const [startedVariationGeneration, setStartedVariationGeneration] =
@@ -63,7 +73,7 @@ export default function CreativityActivity() {
   const [selectedSubdominantMeasure, setSelectedSubdominantMeasure] = useState(-1);
 
   const userInfo = useSelector((state) => state.currentUser);
-
+    
   const {
     isLoading: loaded,
     error: assignmentsError,
@@ -96,6 +106,10 @@ export default function CreativityActivity() {
   let tonicMotiveScore = '';
   let subdominantMotiveScore = '';
   let dominantMotiveScore = '';
+
+  function updateTonic(score) {
+    tonicMotiveScore = score
+  }
   // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
     assignments &&
@@ -159,8 +173,8 @@ export default function CreativityActivity() {
   }
 
   function doneTonic() {
-    // console.log('doneTonic', tonicMotiveScore);
-    setTonicJson(tonicMotiveScore);
+    console.log('doneTonic', tonicEditorJson);
+    setTonicJson(tonicEditorJson)
   }
 
   function doneSubdominant() {
@@ -197,27 +211,35 @@ export default function CreativityActivity() {
           />
         </div>
       </div>
-      <FlatEditor
-        edit
-        score={
-          tonicJson
-            ? {}
-            : {
-                scoreId: 'blank',
-              }
-        }
-        scoreJSON={tonicJson}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        orig={melodyJson}
+      <ExploratoryCompose
+        melodyJson={melodyJson} 
         trim={1}
-        onUpdate={(data) => {
-          // console.log('data', data);
-          tonicMotiveScore = data;
-          // console.log('tonicMotiveScore', tonicMotiveScore);
-        }}
+        onUpdate={setTonicJson}
       />
       {/* <Button variant="primary" onClick={doneTonic}>
+          <Accordion.Body>
+            <div className="row">
+              <div className="col-md-6">
+                Create a melody one measure in length using only these 5
+                pitches. You can use rests or note durations from 1/8 - 1/2.
+              </div>
+              <div className="col-md-6">
+                <ChordScaleBucketScore
+                  height={150}
+                  referenceScoreJSON={melodyJson}
+                  chordScaleBucket="tonic"
+                  colors={bucketColors.tonic}
+                  instrumentName={currentAssignment?.instrument}
+                />
+              </div>
+            </div>
+            <ExploratoryCompose
+              melodyJson={melodyJson} 
+              trim={1}
+              onUpdate={setTonicEditorJson}
+            />
+
+            <Button variant="primary" onClick={doneTonic}>
               Next
             </Button> */}
       {/* </Accordion.Body>
@@ -258,6 +280,45 @@ export default function CreativityActivity() {
         }}
       />
       {/* <Button variant="primary" onClick={doneSubdominant}>
+        {tonicJson && (
+          <Accordion.Item eventKey="1">
+            <Accordion.Header>Step 2 - Subdominant</Accordion.Header>
+            <Accordion.Body>
+              <div className="row">
+                <div className="col-md-6">
+                  Create a melody one measure in length using only these 5
+                  pitches. You can use rests or note durations from 1/8 - 1/2.
+                </div>
+                <div className="col-md-6">
+                  <ChordScaleBucketScore
+                    height={150}
+                    referenceScoreJSON={melodyJson}
+                    chordScaleBucket="subdominant"
+                    colors={bucketColors.subdominant}
+                    instrumentName={currentAssignment?.instrument}
+                  />
+                </div>
+              </div>
+              <FlatEditor
+                edit
+                score={
+                  subdominantJson
+                    ? {}
+                    : {
+                        scoreId: 'blank',
+                      }
+                }
+                scoreJSON={subdominantJson}
+                onSubmit={setJsonWrapper}
+                submittingStatus={mutation.status}
+                orig={melodyJson}
+                trim={1}
+                onUpdate={(data) => {
+                  subdominantMotiveScore = data;
+                }}
+              />
+              
+              <Button variant="primary" onClick={doneSubdominant}>
                 Next
               </Button> */}
 
