@@ -18,10 +18,20 @@ import {
 } from '../../../actions';
 import { UploadStatusEnum } from '../../../types';
 import { notes, tonicScoreJSON } from '../../../lib/flat';
+import { sub } from 'date-fns';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
+
+const ChordScaleBucketScore = dynamic(
+  () => import('../../chordScaleBucketScore'),
+  {
+    ssr: false,
+  }
+);
+
+const MEASURES_PER_STEP = 4;
 
 const bucketColors = {
   tonic: '#E75B5C',
@@ -32,7 +42,6 @@ const bucketColors = {
 export default function CreativityActivity() {
   const tonicNotes = notes(tonicScoreJSON);
 
-  // console.log('got into aural component');
   const dispatch = useDispatch();
   // I think this should show the melody for the current piece, but in the student's transposition
   // need to get the student's current assignment
@@ -40,13 +49,18 @@ export default function CreativityActivity() {
   const { slug, piece } = router.query;
   const actCategory = 'Create';
   const [melodyJson, setMelodyJson] = useState('');
-  const [score1JSON, setScore1JSON] = useState('');
-  const [score2JSON, setScore2JSON] = useState('');
-  const [score3JSON, setScore3JSON] = useState('');
-  const [score4JSON, setScore4JSON] = useState('');
-  const [totalScoreJSON, setTotalScoreJSON] = useState('');
 
-  const userInfo = useSelector((state) => state.currentUser);
+  // let's just store the calculated 4 measure slices of
+  // the score and the corresponding colors
+  const [subScores, setSubScores] = useState([]);
+  const [subColors, setSubColors] = useState([]);
+  // const [score1JSON, setScore1JSON] = useState('');
+  // const [score2JSON, setScore2JSON] = useState('');
+  // const [score3JSON, setScore3JSON] = useState('');
+  // const [score4JSON, setScore4JSON] = useState('');
+  // const [totalScoreJSON, setTotalScoreJSON] = useState('');
+
+  // const userInfo = useSelector((state) => state.currentUser);
 
   const {
     isLoading: loaded,
@@ -56,10 +70,39 @@ export default function CreativityActivity() {
     enabled: !!slug,
   });
 
+  //only when melodyJson is updated, calculate the steps
+  useEffect(() => {
+    if (melodyJson && melodyJson.length > 0) {
+      const referenceScoreObj = JSON.parse(melodyJson);
+      let partialScores = [];
+      let partialColors = [];
+      const measureCount = referenceScoreObj['score-partwise'].part[0].measure.length;
+      for (let i = 0; i < measureCount; i += MEASURES_PER_STEP) {
+        const slice = JSON.parse(melodyJson);
+        slice['score-partwise'].part[0].measure = slice['score-partwise'].part[0].measure.slice(i, i + MEASURES_PER_STEP);
+        slice['score-partwise'].part[0].measure[0].attributes[0].divisions = '8';
+        slice['score-partwise'].part[0].measure[0].attributes[0].time = { beats: '4', 'beat-type': '4' };
+        slice['score-partwise'].part[0].measure[0].attributes[0].clef = { sign: 'G', line: '2' };
+        slice['score-partwise'].part[0].measure[0].attributes[0].key = { fifths: '-3' };
+        slice['score-partwise'].part[0].measure[0].attributes[0]['staff-details'] = { 'staff-lines': '5' };
+        partialScores.push(JSON.stringify(slice));
+
+        const colorSlice = currentAssignment?.part?.chord_scale_pattern?.slice(i, i+MEASURES_PER_STEP).map(
+          (color) => bucketColors[color]
+        )
+        partialColors.push(colorSlice);
+      }
+      setSubScores(partialScores);
+      setSubColors(partialColors);
+      console.log('partialScores', partialScores);
+      console.log('partialColors', partialColors);
+    }
+
+  }, [melodyJson]);
+
   // const assignment = useSelector((state) => state.selectedAssignment);
 
   // useEffect(() => {
-  //   console.log('does assignment have id?', assignment)
   //   if (loaded) {
   //     dispatch(
   //       fetchSingleStudentAssignment({
@@ -71,32 +114,22 @@ export default function CreativityActivity() {
   // }, [slug, loaded, assignment]);
 
   // if (assignments) {
-  //   console.log('assignments', assignments);
   // }
 
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
   let composition = ''; // FIXME: why isn't this useState???
-  let score1Data = '';
-  let score2Data = '';
-  let score3Data = '';
-  let score4Data = '';
-  let scoreTotalData = '';
-  // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
     assignments &&
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter((assn) => {
-        // console.log('assn', assn);
         return (
           assn.piece_slug === piece &&
           assn.activity_type_category === actCategory
         );
       })?.[0];
   const currentTransposition = currentAssignment?.transposition;
-  // console.log('currentAssignment', currentAssignment);
-  // console.log('currentTransposition', currentTransposition);
   const flatIOScoreForTransposition =
     currentAssignment?.part?.transpositions?.filter(
       (partTransposition) =>
@@ -119,238 +152,43 @@ export default function CreativityActivity() {
         submissionId,
       })
     );
-  console.log('flatIOScoreForTransposition', flatIOScoreForTransposition);
   let scoreJSON;
   if (flatIOScoreForTransposition) {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
-  console.log('scoreJSON', scoreJSON);
+  let scoreData = [];
+
 
   // const origJSON
   return flatIOScoreForTransposition ? (
     <>
-      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
-      <h2>Step 1</h2>
-      Compose a four-measure melody using only quarter notes and half notes and
-      only the pitches that correspond with the color-coded measures.
-      <div className="row">
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '65241135b67581e78952d1b1',
-              sharingKey:
-                '223faaebf63c6ff5c964fb74737554f58d86b99262bc62bac15195b66d3ee566f8ff923f6d094e611a610105b3d9582cea55e183cf60ab8683986fc29d7a1f37',
-            }}
-            colors={[bucketColors.tonic]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114afc390c181375fdc8',
-              sharingKey:
-                'ea5a2d5bdb5b8c570cb0796add8188d50757c7a06d2636f1b7c088b905aa7716b8a8eaf0a0b12802d8a02852691b0420bff1adef17e7250bbe6f03b442131fda',
-            }}
-            colors={[bucketColors.subdominant]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114e605572ddb1c1090f',
-              sharingKey:
-                '895d5f93344d05f47252535852e3f9f9ec638b94b3237278508cf6b085671dc56791d83fba37fc1c0285fec49a70a417a461d49f4ec48c520a96a6b076bab21f',
-            }}
-            colors={[bucketColors.dominant]}
-          />
-        </div>
-      </div>
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          // console.log('updated composition', data);
-          score1Data = data;
-        }}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-        sliceIdx={0}
-      />
-      <h2>Step 2</h2>
-      Compose a four-measure melody using only quarter notes and half notes and
-      only the pitches that correspond with the color-coded measures.
-      <div className="row">
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '65241135b67581e78952d1b1',
-              sharingKey:
-                '223faaebf63c6ff5c964fb74737554f58d86b99262bc62bac15195b66d3ee566f8ff923f6d094e611a610105b3d9582cea55e183cf60ab8683986fc29d7a1f37',
-            }}
-            colors={[bucketColors.tonic]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114afc390c181375fdc8',
-              sharingKey:
-                'ea5a2d5bdb5b8c570cb0796add8188d50757c7a06d2636f1b7c088b905aa7716b8a8eaf0a0b12802d8a02852691b0420bff1adef17e7250bbe6f03b442131fda',
-            }}
-            colors={[bucketColors.subdominant]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114e605572ddb1c1090f',
-              sharingKey:
-                '895d5f93344d05f47252535852e3f9f9ec638b94b3237278508cf6b085671dc56791d83fba37fc1c0285fec49a70a417a461d49f4ec48c520a96a6b076bab21f',
-            }}
-            colors={[bucketColors.dominant]}
-          />
-        </div>
-      </div>
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          // console.log('updated composition', data);
-          score2Data = data;
-        }}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-        sliceIdx={0}
-      />
-      <h2>Step 3</h2>
-      Compose a four-measure melody using only quarter notes and half notes and
-      only the pitches that correspond with the color-coded measures.
-      <div className="row">
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '65241135b67581e78952d1b1',
-              sharingKey:
-                '223faaebf63c6ff5c964fb74737554f58d86b99262bc62bac15195b66d3ee566f8ff923f6d094e611a610105b3d9582cea55e183cf60ab8683986fc29d7a1f37',
-            }}
-            colors={[bucketColors.tonic]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114afc390c181375fdc8',
-              sharingKey:
-                'ea5a2d5bdb5b8c570cb0796add8188d50757c7a06d2636f1b7c088b905aa7716b8a8eaf0a0b12802d8a02852691b0420bff1adef17e7250bbe6f03b442131fda',
-            }}
-            colors={[bucketColors.subdominant]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114e605572ddb1c1090f',
-              sharingKey:
-                '895d5f93344d05f47252535852e3f9f9ec638b94b3237278508cf6b085671dc56791d83fba37fc1c0285fec49a70a417a461d49f4ec48c520a96a6b076bab21f',
-            }}
-            colors={[bucketColors.dominant]}
-          />
-        </div>
-      </div>
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          // console.log('updated composition', data);
-          score3Data = data;
-        }}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-        sliceIdx={2}
-      />
-      <h2>Step 4</h2>
-      Compose a four-measure melody using only quarter notes and half notes and
-      only the pitches that correspond with the color-coded measures.
-      <div className="row">
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '65241135b67581e78952d1b1',
-              sharingKey:
-                '223faaebf63c6ff5c964fb74737554f58d86b99262bc62bac15195b66d3ee566f8ff923f6d094e611a610105b3d9582cea55e183cf60ab8683986fc29d7a1f37',
-            }}
-            colors={[bucketColors.tonic]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114afc390c181375fdc8',
-              sharingKey:
-                'ea5a2d5bdb5b8c570cb0796add8188d50757c7a06d2636f1b7c088b905aa7716b8a8eaf0a0b12802d8a02852691b0420bff1adef17e7250bbe6f03b442131fda',
-            }}
-            colors={[bucketColors.subdominant]}
-          />
-        </div>
-        <div className="col-md-4">
-          <FlatEditor
-            height={150}
-            score={{
-              scoreId: '6524114e605572ddb1c1090f',
-              sharingKey:
-                '895d5f93344d05f47252535852e3f9f9ec638b94b3237278508cf6b085671dc56791d83fba37fc1c0285fec49a70a417a461d49f4ec48c520a96a6b076bab21f',
-            }}
-            colors={[bucketColors.dominant]}
-          />
-        </div>
-      </div>
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          // console.log('updated composition', data);
-          score4Data = data;
-        }}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-        sliceIdx={3}
-      />
-      <h2>Step 5 - Combined</h2>
+      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
+      {
+        // subScores.slice(0, 1).map((subScore, idx) => {
+        subScores.map((subScore, idx) =>{
+        scoreData[idx] = {};
+        console.log('subScore', idx);
+        return (
+          <div key={idx}>
+            <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
+            <FlatEditor
+              edit
+              score={{
+                scoreId: 'blank',
+              }}
+              onSubmit={setJsonWrapper}
+              submittingStatus={mutation.status}
+              onUpdate={(data) => {
+                scoreData[idx] = data;
+              }}
+              orig={subScore}
+              colors={subColors[idx]}
+              debugMsg={`error in rendering the subScore[${idx}]`}
+            />
+          </div>
+        );
+      })}
+      {/* <h2>Step 5 - Combined</h2>
       <FlatEditor
         edit
         score={{
@@ -362,7 +200,7 @@ export default function CreativityActivity() {
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
-      />
+      /> */}
     </>
   ) : (
     <Spinner
