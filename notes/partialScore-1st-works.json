@@ -1,0 +1,306 @@
+{
+  "measure": [
+    {
+      "$number": "1",
+      "$width": "178",
+      "harmony": [
+        {
+          "$default-y": "39",
+          "root": { "root-step": "E", "root-alter": "-1" },
+          "kind": {
+            "content": "major",
+            "$halign": "center",
+            "$text": ""
+          },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1",
+          "$placement": "above",
+          "noteBefore": -1
+        }
+      ],
+      "note": [
+        {
+          "$default-x": "129",
+          "rest": {},
+          "duration": "8",
+          "voice": "1",
+          "type": "quarter",
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "139",
+          "pitch": { "step": "E", "alter": "-1", "octave": "4" },
+          "duration": "8",
+          "voice": "1",
+          "type": "quarter",
+          "stem": { "content": "up", "$default-y": "-5" },
+          "notations": {
+            "slur": {
+              "$bezier-x": "9",
+              "$bezier-y": "-7",
+              "$default-x": "6",
+              "$default-y": "-50",
+              "$number": "1",
+              "$placement": "below",
+              "$type": "start"
+            }
+          },
+          "$adagio-location": { "timePos": 8, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "152",
+          "pitch": { "step": "G", "octave": "4" },
+          "duration": "8",
+          "voice": "1",
+          "type": "quarter",
+          "stem": { "content": "up", "$default-y": "5" },
+          "$adagio-location": { "timePos": 16, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "164",
+          "pitch": { "step": "F", "octave": "4" },
+          "duration": "8",
+          "voice": "1",
+          "type": "quarter",
+          "stem": { "content": "up", "$default-y": "0" },
+          "notations": {
+            "slur": {
+              "$bezier-x": "-6",
+              "$bezier-y": "-10",
+              "$default-x": "6",
+              "$default-y": "-45",
+              "$number": "1",
+              "$type": "stop"
+            }
+          },
+          "$adagio-location": { "timePos": 24, "dpq": 8 },
+          "staff": "1"
+        }
+      ],
+      "attributes": [
+        {
+          "divisions": "8",
+          "time": { "beats": "4", "beat-type": "4" },
+          "clef": { "sign": "G", "line": "2" },
+          "key": { "fifths": "-3" },
+          "staff-details": { "staff-lines": "5" },
+          "$adagio-time": { "beats": "4", "beat-type": "4" },
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 1 }
+        }
+      ],
+      "sound": [
+        {
+          "$adagio-swing": { "swing": false },
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 8 }
+        },
+        {
+          "$tempo": "120",
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 8 }
+        }
+      ],
+      "direction": [
+        {
+          "$placement": "above",
+          "staff": "1",
+          "$adagio-location": { "timePos": 0 },
+          "direction-type": {
+            "metronome": { "per-minute": "72", "beat-unit": "quarter" }
+          },
+          "noteBefore": -1,
+          "$adagio-isFirst": true
+        }
+      ],
+      "$adagio-beatsList": [1, 1, 1, 1],
+      "$adagio-restsInsideBeams": false
+    },
+    {
+      "$number": "2",
+      "$width": "44",
+      "harmony": [
+        {
+          "$default-y": "39",
+          "root": { "root-step": "E", "root-alter": "-1" },
+          "kind": {
+            "content": "major",
+            "$halign": "center",
+            "$text": ""
+          },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1",
+          "$placement": "above",
+          "noteBefore": -1
+        }
+      ],
+      "note": [
+        {
+          "$default-x": "14",
+          "pitch": { "step": "G", "octave": "4" },
+          "duration": "32",
+          "tie": { "$type": "start" },
+          "voice": "1",
+          "type": "whole",
+          "notations": { "tied": { "$type": "start" } },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1"
+        }
+      ],
+      "attributes": [
+        {
+          "$adagio-time": { "beats": "4", "beat-type": "4" },
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 1 }
+        }
+      ],
+      "$adagio-beatsList": [1, 1, 1, 1],
+      "$adagio-restsInsideBeams": false
+    },
+    {
+      "$number": "3",
+      "$width": "65",
+      "harmony": [
+        {
+          "$default-y": "39",
+          "root": { "root-step": "A", "root-alter": "-1" },
+          "kind": {
+            "content": "major",
+            "$halign": "center",
+            "$text": ""
+          },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1",
+          "$placement": "above",
+          "noteBefore": -1
+        }
+      ],
+      "note": [
+        {
+          "$default-x": "13",
+          "pitch": { "step": "G", "octave": "4" },
+          "duration": "8",
+          "tie": { "$type": "stop" },
+          "voice": "1",
+          "type": "quarter",
+          "stem": { "content": "up", "$default-y": "5" },
+          "notations": {
+            "tied": { "$type": "stop" },
+            "articulations": {
+              "breath-mark": {
+                "$default-x": "26",
+                "$default-y": "23",
+                "$placement": "above"
+              }
+            }
+          },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "23",
+          "pitch": { "step": "A", "alter": "-1", "octave": "4" },
+          "duration": "8",
+          "voice": "1",
+          "type": "quarter",
+          "stem": { "content": "up", "$default-y": "10" },
+          "notations": {
+            "slur": {
+              "$bezier-x": "4",
+              "$bezier-y": "-13",
+              "$default-x": "6",
+              "$default-y": "-35",
+              "$number": "1",
+              "$placement": "below",
+              "$type": "start"
+            }
+          },
+          "$adagio-location": { "timePos": 8, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "34",
+          "pitch": { "step": "G", "octave": "4" },
+          "duration": "12",
+          "voice": "1",
+          "type": "quarter",
+          "dot": {},
+          "stem": { "content": "up", "$default-y": "5" },
+          "$adagio-location": { "timePos": 16, "dpq": 8 },
+          "staff": "1"
+        },
+        {
+          "$default-x": "49",
+          "pitch": { "step": "F", "octave": "4" },
+          "duration": "4",
+          "voice": "1",
+          "type": "eighth",
+          "stem": { "content": "up", "$default-y": "0" },
+          "notations": {
+            "slur": {
+              "$bezier-x": "-9",
+              "$bezier-y": "-10",
+              "$default-x": "6",
+              "$default-y": "-45",
+              "$number": "1",
+              "$type": "stop"
+            }
+          },
+          "$adagio-location": { "timePos": 28, "dpq": 8 },
+          "staff": "1"
+        }
+      ],
+      "attributes": [
+        {
+          "$adagio-time": { "beats": "4", "beat-type": "4" },
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 1 }
+        }
+      ],
+      "$adagio-beatsList": [1, 1, 1, 1],
+      "$adagio-restsInsideBeams": false
+    },
+    {
+      "$number": "4",
+      "$width": "44",
+      "harmony": [
+        {
+          "$default-y": "39",
+          "root": { "root-step": "E", "root-alter": "-1" },
+          "kind": {
+            "content": "major",
+            "$halign": "center",
+            "$text": ""
+          },
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1",
+          "$placement": "above",
+          "noteBefore": -1
+        }
+      ],
+      "note": [
+        {
+          "$default-x": "14",
+          "pitch": { "step": "E", "alter": "-1", "octave": "4" },
+          "duration": "32",
+          "voice": "1",
+          "type": "whole",
+          "$adagio-location": { "timePos": 0, "dpq": 8 },
+          "staff": "1"
+        }
+      ],
+      "attributes": [
+        {
+          "$adagio-time": { "beats": "4", "beat-type": "4" },
+          "noteBefore": -1,
+          "$adagio-location": { "timePos": 0, "dpq": 1 }
+        }
+      ],
+      "$adagio-beatsList": [1, 1, 1, 1],
+      "$adagio-restsInsideBeams": false
+    }
+  ]
+}
