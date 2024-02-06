@@ -302,14 +302,14 @@ export default function CreativityActivity() {
         Begin Composing
       </Button>
 
-      <Tabs
+      {/* <Tabs
         defaultActiveKey="tonic-palette"
         id="justify-tab-example"
         className="mb-3"
         justify
         variant="underline"
       >
-        <Tab eventKey="tonic-palette" title={`Tonic ${selectedTonicMeasure}`} className="tonic">
+        <Tab eventKey="tonic-palette" title={`Tonic ${selectedTonicMeasure}`} className="tonic"> */}
           {tonicJson && (
             <VariationsFromMotiveScore
               referenceScoreJSON={tonicJson}
@@ -318,12 +318,12 @@ export default function CreativityActivity() {
               onSelect={setSelectedTonicMeasure}
             />
           )}
-        </Tab>
+        {/* </Tab>
         <Tab
           eventKey="subdominant-palette"
           title={`Subdominant ${selectedSubdominantMeasure}`}
           className="subdominant"
-        >
+        > */}
           {subdominantJson && (
             <VariationsFromMotiveScore
               referenceScoreJSON={subdominantJson}
@@ -332,8 +332,8 @@ export default function CreativityActivity() {
               onSelect={setSelectedSubdominantMeasure}
             />
           )}
-        </Tab>
-        <Tab eventKey="dominant-palette" title={`Dominant ${selectedDominantMeasure}`} className="dominant">
+        {/* </Tab>
+        <Tab eventKey="dominant-palette" title={`Dominant ${selectedDominantMeasure}`} className="dominant"> */}
           {dominantJson && (
             <VariationsFromMotiveScore
               referenceScoreJSON={dominantJson}
@@ -342,8 +342,8 @@ export default function CreativityActivity() {
               onSelect={setSelectedDominantMeasure}
             />
           )}
-        </Tab>
-      </Tabs>
+        {/* </Tab>
+      </Tabs> */}
 
       
         <FlatEditor
