@@ -19,6 +19,7 @@ import {
 import { UploadStatusEnum } from '../../../types';
 import { notes, tonicScoreJSON } from '../../../lib/flat';
 import { sub } from 'date-fns';
+import { Col, Row } from 'react-bootstrap';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
@@ -58,7 +59,7 @@ export default function CreativityActivity() {
   // const [score2JSON, setScore2JSON] = useState('');
   // const [score3JSON, setScore3JSON] = useState('');
   // const [score4JSON, setScore4JSON] = useState('');
-  // const [totalScoreJSON, setTotalScoreJSON] = useState('');
+  const [totalScoreJSON, setTotalScoreJSON] = useState('');
 
   // const userInfo = useSelector((state) => state.currentUser);
 
@@ -94,8 +95,8 @@ export default function CreativityActivity() {
       }
       setSubScores(partialScores);
       setSubColors(partialColors);
-      console.log('partialScores', partialScores);
-      console.log('partialColors', partialColors);
+      // console.log('partialScores', partialScores);
+      // console.log('partialColors', partialColors);
     }
 
   }, [melodyJson]);
@@ -171,6 +172,31 @@ export default function CreativityActivity() {
         return (
           <div key={idx}>
             <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
+            <Row>
+              <Col md>
+                <ChordScaleBucketScore
+                  height={150}
+                  referenceScoreJSON={melodyJson}
+                  chordScaleBucket="tonic"
+                  colors={bucketColors.tonic}
+                  instrumentName={currentAssignment?.instrument}
+                />
+              </Col>
+              <Col md><ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="subdominant"
+            colors={bucketColors.subdominant}
+            instrumentName={currentAssignment?.instrument}
+          /></Col>
+              <Col md><ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="dominant"
+            colors={bucketColors.dominant}
+            instrumentName={currentAssignment?.instrument}
+          /></Col>
+            </Row>
             <FlatEditor
               edit
               score={{
@@ -188,7 +214,7 @@ export default function CreativityActivity() {
           </div>
         );
       })}
-      {/* <h2>Step 5 - Combined</h2>
+      <h2>Step {subScores.length} - Combined</h2>
       <FlatEditor
         edit
         score={{
@@ -200,7 +226,7 @@ export default function CreativityActivity() {
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
-      /> */}
+      />
     </>
   ) : (
     <Spinner

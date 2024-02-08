@@ -378,7 +378,7 @@ function VariationsFromMotiveScore({
         const variations = mwCreateVariations(referenceScoreJSON);
         console.log('algortihmically generated variations', variations);
         createdEmbed.loadJSON(variations);
-
+        //TODO: save/set the measures array from this `variations` json obj
 
       });
     }
