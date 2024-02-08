@@ -81,11 +81,17 @@ export default function CreativityActivity() {
       for (let i = 0; i < measureCount; i += MEASURES_PER_STEP) {
         const slice = JSON.parse(melodyJson);
         slice['score-partwise'].part[0].measure = slice['score-partwise'].part[0].measure.slice(i, i + MEASURES_PER_STEP);
-        slice['score-partwise'].part[0].measure[0].attributes[0].divisions = '8';
-        slice['score-partwise'].part[0].measure[0].attributes[0].time = { beats: '4', 'beat-type': '4' };
-        slice['score-partwise'].part[0].measure[0].attributes[0].clef = { sign: 'G', line: '2' };
-        slice['score-partwise'].part[0].measure[0].attributes[0].key = { fifths: '-3' };
-        slice['score-partwise'].part[0].measure[0].attributes[0]['staff-details'] = { 'staff-lines': '5' };
+        slice['score-partwise'].part[0].measure[0].attributes[0].clef = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].clef;
+        slice['score-partwise'].part[0].measure[0].attributes[0].key = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].key;
+        // FIXME: probably shouldn't hard code these?
+        // slice['score-partwise'].part[0].measure[0].attributes[0].divisions = '8';
+        // slice['score-partwise'].part[0].measure[0].attributes[0].time = { beats: '4', 'beat-type': '4' };
+        // slice['score-partwise'].part[0].measure[0].attributes[0]['staff-details'] = { 'staff-lines': '5' };
+        
+        slice['score-partwise'].part[0].measure[0].attributes[0].divisions = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].divisions
+        slice['score-partwise'].part[0].measure[0].attributes[0].time = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].time
+        slice['score-partwise'].part[0].measure[0].attributes[0]['staff-details'] = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0]['staff-details']
+        
         partialScores.push(JSON.stringify(slice));
 
         const colorSlice = currentAssignment?.part?.chord_scale_pattern?.slice(i, i+MEASURES_PER_STEP).map(
