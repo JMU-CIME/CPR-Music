@@ -17,9 +17,6 @@ function ExploratoryCompose({
   onUpdate,
   melodyJson,
   trim,
-  colors,
-  slice,
-  sliceIdx,
 }) {
   const [embed, setEmbed] = useState();
   const editorRef = React.createRef();
@@ -53,24 +50,7 @@ function ExploratoryCompose({
 
   function createJsonFromMelody(melodyJson) {
     let result = pitchesToRests(JSON.parse(melodyJson));
-    
     result = trim ? trimScore(result, trim) : result;
-    result = slice ? sliceScore(result, slice) : result;
-
-    let colorStart = 0;
-    let colorStop = colors?.length;
-
-    if (sliceIdx !== undefined) {
-      [colorStart, colorStop] = nthSliceIdxs(result, sliceScore);
-      result = nthScoreSlice(result, sliceIdx);
-    }
-
-    if (colors) {
-      result['score-partwise'].part[0].measure = colorMeasures(
-        result['score-partise'].part[0].measure,
-        colors.slice(colorStart, colorStop)
-      );
-    }
     return result;
   }
 
@@ -91,18 +71,7 @@ function ExploratoryCompose({
             embed.on('noteDetails', () => {
               embed.getJSON().then((jd) => {
                 const jsonData = jd;
-                let scorePartwise = jsonData['score-partwise'].part[0]
                 //try to let the outer context know when this thing has data
-                if (colors && scorePartwise.measure.some((m) => 
-                  m.note.some((n) => !n.$color || n.$color === '#000000'))
-                ) {
-                  scorePartwise.measure = colorMeasures(scorePartwise.measure, colors);
-                  embed.getCursorPosition().then((position) =>
-                    embed.loadJSON(jsonData).then(() => {
-                      embed.setCursorPosition(position);
-                    })
-                  );
-                }
                 if (onUpdate) {
                   onUpdate(JSON.stringify(jsonData));
                 }
