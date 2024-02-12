@@ -150,7 +150,6 @@ export default function CreativityActivity() {
     setFinalSubdominantJson(subdominantJson);
     setFinalDominantJson(dominantJson);
     setStartedVariationGeneration(true); 
-    setDominantJson(data);
   } 
  
   return flatIOScoreForTransposition ? (
@@ -255,6 +254,7 @@ export default function CreativityActivity() {
               width={700}
               onSelect={setSelectedDominantMeasure}
             />
+        </Tab>
         <FlatEditor
           edit
           score={{
@@ -267,21 +267,8 @@ export default function CreativityActivity() {
             (color) => bucketColors[color]
           )}
         />
-        </Tab>
       </Tabs>
     )}
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        orig={melodyJson}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
-      />
     </div>
   ) : (
     <Spinner
