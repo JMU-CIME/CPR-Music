@@ -5,24 +5,17 @@ import Embed from 'flat-embed';
 import {
   trimScore,
   pitchesToRests,
-  colorMeasures,
-  nthSliceIdxs,
-  nthScoreSlice,
-  sliceScore
 } from '../lib/flat'
 
 function ExploratoryCompose({
   height=300,
   width='100%',
   onUpdate,
-  melodyJson,
+  referenceScoreJSON,
   trim,
 }) {
   const [embed, setEmbed] = useState();
   const editorRef = React.createRef();
-  const score = {
-    scoreId: 'blank'
-  }
 
   const embedParams = {
     appId: '60a51c906bcde01fc75a3ad0',
@@ -48,8 +41,8 @@ function ExploratoryCompose({
   }, [height]);
   
 
-  function createJsonFromMelody(melodyJson) {
-    let result = pitchesToRests(JSON.parse(melodyJson));
+  function createJsonFromReference(reference) {
+    let result = pitchesToRests(JSON.parse(reference));
     result = trim ? trimScore(result, trim) : result;
     return result;
   }
@@ -60,18 +53,16 @@ function ExploratoryCompose({
     embed
       .ready()
       .then(() => {
-        if (!melodyJson) return embed;
+        if (!referenceScoreJSON) return embed;
         
-        const result = createJsonFromMelody(melodyJson)
+        const result = createJsonFromReference(referenceScoreJSON)
 
         return (
-          // if a user adds a note that is black or does not have a color assigned to it, then we apply the color from the chord scale pattern to match.
           embed.loadJSON(result).then(() => {
             embed.off('noteDetails');
             embed.on('noteDetails', () => {
               embed.getJSON().then((jd) => {
                 const jsonData = jd;
-                //try to let the outer context know when this thing has data
                 if (onUpdate) {
                   onUpdate(JSON.stringify(jsonData));
                 }
@@ -80,7 +71,7 @@ function ExploratoryCompose({
           })
         );
       })
-    }, [score, embed]);
+    }, [referenceScoreJSON, embed]);
 
   return (
     <>

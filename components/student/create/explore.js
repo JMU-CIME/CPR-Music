@@ -58,7 +58,7 @@ export default function CreativityActivity() {
   const { slug, piece } = router.query;
   const actCategory = 'Create';
   const [melodyJson, setMelodyJson] = useState('');
-    
+  
   // Current JSON representation of one measure editors
   const [tonicJson, setTonicJson] = useState('');
   const [subdominantJson, setSubdominantJson] = useState('');
@@ -68,7 +68,6 @@ export default function CreativityActivity() {
   const [finalTonicJson, setFinalTonicJson] = useState('');
   const [finalSubdominantJson, setFinalSubdominantJson] = useState('');
   const [finalDominantJson, setFinalDominantJson] = useState('');
-
   const [startedVariationGeneration, setStartedVariationGeneration] = useState(false);
 
   const [selectedTonicMeasure, setSelectedTonicMeasure] = useState(-1);
@@ -153,7 +152,7 @@ export default function CreativityActivity() {
     setStartedVariationGeneration(true); 
     setDominantJson(data);
   } 
-
+ 
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
@@ -271,6 +270,18 @@ export default function CreativityActivity() {
         </Tab>
       </Tabs>
     )}
+      <FlatEditor
+        edit
+        score={{
+          scoreId: 'blank',
+        }}
+        onSubmit={setJsonWrapper}
+        submittingStatus={mutation.status}
+        orig={melodyJson}
+        colors={currentAssignment?.part?.chord_scale_pattern?.map(
+          (color) => bucketColors[color]
+        )}
+      />
     </div>
   ) : (
     <Spinner
