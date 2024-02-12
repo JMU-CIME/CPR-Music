@@ -651,10 +651,10 @@ function FlatEditor({
                 // **** Hi - even with optional chaining, line 654 causing runtime errors (I *think* when scores get locked). 
                 // Otherwise chaining resolves rare, seemingly random errors accessing message property
 
-                // e?.message = `flat error: ${e.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
-                // if (debugMsg){
-                //   e.message = `${e.message}, debugMsg: ${debugMsg}`;
-                // }
+                e?.message = `flat error: ${e.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
+                if (debugMsg){
+                  e.message = `${e.message}, debugMsg: ${debugMsg}`;
+                }
                 console.error('score not loaded from scoreId');
                 console.error('score', score);
                 console.error('orig', orig);
