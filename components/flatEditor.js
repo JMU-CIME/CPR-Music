@@ -653,7 +653,8 @@ function FlatEditor({
 
                 // e?.message = `flat error: ${e.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
                 if (debugMsg){
-                  e.message = `${e.message}, debugMsg: ${debugMsg}`;
+                  console.error(`debugMsg: ${debugMsg}`;
+                  // e.message = `${e.message}, debugMsg: ${debugMsg}`;
                 }
                 console.error('score not loaded from scoreId');
                 console.error('score', score);
