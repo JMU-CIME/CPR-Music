@@ -63,7 +63,7 @@ export default function CreativityActivity() {
   const [tonicJson, setTonicJson] = useState('');
   const [subdominantJson, setSubdominantJson] = useState('');
   const [dominantJson, setDominantJson] = useState('');
-  
+
   // Final JSON representation which is used to generate variations
   const [finalTonicJson, setFinalTonicJson] = useState('');
   const [finalSubdominantJson, setFinalSubdominantJson] = useState('');
@@ -133,7 +133,7 @@ export default function CreativityActivity() {
   }
 
   const handleTonicUpdate = useCallback((data) => {
-    setTonicJson(data) 
+    setTonicJson(data);
   }, [setTonicJson]);
   
   const handleSubdominantUpdate = useCallback((data) => {
@@ -151,7 +151,8 @@ export default function CreativityActivity() {
     setFinalSubdominantJson(subdominantJson);
     setFinalDominantJson(dominantJson);
     setStartedVariationGeneration(true); 
-  }
+    setDominantJson(data);
+  } 
 
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
