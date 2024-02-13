@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -22,6 +22,10 @@ import { sub } from 'date-fns';
 import { Col, Row } from 'react-bootstrap';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
+  ssr: false,
+});
+
+const MergingScore = dynamic(() => import('../../mergingScore'), {
   ssr: false,
 });
 
@@ -55,11 +59,9 @@ export default function CreativityActivity() {
   // the score and the corresponding colors
   const [subScores, setSubScores] = useState([]);
   const [subColors, setSubColors] = useState([]);
-  // const [score1JSON, setScore1JSON] = useState('');
-  // const [score2JSON, setScore2JSON] = useState('');
-  // const [score3JSON, setScore3JSON] = useState('');
-  // const [score4JSON, setScore4JSON] = useState('');
+  const [scoreData, setScoreData] = useState([]);
   const [totalScoreJSON, setTotalScoreJSON] = useState('');
+  const [isDoneComposing, setIsDoneComposing] = useState(false);
 
   // const userInfo = useSelector((state) => state.currentUser);
 
@@ -77,16 +79,14 @@ export default function CreativityActivity() {
       const referenceScoreObj = JSON.parse(melodyJson);
       let partialScores = [];
       let partialColors = [];
+
+      let initialScoreData = [];
       const measureCount = referenceScoreObj['score-partwise'].part[0].measure.length;
       for (let i = 0; i < measureCount; i += MEASURES_PER_STEP) {
         const slice = JSON.parse(melodyJson);
         slice['score-partwise'].part[0].measure = slice['score-partwise'].part[0].measure.slice(i, i + MEASURES_PER_STEP);
         slice['score-partwise'].part[0].measure[0].attributes[0].clef = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].clef;
         slice['score-partwise'].part[0].measure[0].attributes[0].key = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].key;
-        // FIXME: probably shouldn't hard code these?
-        // slice['score-partwise'].part[0].measure[0].attributes[0].divisions = '8';
-        // slice['score-partwise'].part[0].measure[0].attributes[0].time = { beats: '4', 'beat-type': '4' };
-        // slice['score-partwise'].part[0].measure[0].attributes[0]['staff-details'] = { 'staff-lines': '5' };
         
         slice['score-partwise'].part[0].measure[0].attributes[0].divisions = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].divisions
         slice['score-partwise'].part[0].measure[0].attributes[0].time = referenceScoreObj['score-partwise'].part[0].measure[0].attributes[0].time
@@ -98,11 +98,11 @@ export default function CreativityActivity() {
           (color) => bucketColors[color]
         )
         partialColors.push(colorSlice);
+        initialScoreData.push({});
       }
       setSubScores(partialScores);
+      setScoreData(initialScoreData);
       setSubColors(partialColors);
-      // console.log('partialScores', partialScores);
-      // console.log('partialColors', partialColors);
     }
 
   }, [melodyJson]);
@@ -163,7 +163,13 @@ export default function CreativityActivity() {
   if (flatIOScoreForTransposition) {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
-  let scoreData = [];
+
+  
+  // the child component has finished merging the array of "subscores" into the single "score"
+  const onMerged = useCallback(mergedData=> {
+    setTotalScoreJSON(mergedData);
+  }, [setTotalScoreJSON])
+
 
 
   // const origJSON
@@ -172,63 +178,78 @@ export default function CreativityActivity() {
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
       {
         // subScores.slice(0, 1).map((subScore, idx) => {
-        subScores.map((subScore, idx) =>{
-        scoreData[idx] = {};
-        console.log('subScore', idx);
-        return (
-          <div key={idx}>
-            <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
-            <Row>
-              <Col md>
-                <ChordScaleBucketScore
-                  height={150}
-                  referenceScoreJSON={melodyJson}
-                  chordScaleBucket="tonic"
-                  colors={bucketColors.tonic}
-                  instrumentName={currentAssignment?.instrument}
-                />
-              </Col>
-              <Col md><ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={melodyJson}
-            chordScaleBucket="subdominant"
-            colors={bucketColors.subdominant}
-            instrumentName={currentAssignment?.instrument}
-          /></Col>
-              <Col md><ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={melodyJson}
-            chordScaleBucket="dominant"
-            colors={bucketColors.dominant}
-            instrumentName={currentAssignment?.instrument}
-          /></Col>
-            </Row>
-            <FlatEditor
-              edit
-              score={{
-                scoreId: 'blank',
-              }}
-              onSubmit={setJsonWrapper}
-              submittingStatus={mutation.status}
-              onUpdate={(data) => {
-                scoreData[idx] = data;
-              }}
-              orig={subScore}
-              colors={subColors[idx]}
-              debugMsg={`error in rendering the subScore[${idx}]`}
-            />
-          </div>
-        );
-      })}
-      <h2>Step {subScores.length} - Combined</h2>
-      <FlatEditor
-        edit
-        score={{
-          scoreId: '652420e274458c7c5d131dbc',
-          sharingKey:
-            'bfba3331ca100567830b5e824103ba64071f753818a513b6660756a4578b1cfd51e8b6478b7e7b86b0277dc45bd7e16707033d42414a64a2b60eb4e508b5f8d6',
-        }}
-      />
+        subScores && subScores.map((subScore, idx) => {
+          // FIXME: adam says we probably don't care about this useCallback unless we memoize flateditor (to which we're passing the useCallback result below)
+          // const onSubScoreEdited = useCallback((data) => {
+          //   scoreData[idx] = data;
+          // })
+          // scoreData[idx] = {};
+          console.log('subScore', idx);
+          return (
+            <div key={idx}>
+              <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
+              <Row>
+                <Col md>
+                  <ChordScaleBucketScore
+                    height={150}
+                    referenceScoreJSON={melodyJson}
+                    chordScaleBucket="tonic"
+                    colors={bucketColors.tonic}
+                    instrumentName={currentAssignment?.instrument}
+                  />
+                </Col>
+                <Col md><ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={melodyJson}
+              chordScaleBucket="subdominant"
+              colors={bucketColors.subdominant}
+              instrumentName={currentAssignment?.instrument}
+            /></Col>
+                <Col md><ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={melodyJson}
+              chordScaleBucket="dominant"
+              colors={bucketColors.dominant}
+              instrumentName={currentAssignment?.instrument}
+            /></Col>
+              </Row>
+              <FlatEditor
+                edit
+                score={{
+                  scoreId: 'blank',
+                }}
+                onSubmit={(data) => {
+                  const score = scoreData;
+                  score[idx] = data;
+                  setScoreData(score);
+                }}
+                submittingStatus={mutation.status}
+                // onUpdate={onSubScoreEdited}
+                // onUpdate={(data) => {
+                //   const score = scoreData;
+                //   score[idx] = data;
+                //   setScoreData(score);
+                // }}
+                orig={subScore}
+                colors={subColors[idx]}
+                debugMsg={`error in rendering the subScore[${idx}]`}
+              />
+            </div>
+          );
+        })
+      }
+      <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
+      <h2>Step {subScores.length + 1} - Combined</h2>
+      {scoreData && scoreData.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreData} />}
+
+      {/* 
+        map runs 4 times
+          (displaying 4 FlatEditors)
+          each first load of these flateditors results in its onUpdate being called, 
+          that onUpdate makes scoreData satisfy the show condition of the mergingscore (even though it's not intersting yet)
+          mergescore sees this garbage data and merges it and sends it to the parent (this component)
+          the parent then 
+       */}
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}

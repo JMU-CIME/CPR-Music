@@ -13,6 +13,7 @@ import {
   colorNotes,
   colorMeasures
 } from '../lib/flat';
+import { Button } from 'react-bootstrap';
 
 const validateScore = (proposedScore, permittedPitches) => {
   const result = { ok: true, errors: [] };
@@ -333,14 +334,16 @@ function FlatEditor({
                 setRefId(score.scoreId);
               })
               .catch((e) => {
-
-                // **** Hi - even with optional chaining, line 654 causing runtime errors (I *think* when scores get locked). 
-                // Otherwise chaining resolves rare, seemingly random errors accessing message property
-
-                // e?.message = `flat error: ${e.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
-                if (debugMsg){
-                  console.error(`debugMsg: ${debugMsg}`;
-                  // e.message = `${e.message}, debugMsg: ${debugMsg}`;
+                if (e && e.message) {
+                  e.message = `flat error: ${e?.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
+                  if (debugMsg){
+                    e.message = `${e?.message}, debugMsg: ${debugMsg}`;
+                  }
+                } else if(debugMsg) {
+                  console.error('debugMsg', debugMsg);
+                  if (score){console.error('score', score);}
+                  if (orig){console.error('orig', orig);}
+                  if (colors){console.error('colors', colors);}
                 }
                 console.error('score not loaded from scoreId');
                 console.error('score', score);
@@ -382,6 +385,13 @@ function FlatEditor({
       <Row>
         <Col>
           <div ref={editorRef} />
+          { edit && onSubmit && <Button onClick={()=>{
+            if (embed) {
+              embed.getJSON().then((jsonData) => {
+                onSubmit(jsonData);
+              });
+            }
+          }}>Done Composing</Button>}
         </Col>
       </Row>
     </>
