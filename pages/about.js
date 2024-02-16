@@ -135,6 +135,10 @@ function About() {
         <li><a target = "_blank" rel="noopener nonreferrer" href="https://www.linkedin.com/in/chris-hopkins-382238221/">
           Chris Hopkins </a>{' '}(Undergraduate Student, James Madison University)</li>
         <li>
+          William Jedrzejczak (Undergraduate Student,
+          James Madison University)
+        </li>
+        <li>
           Heidi Lucas, DMA (Visiting Assistant Professor of Brass and Music
           Education, University of Delaware)
         </li>
