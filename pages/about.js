@@ -128,6 +128,10 @@ function About() {
           Luke Hennessy (Undergraduate, James Madison University)
         </li>
         <li>
+          <a target="_blank" rel="noopener noreferrer" href="https://mfwolffe.github.io/">Matt Wolffe</a>
+            (Undergraduate, James Madison University)
+        </li>
+        <li>
           Thomas Hassett (Undergraduate Student Alumnus, School of Music;
           Innovation Leader, Center for Inclusive Music Engagement; James
           Madison University)
