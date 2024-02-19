@@ -46,7 +46,7 @@ function MergingScore({
         createdEmbed.loadJSON(mergedScore);
       });
     }
-  }, [height, scores]);
+  }, [scores, height, instrumentName, giveJSON]);
 
   return <div ref={editorRef} />
 }

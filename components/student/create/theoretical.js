@@ -166,9 +166,13 @@ export default function CreativityActivity() {
 
   
   // the child component has finished merging the array of "subscores" into the single "score"
-  const onMerged = useCallback(mergedData=> {
+  // const onMerged = useCallback(mergedData=> {
+  //   setTotalScoreJSON(mergedData);
+  // }, [setTotalScoreJSON])
+
+  function onMerged (mergedData) {
     setTotalScoreJSON(mergedData);
-  }, [setTotalScoreJSON])
+  }
 
 
 
