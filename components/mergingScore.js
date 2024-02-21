@@ -8,15 +8,19 @@ function MergingScore({
   scores,
   giveJSON,
 }) {
+  console.log('ffs did we get in here or what?')
   // const [embed, setEmbed] = useState();
   const embedRef = useRef();
   const editorRef = useRef();
+  const resultScore = useRef('');
   useEffect(() => {
     console.log('got in here');
     // const mergedScore = mergeScores(scores, instrumentName);
+    resultScore.current = mergeScores(scores, instrumentName);
+    // resultScore.current = JSON.stringify(scores[0]);
     if (giveJSON) {
       // giveJSON(mergedScore);
-      giveJSON(JSON.stringify(scores[0]));
+      giveJSON(resultScore.current);
     }
     const embedParams = {
       appId: '60a51c906bcde01fc75a3ad0',
@@ -44,8 +48,8 @@ function MergingScore({
     // setEmbed(createdEmbed);
     if (embedRef.current) {
       embedRef.current.ready().then(() => {
-        createdEmbed.loadJSON(mergedScore);
-        console.log('createdEmbed.loadJSON(mergedScore);')
+        embedRef.current.loadJSON(resultScore.current);
+        console.log('embedRef.current.loadJSON(resultScore.current);')
       });
     }
   }, [scores, height, instrumentName, giveJSON]);
@@ -54,4 +58,5 @@ function MergingScore({
   return <div ref={editorRef} />
 }
 
-export default React.memo(MergingScore);
+export default MergingScore;
+// export default React.memo(MergingScore);

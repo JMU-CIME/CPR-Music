@@ -334,6 +334,7 @@ function FlatEditor({
                 setRefId(score.scoreId);
               })
               .catch((e) => {
+                
                 if (e && e.message) {
                   e.message = `flat error: ${e?.message}, not loaded from scoreId, score: ${JSON.stringify(score)}, orig: ${orig}, colors: ${colors}`;
                   if (debugMsg){
@@ -347,6 +348,7 @@ function FlatEditor({
                 }
                 console.error('score not loaded from scoreId');
                 console.error('score', score);
+                if (loadParams) { console.error('loadParams', loadParams)}
                 console.error('orig', orig);
                 console.error('colors', colors);
                 // console.error(e);

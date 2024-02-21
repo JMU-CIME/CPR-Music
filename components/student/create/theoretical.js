@@ -181,8 +181,8 @@ export default function CreativityActivity() {
     }
   }
 
-
-
+  console.log(scoreDataRef.current, isDoneComposing)
+  console.log('scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing', scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing)
   // const origJSON
   return flatIOScoreForTransposition ? (
     <>
