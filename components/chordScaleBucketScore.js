@@ -135,7 +135,7 @@ function ChordScaleBucketScore({
         };
       });
     }
-    console.log('chord scale bucket generated json scoure output', template)
+    // console.log('chord scale bucket generated json scoure output', template)
     const resultTransposed = transposeEmbed
       .ready()
       .then(() => transposeEmbed.loadJSON(template));
@@ -218,8 +218,8 @@ function ChordScaleBucketScore({
         colorNotes(bucket, colors);
       }
 
-      console.log('current JSON', copyJSON);
-      console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
+      // console.log('current JSON', copyJSON);
+      // console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
       embedTransposed(bucket, embed, keySignature, instrumentName);
     }
   }, [referenceScoreJSON, chordScaleBucket, embed]);

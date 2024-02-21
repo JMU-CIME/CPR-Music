@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Embed from 'flat-embed';
 import { mergeScores } from '../lib/flat';
 
@@ -8,14 +8,15 @@ function MergingScore({
   scores,
   giveJSON,
 }) {
-  const [embed, setEmbed] = useState();
-  const [refId, setRefId] = useState('0');
-  const editorRef = React.createRef();
+  // const [embed, setEmbed] = useState();
+  const embedRef = useRef();
+  const editorRef = useRef();
   useEffect(() => {
     console.log('got in here');
-    const mergedScore = mergeScores(scores, instrumentName);
+    // const mergedScore = mergeScores(scores, instrumentName);
     if (giveJSON) {
-      giveJSON(mergedScore);
+      // giveJSON(mergedScore);
+      giveJSON(JSON.stringify(scores[0]));
     }
     const embedParams = {
       appId: '60a51c906bcde01fc75a3ad0',
@@ -39,14 +40,16 @@ function MergingScore({
       width: '100%',
       embedParams,
     };
-    const createdEmbed = new Embed(editorRef.current, allParams);
-    setEmbed(createdEmbed);
-    if (createdEmbed) {
-      createdEmbed.ready().then(() => {
+    embedRef.current = new Embed(editorRef.current, allParams);
+    // setEmbed(createdEmbed);
+    if (embedRef.current) {
+      embedRef.current.ready().then(() => {
         createdEmbed.loadJSON(mergedScore);
+        console.log('createdEmbed.loadJSON(mergedScore);')
       });
     }
   }, [scores, height, instrumentName, giveJSON]);
+  console.log('rendering merging score', scores, height, instrumentName, giveJSON)
 
   return <div ref={editorRef} />
 }

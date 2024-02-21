@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -45,7 +45,7 @@ const bucketColors = {
 };
 
 export default function CreativityActivity() {
-  const tonicNotes = notes(tonicScoreJSON);
+  // const tonicNotes = notes(tonicScoreJSON);
 
   const dispatch = useDispatch();
   // I think this should show the melody for the current piece, but in the student's transposition
@@ -59,8 +59,10 @@ export default function CreativityActivity() {
   // the score and the corresponding colors
   const [subScores, setSubScores] = useState([]);
   const [subColors, setSubColors] = useState([]);
-  const [scoreData, setScoreData] = useState([]);
-  const [totalScoreJSON, setTotalScoreJSON] = useState('');
+  // const [scoreData, setScoreData] = useState([]);
+  const scoreDataRef = useRef([]);
+  // const [totalScoreJSON, setTotalScoreJSON] = useState('');
+  const totalScoreJSON = useRef('');
   const [isDoneComposing, setIsDoneComposing] = useState(false);
 
   // const userInfo = useSelector((state) => state.currentUser);
@@ -80,7 +82,7 @@ export default function CreativityActivity() {
       let partialScores = [];
       let partialColors = [];
 
-      let initialScoreData = [];
+      scoreDataRef.current = [];
       const measureCount = referenceScoreObj['score-partwise'].part[0].measure.length;
       for (let i = 0; i < measureCount; i += MEASURES_PER_STEP) {
         const slice = JSON.parse(melodyJson);
@@ -98,10 +100,9 @@ export default function CreativityActivity() {
           (color) => bucketColors[color]
         )
         partialColors.push(colorSlice);
-        initialScoreData.push({});
+        scoreDataRef.current.push({});
       }
       setSubScores(partialScores);
-      setScoreData(initialScoreData);
       setSubColors(partialColors);
     }
 
@@ -171,7 +172,13 @@ export default function CreativityActivity() {
   // }, [setTotalScoreJSON])
 
   function onMerged (mergedData) {
-    setTotalScoreJSON(mergedData);
+    totalScoreJSON.current = mergedData;
+  }
+
+  function handleSubmit(i) {
+    return (data) => {
+      scoreDataRef.current[i] = data;
+    }
   }
 
 
@@ -180,72 +187,71 @@ export default function CreativityActivity() {
   return flatIOScoreForTransposition ? (
     <>
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
-      {
-        // subScores.slice(0, 1).map((subScore, idx) => {
-        subScores && subScores.map((subScore, idx) => {
-          // FIXME: adam says we probably don't care about this useCallback unless we memoize flateditor (to which we're passing the useCallback result below)
-          // const onSubScoreEdited = useCallback((data) => {
-          //   scoreData[idx] = data;
-          // })
-          // scoreData[idx] = {};
-          console.log('subScore', idx);
-          return (
-            <div key={idx}>
-              <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
-              <Row>
-                <Col md>
-                  <ChordScaleBucketScore
-                    height={150}
-                    referenceScoreJSON={melodyJson}
-                    chordScaleBucket="tonic"
-                    colors={bucketColors.tonic}
-                    instrumentName={currentAssignment?.instrument}
+      <Row>
+        <Col md={4}>
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="tonic"
+            colors={bucketColors.tonic}
+            instrumentName={currentAssignment?.instrument}
+          />
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="subdominant"
+            colors={bucketColors.subdominant}
+            instrumentName={currentAssignment?.instrument}
+          />
+          <ChordScaleBucketScore
+            height={150}
+            referenceScoreJSON={melodyJson}
+            chordScaleBucket="dominant"
+            colors={bucketColors.dominant}
+            instrumentName={currentAssignment?.instrument}
+          />
+        </Col>
+        <Col md>
+          {
+            // subScores.slice(0, 1).map((subScore, idx) => {
+            subScores && subScores.map((subScore, idx) => {
+              // FIXME: adam says we probably don't care about this useCallback unless we memoize flateditor (to which we're passing the useCallback result below)
+              // const onSubScoreEdited = useCallback((data) => {
+              //   scoreData[idx] = data;
+              // })
+              // scoreData[idx] = {};
+              console.log('subScore', idx);
+              return (
+                <div key={idx}>
+                  <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
+                  
+                  <FlatEditor
+                    edit
+                    score={{
+                      scoreId: 'blank',
+                    }}
+                    onSubmit={handleSubmit(idx)}
+                    submittingStatus={mutation.status}
+                    // onUpdate={onSubScoreEdited}
+                    // onUpdate={(data) => {
+                    //   const score = scoreData;
+                    //   score[idx] = data;
+                    //   setScoreData(score);
+                    // }}
+                    orig={subScore}
+                    colors={subColors[idx]}
+                    debugMsg={`error in rendering the subScore[${idx}]`}
                   />
-                </Col>
-                <Col md><ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={melodyJson}
-              chordScaleBucket="subdominant"
-              colors={bucketColors.subdominant}
-              instrumentName={currentAssignment?.instrument}
-            /></Col>
-                <Col md><ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={melodyJson}
-              chordScaleBucket="dominant"
-              colors={bucketColors.dominant}
-              instrumentName={currentAssignment?.instrument}
-            /></Col>
-              </Row>
-              <FlatEditor
-                edit
-                score={{
-                  scoreId: 'blank',
-                }}
-                onSubmit={(data) => {
-                  const score = scoreData;
-                  score[idx] = data;
-                  setScoreData(score);
-                }}
-                submittingStatus={mutation.status}
-                // onUpdate={onSubScoreEdited}
-                // onUpdate={(data) => {
-                //   const score = scoreData;
-                //   score[idx] = data;
-                //   setScoreData(score);
-                // }}
-                orig={subScore}
-                colors={subColors[idx]}
-                debugMsg={`error in rendering the subScore[${idx}]`}
-              />
-            </div>
-          );
-        })
-      }
-      <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
-      <h2>Step {subScores.length + 1} - Combined</h2>
-      {scoreData && scoreData.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreData} />}
-
+                </div>
+              );
+            })
+          }
+          <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
+          <h2>Step {subScores.length + 1} - Combined</h2>
+          {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef.current} />}
+        </Col>
+      </Row>
+      
       {/* 
         map runs 4 times
           (displaying 4 FlatEditors)
