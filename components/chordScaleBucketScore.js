@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
-import { getChordScaleInKey, keyFromScoreJSON } from '../lib/flat';
+import { colorNotes, getChordScaleInKey, keyFromScoreJSON, colorMap} from '../lib/flat';
 
 function ChordScaleBucketScore({
   height,
@@ -95,7 +95,7 @@ function ChordScaleBucketScore({
 
     // start from bucket, create the notes, add them to measure
     template['score-partwise'].part[0].measure[0].note = bucket.map(
-      ({ alter, octave, step, $color = '#00000' }) => {
+      ({ alter, octave, step, $color = '#000000' }) => {
         const note = {
           staff: '1',
           voice: '1',
@@ -142,34 +142,6 @@ function ChordScaleBucketScore({
     return resultTransposed;
   };
 
-  function colorNotes(notes, color) {
-    for (let i = 0; i < notes.length; i++) {
-      notes[i].$color = color;
-    }
-  }
-  /**
-   *  Given a measure, and a string consisting of "rgbgrb..." we match the notes of the corresponding measure to that value.
-   *  For example, given a measure (1,2,3) and a string "rgb", the first measure would be colored red, second would be green, third would be green.
-   */
-  const colorMeasures = (measures, colorSpecs) => {
-    /**
-     * Colors an array of notes to a given hex color attribute.
-     */
-    const BLACK = '#000000';
-    const ORANGE = '#f5bd1f';
-    for (let i = 0; i < measures.length; i++) {
-      if (colorSpecs) {
-        if (Array.isArray(colorSpecs) && colorSpecs[i]) {
-          colorNotes(measures[i].note, colorSpecs[i]);
-        } else if (!Array.isArray(colorSpecs)) {
-          colorNotes(measures[i].note, colorSpecs);
-        }
-      } else {
-        colorNotes(measures[i], BLACK);
-      }
-    }
-    return measures;
-  };
   useEffect(() => {
     const embedParams = {
       // sharingKey: score.sharingKey,
@@ -182,6 +154,7 @@ function ChordScaleBucketScore({
       controlsFullscreen: false,
       controlsZoom: false,
       controlsPrint: false,
+      displayFirstLinePartsNames: false,
       toolsetId: '64be80de738efff96cc27edd',
     };
     let computedHeight = 300;
@@ -215,7 +188,14 @@ function ChordScaleBucketScore({
       }
 
       if (colors) {
-        colorNotes(bucket, colors);
+        console.log('colors', colors);
+        let mappedColors = colors;
+        if(Array.isArray(colors) && colors.length > 0) {
+          mappedColors = colors.map(colorMap);
+        } else {
+          mappedColors = colorMap(colors);
+        }
+        colorNotes(bucket, mappedColors);
       }
 
       // console.log('current JSON', copyJSON);

@@ -12,13 +12,9 @@ import Tabs from 'react-bootstrap/Tabs';
 import { getStudentAssignments, mutateCreateSubmission } from '../../../api';
 import Recorder from '../../recorder';
 import {
-  fetchActivities,
-  fetchSingleStudentAssignment,
   postRecording,
 } from '../../../actions';
 import { UploadStatusEnum } from '../../../types';
-import { notes, tonicScoreJSON } from '../../../lib/flat';
-import { sub } from 'date-fns';
 import { Col, Row } from 'react-bootstrap';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
@@ -45,8 +41,6 @@ const bucketColors = {
 };
 
 export default function CreativityActivity() {
-  // const tonicNotes = notes(tonicScoreJSON);
-
   const dispatch = useDispatch();
   // I think this should show the melody for the current piece, but in the student's transposition
   // need to get the student's current assignment
@@ -96,9 +90,7 @@ export default function CreativityActivity() {
         
         partialScores.push(JSON.stringify(slice));
 
-        const colorSlice = currentAssignment?.part?.chord_scale_pattern?.slice(i, i+MEASURES_PER_STEP).map(
-          (color) => bucketColors[color]
-        )
+        const colorSlice = currentAssignment?.part?.chord_scale_pattern?.slice(i, i+MEASURES_PER_STEP)
         partialColors.push(colorSlice);
         scoreDataRef.current.push({});
       }
@@ -108,25 +100,8 @@ export default function CreativityActivity() {
 
   }, [melodyJson]);
 
-  // const assignment = useSelector((state) => state.selectedAssignment);
-
-  // useEffect(() => {
-  //   if (loaded) {
-  //     dispatch(
-  //       fetchSingleStudentAssignment({
-  //         slug,
-  //         assignmentId: assignment.id,
-  //       })
-  //     );
-  //   }
-  // }, [slug, loaded, assignment]);
-
-  // if (assignments) {
-  // }
-
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  let composition = ''; // FIXME: why isn't this useState???
   const currentAssignment =
     assignments &&
     Object.values(assignments)
@@ -143,20 +118,12 @@ export default function CreativityActivity() {
       (partTransposition) =>
         partTransposition.transposition.name === currentTransposition
     )?.[0]?.flatio;
-
-  const setJsonWrapper = (data) => {
-    mutation.mutate({
-      submission: { content: data },
-      assignmentId: currentAssignment.id,
-    });
-  };
-  const submitCreativity = ({ audio, submissionId }) =>
-    dispatch(
+  const submitCreativity = ({ audio, submissionId }) =>dispatch(
       postRecording({
         slug,
         assignmentId: currentAssignment.id,
         audio,
-        composition,
+        composition: totalScoreJSON.current,
         submissionId,
       })
     );
@@ -181,9 +148,6 @@ export default function CreativityActivity() {
     }
   }
 
-  console.log(scoreDataRef.current, isDoneComposing)
-  console.log('scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing', scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing)
-  // const origJSON
   return flatIOScoreForTransposition ? (
     <>
       <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
@@ -193,21 +157,21 @@ export default function CreativityActivity() {
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="tonic"
-            colors={bucketColors.tonic}
+            colors='tonic'
             instrumentName={currentAssignment?.instrument}
           />
           <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="subdominant"
-            colors={bucketColors.subdominant}
+            colors='subdominant'
             instrumentName={currentAssignment?.instrument}
           />
           <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="dominant"
-            colors={bucketColors.dominant}
+            colors='dominant'
             instrumentName={currentAssignment?.instrument}
           />
         </Col>
@@ -220,7 +184,6 @@ export default function CreativityActivity() {
               //   scoreData[idx] = data;
               // })
               // scoreData[idx] = {};
-              console.log('subScore', idx);
               return (
                 <div key={idx}>
                   <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>

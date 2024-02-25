@@ -125,7 +125,7 @@ export default function CreativityAuralActivity() {
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="tonic"
-            colors={bucketColors.tonic}
+            colors='tonic'
             instrumentName={currentAssignment?.instrument}
           />
         </Col>
@@ -134,7 +134,7 @@ export default function CreativityAuralActivity() {
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="subdominant"
-            colors={bucketColors.subdominant}
+            colors='subdominant'
             instrumentName={currentAssignment?.instrument}
           />
         </Col>
@@ -143,7 +143,7 @@ export default function CreativityAuralActivity() {
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="dominant"
-            colors={bucketColors.dominant}
+            colors='dominant'
             instrumentName={currentAssignment?.instrument}
           />
         </Col>
@@ -162,9 +162,7 @@ export default function CreativityAuralActivity() {
           composition = data;
         }}
         orig={json}
-        colors={currentAssignment?.part?.chord_scale_pattern?.map(
-          (color) => bucketColors[color]
-        )}
+        colors={currentAssignment?.part?.chord_scale_pattern}
       />
       <Recorder
         submit={submitCreativity}

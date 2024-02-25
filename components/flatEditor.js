@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
@@ -52,9 +52,18 @@ function FlatEditor({
   instrumentName,
   slice,
   sliceIdx,
-  debugMsg
+  debugMsg,
+  selectedMeasureNotes
 }) {
-  const [json, setJson] = useState('');
+
+  function onFlatEditorError(e) {
+    if (debugMsg) {
+      console.error('debugMsg', debugMsg);
+    }
+    console.error('error in flat editor', e);
+  }
+  // const [json, setJson] = useState('');
+  const json = useRef('');
   const [embed, setEmbed] = useState();
   const [refId, setRefId] = useState('0');
   const editorRef = React.createRef();
@@ -179,8 +188,8 @@ function FlatEditor({
     }
 
     const resultTransposed = embed.ready().then(() => {
-      return embed.loadJSON(template);
-    });
+      return embed.loadJSON(template).catch(onFlatEditorError);
+    }).catch(onFlatEditorError);
     return resultTransposed;
   };
 
@@ -281,6 +290,19 @@ function FlatEditor({
               // if a user adds a note that is black or does not have a color assigned to it, then we apply the color from the chord scale pattern to match.
               score.scoreId === 'blank' &&
               embed.loadJSON(result).then(() => {
+                embed.off('cursorPosition');
+                embed.on('cursorPosition', (ev) => {
+                  console.log('cursorPos', ev)
+                  // selectedMeasureNotes
+                  console.log('json.current', json.current)
+                  if (selectedMeasureNotes && selectedMeasureNotes.current && selectedMeasureNotes.current.length > 0 && json.current !== '') {
+                    console.log('selectedMeasureNotes.current', selectedMeasureNotes.current)
+                    const scoreData = JSON.parse(json.current);
+                    scoreData['score-partwise'].part[0].measure[ev.measureIdx].note = JSON.parse(JSON.stringify(selectedMeasureNotes.current));
+                    selectedMeasureNotes.current = [];
+                    embed.loadJSON(JSON.stringify(scoreData)).catch(onFlatEditorError);
+                  }
+                });
                 embed.off('noteDetails');
                 embed.on('noteDetails', (info) => {
                   // console.log('noteDetails', info);
@@ -304,18 +326,18 @@ function FlatEditor({
                           if (edit) {
                             embed.setCursorPosition(position);
                           }
-                        })
+                        }).catch(onFlatEditorError)
                       );
                     }
                     const data = JSON.stringify(jsonData);
                     // validateScore(jsonData, [])
-                    setJson(data);
+                    json.current = data;
                     if (onUpdate) {
                       onUpdate(data);
                     }
                   });
                 });
-              })
+              }).catch(onFlatEditorError)
             );
           }
           return embed;
@@ -354,7 +376,8 @@ function FlatEditor({
                 // console.error(e);
                 throw e;
               })
-        );
+        )
+        .catch(onFlatEditorError);
     } else if (scoreJSON && embed) {
       // this is currently for the grade creativity screen
       embed
@@ -367,7 +390,7 @@ function FlatEditor({
             embed.on('noteDetails', (info) => {
               embed.getJSON().then((jsonData) => {
                 const data = JSON.stringify(jsonData);
-                setJson(data);
+                json.current = data;
                 if (onUpdate) {
                   onUpdate(data);
                 }
@@ -376,6 +399,9 @@ function FlatEditor({
           }
         })
         .catch((e) => {
+          if (debugMsg) {
+            console.error('debugMsg', debugMsg);
+          }
           console.error('score not loaded from json');
           console.error(e);
         });
@@ -391,7 +417,7 @@ function FlatEditor({
             if (embed) {
               embed.getJSON().then((jsonData) => {
                 onSubmit(jsonData);
-              });
+              }).catch(onFlatEditorError);
             }
           }}>Done Composing</Button>}
         </Col>

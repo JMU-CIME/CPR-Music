@@ -5,6 +5,7 @@ import Embed from 'flat-embed';
 import {
   trimScore,
   pitchesToRests,
+  colorMeasures,
 } from '../lib/flat'
 
 function ExploratoryCompose({
@@ -13,6 +14,7 @@ function ExploratoryCompose({
   onUpdate,
   referenceScoreJSON,
   trim,
+  colors,
 }) {
   const [embed, setEmbed] = useState();
   const editorRef = React.createRef();
@@ -27,6 +29,7 @@ function ExploratoryCompose({
     controlsFullscreen: false,
     controlsZoom: false,
     controlsPrint: false,
+    displayFirstLinePartsNames: false,
     toolsetId: '64be80de738efff96cc27edd',
     mode: 'edit'
   };
@@ -41,9 +44,14 @@ function ExploratoryCompose({
   }, [height]);
   
 
-  function createJsonFromReference(reference) {
+  function createJsonFromReference(reference, colors) {
     let result = pitchesToRests(JSON.parse(reference));
     result = trim ? trimScore(result, trim) : result;
+    if (colors && colors.length > result['score-partwise'].part[0].measure.length) {
+      let measures = result['score-partwise'].part[0].measure;
+      result['score-partwise'].part[0].measure = colorMeasures(measures, colors);
+      // result['score-partwise'].part[0].measure
+    }
     return result;
   }
 
@@ -55,14 +63,33 @@ function ExploratoryCompose({
       .then(() => {
         if (!referenceScoreJSON) return embed;
         
-        const result = createJsonFromReference(referenceScoreJSON)
+        const result = createJsonFromReference(referenceScoreJSON, colors);
 
         return (
           embed.loadJSON(result).then(() => {
             embed.off('noteDetails');
-            embed.on('noteDetails', () => {
+            embed.on('noteDetails', (ev) => {
+              console.log('noteDetails', ev);
+              console.log('should color?', colors);
               embed.getJSON().then((jd) => {
                 const jsonData = jd;
+                if (
+                  colors &&
+                  jsonData['score-partwise'].part[0].measure.some((m) =>
+                    m.note.some((n) => !n.$color || n.$color === '#000000')
+                  )
+                ) {
+                  jsonData['score-partwise'].part[0].measure =
+                    colorMeasures(
+                      jsonData['score-partwise'].part[0].measure,
+                      colors
+                    );
+                  embed.getCursorPosition().then((position) =>
+                    embed.loadJSON(jsonData).then(() => {
+                        embed.setCursorPosition(position);
+                    })
+                  );
+                }
                 if (onUpdate) {
                   onUpdate(JSON.stringify(jsonData));
                 }

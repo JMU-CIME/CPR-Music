@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -43,12 +43,6 @@ const VariationsFromMotiveScore = dynamic(
   }
 );
 
-const bucketColors = {
-  tonic: '#E75B5C',
-  subdominant: '#265C5C',
-  dominant: '#4390E2',
-};
-
 export default function CreativityActivity() {
   // console.log('got into aural component');
   const dispatch = useDispatch();
@@ -58,21 +52,45 @@ export default function CreativityActivity() {
   const { slug, piece } = router.query;
   const actCategory = 'Create';
   const [melodyJson, setMelodyJson] = useState('');
+
+  const composition = useRef('');
   
   // Current JSON representation of one measure editors
-  const [tonicJson, setTonicJson] = useState('');
-  const [subdominantJson, setSubdominantJson] = useState('');
-  const [dominantJson, setDominantJson] = useState('');
+  // const [tonicJson, setTonicJson] = useState('');
+  // const [subdominantJson, setSubdominantJson] = useState('');
+  // const [dominantJson, setDominantJson] = useState('');
+  const tonicJson = useRef('');
+  const subdominantJson = useRef('');
+  const dominantJson = useRef('');
 
   // Final JSON representation which is used to generate variations
-  const [finalTonicJson, setFinalTonicJson] = useState('');
-  const [finalSubdominantJson, setFinalSubdominantJson] = useState('');
-  const [finalDominantJson, setFinalDominantJson] = useState('');
+  // const [finalTonicJson, setFinalTonicJson] = useState('');
+  // const [finalSubdominantJson, setFinalSubdominantJson] = useState('');
+  // const [finalDominantJson, setFinalDominantJson] = useState('');
   const [startedVariationGeneration, setStartedVariationGeneration] = useState(false);
 
-  const [selectedTonicMeasure, setSelectedTonicMeasure] = useState(-1);
-  const [selectedDominantMeasure, setSelectedDominantMeasure] = useState(-1);
-  const [selectedSubdominantMeasure, setSelectedSubdominantMeasure] = useState(-1);
+  // const [selectedTonicMeasure, setSelectedTonicMeasure] = useState(-1);
+  // const [selectedDominantMeasure, setSelectedDominantMeasure] = useState(-1);
+  // const [selectedSubdominantMeasure, setSelectedSubdominantMeasure] = useState(-1);
+
+  // const selectedTonicMeasureNotes = useRef(-1);
+  // function setSelectedTonicMeasureNotes(notes) {
+  //   selectedTonicMeasureNotes.current = notes;
+  // }  
+  // const selectedDominantMeasureNotes = useRef(-1);
+  // function setSelectedDominantMeasureNotes(notes) {
+  //   selectedDominantMeasureNotes.current = notes;
+  // }  
+  // const selectedSubdominantMeasureNotes = useRef(-1);
+  // function setSelectedSubdominantMeasureNotes(notes) {
+  //   selectedSubdominantMeasureNotes.current = notes;
+  // }
+
+  const selectedMeasureNotes = useRef([]);
+  function setSelectedMeasureNotes(notes) {
+    console.log('setSelectedMeasureNotes(notes)', notes)
+    selectedMeasureNotes.current = notes;
+  }
 
   const userInfo = useSelector((state) => state.currentUser);
     
@@ -86,7 +104,7 @@ export default function CreativityActivity() {
   
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  let composition = ''; // FIXME: why isn't this useState???
+  // let composition = ''; // FIXME: why isn't this useState???
 
    // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
@@ -121,7 +139,7 @@ export default function CreativityActivity() {
         slug,
         assignmentId: currentAssignment.id,
         audio,
-        composition,
+        composition: composition.current,
         submissionId,
       })
     );
@@ -131,144 +149,171 @@ export default function CreativityActivity() {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
 
-  const handleTonicUpdate = useCallback((data) => {
-    setTonicJson(data);
-  }, [setTonicJson]);
-  
-  const handleSubdominantUpdate = useCallback((data) => {
-    setSubdominantJson(data);
-  }, [setSubdominantJson])
+  // const handleTonicUpdate = useCallback((data) => {
+  //   setTonicJson(data);
+  // }, [setTonicJson]);
 
-  const handleDominantUpdate = useCallback((data) => {
-    setDominantJson(data)
-  }, [setDominantJson])
+  function handleTonicUpdate(data) {
+    tonicJson.current = data;
+  }
+  
+  // const handleSubdominantUpdate = useCallback((data) => {
+  //   setSubdominantJson(data);
+  // }, [setSubdominantJson])
+  function handleSubdominantUpdate(data) {
+    subdominantJson.current = data;
+  }
+
+  // const handleDominantUpdate = useCallback((data) => {
+  //   setDominantJson(data)
+  // }, [setDominantJson])
+  function handleDominantUpdate(data) {
+    dominantJson.current = data;
+  }
 
   function generateVariations() {
     if (startedVariationGeneration) return;
-     
-    setFinalTonicJson(tonicJson);
-    setFinalSubdominantJson(subdominantJson);
-    setFinalDominantJson(dominantJson);
+    // setFinalTonicJson(tonicJson.current);
+    // setFinalSubdominantJson(subdominantJson.current);
+    // setFinalDominantJson(dominantJson.current);
     setStartedVariationGeneration(true); 
   } 
- 
+
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
-      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} />
+      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='explore melody flat editor' />
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
           can use rests or note durations from 1/8 - 1/2.
-        </div>
-        <div className="col-md-6">
           <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="tonic"
-            colors={bucketColors.tonic}
+            colors='tonic'
             instrumentName={currentAssignment?.instrument}
           />
         </div>
+        <div className="col-md-6">
+          <ExploratoryCompose
+            referenceScoreJSON={melodyJson} 
+            trim={1}
+            onUpdate={handleTonicUpdate}
+            colors='tonic'
+          />    
+        </div>
       </div>
-      <ExploratoryCompose
-        referenceScoreJSON={melodyJson} 
-        trim={1}
-        onUpdate={handleTonicUpdate}
-      />
+      
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
           can use rests or note durations from 1/8 - 1/2.
-        </div>
-        <div className="col-md-6">
           <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="subdominant"
-            colors={bucketColors.subdominant}
+            colors='subdominant'
             instrumentName={currentAssignment?.instrument}
           />
         </div>
+        <div className="col-md-6">
+          <ExploratoryCompose 
+            referenceScoreJSON={melodyJson}
+            trim={1}
+            onUpdate={handleSubdominantUpdate}
+            colors='subdominant'
+          />
+        </div>
       </div>
-      <ExploratoryCompose 
-        referenceScoreJSON={melodyJson}
-        trim={1}
-        onUpdate={handleSubdominantUpdate}
-      />
+      
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
           can use rests or note durations from 1/8 - 1/2.
-        </div>
-        <div className="col-md-6">
           <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={melodyJson}
             chordScaleBucket="dominant"
-            colors={bucketColors.dominant}
+            colors='dominant'
             instrumentName={currentAssignment?.instrument}
           />
         </div>
+        <div className="col-md-6">
+          <ExploratoryCompose 
+            referenceScoreJSON={melodyJson}
+            trim={1}
+            onUpdate={handleDominantUpdate}
+            colors='dominant'
+          />
+        </div>
       </div>
-      <ExploratoryCompose 
-        referenceScoreJSON={melodyJson}
-        trim={1}
-        onUpdate={handleDominantUpdate}
-      />
+      
       <Button variant="primary" onClick={generateVariations}>
         Begin Composing
       </Button>
 
     {startedVariationGeneration && (
-      <Tabs
-        defaultActiveKey="tonic-palette"
-        id="justify-tab-example"
-        className="mb-3"
-        justify
-        variant="underline"
-      >
-        <Tab eventKey="tonic-palette" title={`Tonic ${selectedTonicMeasure}`} className="tonic">
-            <VariationsFromMotiveScore
-              referenceScoreJSON={finalTonicJson}
-              height={300}
-              width={700}
-              onSelect={setSelectedTonicMeasure}
-            />
-        </Tab>
-        <Tab
-          eventKey="subdominant-palette"
-          title={`Subdominant ${selectedSubdominantMeasure}`}
-          className="subdominant"
+      <div>
+        <Tabs
+          defaultActiveKey="tonic-palette"
+          id="justify-tab-example"
+          className="mb-3"
+          justify
+          variant="underline"
         >
-            <VariationsFromMotiveScore
-              referenceScoreJSON={finalSubdominantJson}
-              height={300}
-              width={700}
-              onSelect={setSelectedSubdominantMeasure}
-            />
-        </Tab>
-        <Tab eventKey="dominant-palette" title={`Dominant ${selectedDominantMeasure}`} className="dominant">
-            <VariationsFromMotiveScore
-              referenceScoreJSON={finalDominantJson}
-              height={300}
-              width={700}
-              onSelect={setSelectedDominantMeasure}
-            />
-        </Tab>
+          <Tab eventKey="tonic-palette" title='Tonic' className="tonic">
+              <VariationsFromMotiveScore
+                referenceScoreJSON={tonicJson.current}
+                height={300}
+                width={700}
+                onSelect={setSelectedMeasureNotes}
+              />
+          </Tab>
+          <Tab
+            eventKey="subdominant-palette"
+            title='Subdominant'
+            className="subdominant"
+          >
+              <VariationsFromMotiveScore
+                referenceScoreJSON={subdominantJson.current}
+                height={300}
+                width={700}
+                onSelect={setSelectedMeasureNotes}
+              />
+          </Tab>
+          <Tab eventKey="dominant-palette" title='Dominant' className="dominant">
+              <VariationsFromMotiveScore
+                referenceScoreJSON={dominantJson.current}
+                height={300}
+                width={700}
+                onSelect={setSelectedMeasureNotes}
+              />
+          </Tab>
+          
+        </Tabs>
         <FlatEditor
           edit
           score={{
             scoreId: 'blank',
           }}
-          onSubmit={setJsonWrapper}
+          // onSubmit={setJsonWrapper}
+          onUpdate={(data) => {
+            composition.current = data;
+            console.log('composition updated', data)
+          }}
           submittingStatus={mutation.status}
           orig={melodyJson}
-          colors={currentAssignment?.part?.chord_scale_pattern?.map(
-            (color) => bucketColors[color]
-          )}
+          colors={currentAssignment?.part?.chord_scale_pattern}
+          selectedMeasureNotes={selectedMeasureNotes}
+          debugMsg='final explore composition flateditor instance'
         />
-      </Tabs>
+        <Recorder
+          submit={submitCreativity}
+          accompaniment={currentAssignment?.part?.piece?.accompaniment}
+        />
+      </div>
     )}
+    
     </div>
   ) : (
     <Spinner
