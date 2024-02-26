@@ -54,19 +54,11 @@ export default function CreativityActivity() {
   const [melodyJson, setMelodyJson] = useState('');
 
   const composition = useRef('');
-  
-  // Current JSON representation of one measure editors
-  // const [tonicJson, setTonicJson] = useState('');
-  // const [subdominantJson, setSubdominantJson] = useState('');
-  // const [dominantJson, setDominantJson] = useState('');
+
   const tonicJson = useRef('');
   const subdominantJson = useRef('');
   const dominantJson = useRef('');
 
-  // Final JSON representation which is used to generate variations
-  // const [finalTonicJson, setFinalTonicJson] = useState('');
-  // const [finalSubdominantJson, setFinalSubdominantJson] = useState('');
-  // const [finalDominantJson, setFinalDominantJson] = useState('');
   const [startedVariationGeneration, setStartedVariationGeneration] = useState(false);
 
   // const [selectedTonicMeasure, setSelectedTonicMeasure] = useState(-1);
@@ -149,33 +141,20 @@ export default function CreativityActivity() {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
 
-  // const handleTonicUpdate = useCallback((data) => {
-  //   setTonicJson(data);
-  // }, [setTonicJson]);
-
   function handleTonicUpdate(data) {
     tonicJson.current = data;
   }
   
-  // const handleSubdominantUpdate = useCallback((data) => {
-  //   setSubdominantJson(data);
-  // }, [setSubdominantJson])
   function handleSubdominantUpdate(data) {
     subdominantJson.current = data;
   }
 
-  // const handleDominantUpdate = useCallback((data) => {
-  //   setDominantJson(data)
-  // }, [setDominantJson])
   function handleDominantUpdate(data) {
     dominantJson.current = data;
   }
 
   function generateVariations() {
     if (startedVariationGeneration) return;
-    // setFinalTonicJson(tonicJson.current);
-    // setFinalSubdominantJson(subdominantJson.current);
-    // setFinalDominantJson(dominantJson.current);
     setStartedVariationGeneration(true); 
   } 
 
