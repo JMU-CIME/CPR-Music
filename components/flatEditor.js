@@ -264,7 +264,7 @@ function FlatEditor({
         .ready()
         .then(() => {
           if (score.scoreId === 'blank' && orig) {
-            let result = pitchesToRests(JSON.parse(orig));
+            let result = pitchesToRests(JSON.parse(orig)); // TODO: watch out here for the uuid issues
             if (trim) {
               result = trimScore(result, trim);
             }
@@ -293,15 +293,37 @@ function FlatEditor({
               embed.loadJSON(result).then(() => {
                 embed.off('cursorPosition');
                 embed.on('cursorPosition', (ev) => {
+                  // FIXME probably we need to debounce this event. when the paste has succeeded, don't notice that resulting change of cursor and try to do this again.
                   console.log('cursorPos', ev)
                   // selectedMeasure
                   console.log('json.current', json.current)
-                  if (json.current && selectedMeasure && selectedMeasure.current && JSON.stringify(selectedMeasure.current)!== JSON && json.current !== '{}') {
+                  if (json.current && selectedMeasure && selectedMeasure.current && JSON.stringify(selectedMeasure.current)!== '{}' && json.current !== '{}') {
                     console.log('selectedMeasure.current', selectedMeasure.current)
                     const scoreData = JSON.parse(json.current);
                     const correctedSelection = correctMeasure(JSON.parse(JSON.stringify(selectedMeasure.current)));
                     console.log('correctedSelection', correctedSelection)
                     scoreData['score-partwise'].part[0].measure[ev.measureIdx] =  correctedSelection
+                    //FIXME
+                    if (!Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'attributes')) {
+                      console.log('no attributes', scoreData['score-partwise'].part[0].measure[ev.measureIdx])
+                      scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes = [{}];
+
+                    }
+                    if (!Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes[0], '$adagio-location')) {
+                      scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes[0]['$adagio-location'] = {
+                        "timePos": 0,
+                        "dpq": 1
+                      }
+                    }
+                    if (!Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes[0], '$adagio-time')) {
+                      scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes[0]['$adagio-time'] = {
+                        "beats": "4",
+                        "beat-type": "4"
+                      }
+                    }
+                    if (Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'barline')) {
+                      delete scoreData['score-partwise'].part[0].measure[ev.measureIdx].barline;
+                    }
                     selectedMeasure.current = {};
                     const toLoad = JSON.stringify(scoreData);
                     console.log('erroneous toLoad', toLoad);
