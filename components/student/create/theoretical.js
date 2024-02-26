@@ -21,6 +21,10 @@ const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
+const ExploratoryCompose = dynamic(() => import('../../exploratoryCompose'), {
+  ssr: false,
+})
+
 const MergingScore = dynamic(() => import('../../mergingScore'), {
   ssr: false,
 });
@@ -132,12 +136,6 @@ export default function CreativityActivity() {
     scoreJSON = JSON.parse(flatIOScoreForTransposition);
   }
 
-  
-  // the child component has finished merging the array of "subscores" into the single "score"
-  // const onMerged = useCallback(mergedData=> {
-  //   setTotalScoreJSON(mergedData);
-  // }, [setTotalScoreJSON])
-
   function onMerged (mergedData) {
     totalScoreJSON.current = mergedData;
   }
@@ -177,34 +175,15 @@ export default function CreativityActivity() {
         </Col>
         <Col md>
           {
-            // subScores.slice(0, 1).map((subScore, idx) => {
             subScores && subScores.map((subScore, idx) => {
-              // FIXME: adam says we probably don't care about this useCallback unless we memoize flateditor (to which we're passing the useCallback result below)
-              // const onSubScoreEdited = useCallback((data) => {
-              //   scoreData[idx] = data;
-              // })
-              // scoreData[idx] = {};
               return (
                 <div key={idx}>
                   <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
-                  
-                  <FlatEditor
-                    edit
-                    score={{
-                      scoreId: 'blank',
-                    }}
-                    onSubmit={handleSubmit(idx)}
-                    submittingStatus={mutation.status}
-                    // onUpdate={onSubScoreEdited}
-                    // onUpdate={(data) => {
-                    //   const score = scoreData;
-                    //   score[idx] = data;
-                    //   setScoreData(score);
-                    // }}
-                    orig={subScore}
+                  <ExploratoryCompose 
+                    referenceScoreJSON={subScore}
                     colors={subColors[idx]}
-                    debugMsg={`error in rendering the subScore[${idx}]`}
-                  />
+                    onUpdate={handleSubmit(idx)}
+                  /> 
                 </div>
               );
             })
@@ -214,15 +193,7 @@ export default function CreativityActivity() {
           {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef.current} />}
         </Col>
       </Row>
-      
-      {/* 
-        map runs 4 times
-          (displaying 4 FlatEditors)
-          each first load of these flateditors results in its onUpdate being called, 
-          that onUpdate makes scoreData satisfy the show condition of the mergingscore (even though it's not intersting yet)
-          mergescore sees this garbage data and merges it and sends it to the parent (this component)
-          the parent then 
-       */}
+
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
