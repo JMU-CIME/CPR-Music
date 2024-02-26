@@ -14,6 +14,7 @@ import {
   colorMeasures
 } from '../lib/flat';
 import { Button } from 'react-bootstrap';
+import { correctMeasure, correctScore } from '../lib/variations';
 
 const validateScore = (proposedScore, permittedPitches) => {
   const result = { ok: true, errors: [] };
@@ -53,7 +54,7 @@ function FlatEditor({
   slice,
   sliceIdx,
   debugMsg,
-  selectedMeasureNotes
+  selectedMeasure
 }) {
 
   function onFlatEditorError(e) {
@@ -293,14 +294,21 @@ function FlatEditor({
                 embed.off('cursorPosition');
                 embed.on('cursorPosition', (ev) => {
                   console.log('cursorPos', ev)
-                  // selectedMeasureNotes
+                  // selectedMeasure
                   console.log('json.current', json.current)
-                  if (selectedMeasureNotes && selectedMeasureNotes.current && selectedMeasureNotes.current.length > 0 && json.current !== '') {
-                    console.log('selectedMeasureNotes.current', selectedMeasureNotes.current)
+                  if (json.current && selectedMeasure && selectedMeasure.current && JSON.stringify(selectedMeasure.current)!== JSON && json.current !== '{}') {
+                    console.log('selectedMeasure.current', selectedMeasure.current)
                     const scoreData = JSON.parse(json.current);
-                    scoreData['score-partwise'].part[0].measure[ev.measureIdx].note = JSON.parse(JSON.stringify(selectedMeasureNotes.current));
-                    selectedMeasureNotes.current = [];
-                    embed.loadJSON(JSON.stringify(scoreData)).catch(onFlatEditorError);
+                    const correctedSelection = correctMeasure(JSON.parse(JSON.stringify(selectedMeasure.current)));
+                    console.log('correctedSelection', correctedSelection)
+                    scoreData['score-partwise'].part[0].measure[ev.measureIdx] =  correctedSelection
+                    selectedMeasure.current = {};
+                    const toLoad = JSON.stringify(scoreData);
+                    console.log('erroneous toLoad', toLoad);
+                    // const correctedScore = correctScore(scoreData);
+                    // console.log('correctedScore', correctedScore)
+                    // embed.loadJSON(correctedScore).catch(onFlatEditorError);
+                    embed.loadJSON(toLoad).catch(onFlatEditorError);
                   }
                 });
                 embed.off('noteDetails');

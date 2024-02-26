@@ -86,10 +86,10 @@ export default function CreativityActivity() {
   //   selectedSubdominantMeasureNotes.current = notes;
   // }
 
-  const selectedMeasureNotes = useRef([]);
-  function setSelectedMeasureNotes(notes) {
-    console.log('setSelectedMeasureNotes(notes)', notes)
-    selectedMeasureNotes.current = notes;
+  const selectedMeasure = useRef({});
+  function setSelectedMeasure(measure) {
+    console.log('setSelectedMeasure(notes)', measure)
+    selectedMeasure.current = measure;
   }
 
   const userInfo = useSelector((state) => state.currentUser);
@@ -266,7 +266,7 @@ export default function CreativityActivity() {
                 referenceScoreJSON={tonicJson.current}
                 height={300}
                 width={700}
-                onSelect={setSelectedMeasureNotes}
+                onSelect={setSelectedMeasure}
               />
           </Tab>
           <Tab
@@ -278,7 +278,7 @@ export default function CreativityActivity() {
                 referenceScoreJSON={subdominantJson.current}
                 height={300}
                 width={700}
-                onSelect={setSelectedMeasureNotes}
+                onSelect={setSelectedMeasure}
               />
           </Tab>
           <Tab eventKey="dominant-palette" title='Dominant' className="dominant">
@@ -286,7 +286,7 @@ export default function CreativityActivity() {
                 referenceScoreJSON={dominantJson.current}
                 height={300}
                 width={700}
-                onSelect={setSelectedMeasureNotes}
+                onSelect={setSelectedMeasure}
               />
           </Tab>
           
@@ -304,7 +304,7 @@ export default function CreativityActivity() {
           submittingStatus={mutation.status}
           orig={melodyJson}
           colors={currentAssignment?.part?.chord_scale_pattern}
-          selectedMeasureNotes={selectedMeasureNotes}
+          selectedMeasure={selectedMeasure}
           debugMsg='final explore composition flateditor instance'
         />
         <Recorder

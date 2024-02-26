@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import dynamic from 'next/dynamic';
@@ -21,6 +21,10 @@ const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
+const ChordScaleBucketScore = dynamic(() => import('../../chordScaleBucketScore'), {
+  ssr: false,
+});
+
 const bucketColors = {
   tonic: '#E75B5C',
   subdominant: '#265C5C',
@@ -37,6 +41,8 @@ export default function CreativityAuralActivity() {
   const { slug, piece } = router.query;
   const actCategory = 'Create';
   const [json, setJson] = useState('');
+  const composition = useRef('');
+
 
   const userInfo = useSelector((state) => state.currentUser);
 
@@ -68,7 +74,6 @@ export default function CreativityAuralActivity() {
 
   const mutation = useMutation(mutateCreateSubmission({ slug }));
 
-  let composition = ''; // FIXME: why isn't this useState???
   // const currentAssignment = assignments && assignments?.filter((assn) => assn.part.piece.slug === piece && assn.activity.activity_type.category === actCategory)?.[0]
   const currentAssignment =
     assignments &&
@@ -90,19 +95,13 @@ export default function CreativityAuralActivity() {
         partTransposition.transposition.name === currentTransposition
     )?.[0]?.flatio;
 
-  const setJsonWrapper = (data) => {
-    mutation.mutate({
-      submission: { content: data },
-      assignmentId: currentAssignment.id,
-    });
-  };
   const submitCreativity = ({ audio, submissionId }) =>
     dispatch(
       postRecording({
         slug,
         assignmentId: currentAssignment.id,
         audio,
-        composition,
+        composition: composition.current,
         submissionId,
       })
     );
@@ -121,7 +120,7 @@ export default function CreativityAuralActivity() {
       {/**Testing row */}
       <Row>
         <Col md={4}>
-          <FlatEditor
+          <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="tonic"
@@ -130,7 +129,7 @@ export default function CreativityAuralActivity() {
           />
         </Col>
         <Col md={4}>
-          <FlatEditor
+          <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="subdominant"
@@ -139,7 +138,7 @@ export default function CreativityAuralActivity() {
           />
         </Col>
         <Col md={4}>
-          <FlatEditor
+          <ChordScaleBucketScore
             height={150}
             referenceScoreJSON={json}
             chordScaleBucket="dominant"
@@ -155,11 +154,11 @@ export default function CreativityAuralActivity() {
         score={{
           scoreId: 'blank',
         }}
-        onSubmit={setJsonWrapper}
+        // onSubmit={setJsonWrapper}
         submittingStatus={mutation.status}
         onUpdate={(data) => {
-          // console.log('updated composition', data);
-          composition = data;
+          composition.current = data;
+          console.log('composition updated', data)
         }}
         orig={json}
         colors={currentAssignment?.part?.chord_scale_pattern}

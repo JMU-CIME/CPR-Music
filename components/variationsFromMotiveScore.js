@@ -62,7 +62,7 @@ function VariationsFromMotiveScore({
           createdEmbed.off('cursorPosition');
           createdEmbed.on('cursorPosition', (ev) =>{
             console.log('curosrpos', ev, ev.measureIdx)
-            onSelect(measureNotes(variations.current, ev.measureIdx));
+            onSelect(variations.current['score-partwise'].part[0].measure[ev.measureIdx]);
           }) ;
           
         }
