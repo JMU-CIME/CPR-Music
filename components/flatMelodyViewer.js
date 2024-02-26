@@ -3,6 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
 
+
 function FlatMelodyViewer({
   height=300,
   width='100%',
@@ -85,4 +86,4 @@ function FlatMelodyViewer({
 }
 
 
-export default React.memo(FlatMelodyViewer)
+export default FlatMelodyViewer

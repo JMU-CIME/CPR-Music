@@ -17,11 +17,16 @@ import {
 import { UploadStatusEnum } from '../../../types';
 import { Col, Row } from 'react-bootstrap';
 
+
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
 const ExploratoryCompose = dynamic(() => import('../../exploratoryCompose'), {
+  ssr: false,
+})
+
+const FlatMelodyViewer = dynamic(() => import('../../flatMelodyViewer'), {
   ssr: false,
 })
 
@@ -148,7 +153,7 @@ export default function CreativityActivity() {
 
   return flatIOScoreForTransposition ? (
     <>
-      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
+      <FlatMelodyViewer score={scoreJSON} onLoad={setMelodyJson} debugMsg={"Failed to load in theoretical"} />
       <Row>
         <Col md={4}>
           <ChordScaleBucketScore
