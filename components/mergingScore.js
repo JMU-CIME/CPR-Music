@@ -31,6 +31,7 @@ function MergingScore({
       controlsZoom: false,
       controlsPrint: false,
       toolsetId: '64be80de738efff96cc27edd',
+      mode: 'edit',
     };
     let computedHeight = 300;
     if (height) {
