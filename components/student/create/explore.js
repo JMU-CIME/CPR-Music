@@ -271,7 +271,6 @@ export default function CreativityActivity() {
           
         </Tabs>
         <FlatEditor
-          edit
           score={{
             scoreId: 'blank',
           }}
