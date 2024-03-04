@@ -39,6 +39,7 @@ function VariationsFromMotiveScore({
       controlsZoom: false,
       controlsPrint: false,
       toolsetId: '64be80de738efff96cc27edd',
+      displayFirstLinePartsNames: false,
     };
     let computedHeight = 300;
     if (height) {
