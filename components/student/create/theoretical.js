@@ -190,7 +190,7 @@ export default function CreativityActivity() {
           }
           <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
           <h2>Step {subScores.length + 1} - Combined</h2>
-          {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef.current} />}
+          {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
         </Col>
       </Row>
 

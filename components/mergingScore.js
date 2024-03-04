@@ -5,7 +5,7 @@ import { mergeScores } from '../lib/flat';
 function MergingScore({
   height,
   instrumentName,
-  scores,
+  scores, // array of strings
   giveJSON,
 }) {
   console.log('ffs did we get in here or what?')
@@ -15,9 +15,7 @@ function MergingScore({
   const resultScore = useRef('');
   useEffect(() => {
     console.log('got in here');
-    // const mergedScore = mergeScores(scores, instrumentName);
-    resultScore.current = mergeScores(scores, instrumentName);
-    // resultScore.current = JSON.stringify(scores[0]);
+    resultScore.current = mergeScores(scores.current, instrumentName);
     if (giveJSON) {
       // giveJSON(mergedScore);
       giveJSON(resultScore.current);
