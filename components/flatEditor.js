@@ -288,6 +288,7 @@ function FlatEditor({
                 colors
               );
             }
+            console.log('flat editor result', result)
             return (
               // if a user adds a note that is black or does not have a color assigned to it, then we apply the color from the chord scale pattern to match.
               score.scoreId === 'blank' &&
@@ -303,7 +304,12 @@ function FlatEditor({
                     const scoreData = JSON.parse(json.current);
                     const correctedSelection = correctMeasure(JSON.parse(JSON.stringify(selectedMeasure.current)));
                     console.log('correctedSelection', correctedSelection)
+                    if (Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'harmony')){
+                      correctedSelection.harmony = scoreData['score-partwise'].part[0].measure[ev.measureIdx].harmony
+                    }
+                    console.log('target paste measure before paste', JSON.stringify(scoreData['score-partwise'].part[0].measure[ev.measureIdx]))
                     scoreData['score-partwise'].part[0].measure[ev.measureIdx] =  correctedSelection
+                    console.log('target paste measure AFTER paste', JSON.stringify(scoreData['score-partwise'].part[0].measure[ev.measureIdx]))
                     //FIXME
                     if (!Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'attributes')) {
                       console.log('no attributes', scoreData['score-partwise'].part[0].measure[ev.measureIdx])
