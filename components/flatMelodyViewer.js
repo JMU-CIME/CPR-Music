@@ -11,7 +11,7 @@ function FlatMelodyViewer({
   onLoad,
   debugMsg
 }) {
-  const [embed, setEmbed] = useState();
+  //const [embed, setEmbed] = useState();
   const editorRef = React.createRef();
 
   const embedParams = {
@@ -22,57 +22,48 @@ function FlatMelodyViewer({
     controlsDisplay: false,
     controlsPlay: false,
     controlsFullscreen: false,
+    displayFirstLinePartsNames: false,
     controlsZoom: false,
     controlsPrint: false,
     toolsetId: '64be80de738efff96cc27edd',
   };
 
-  useEffect(() => {
-    const allParams = {
+  const allParams = {
       height: `${height}`,
       width: width,
       embedParams,
-    };
-    setEmbed(new Embed(editorRef.current, allParams));
-  }, [height]);
-  
+  };
+
+   
   useEffect(() => {
-    if (!embed) return; 
+    if (!editorRef.current) return; 
     const loadParams = {
       score: score.scoreId,
     };
     if (score.sharingKey) {
       loadParams.sharingKey = score.sharingKey;
     }
-    embed
-      .ready()
-      .then(
-        () => 
-          embed
-            .loadFlatScore(loadParams)
-            .then(() => {
-              embed
-                .getJSON()
-                .then(
-                  (jsonData) => onLoad && onLoad(JSON.stringify(jsonData))
-                );
-            })
-            .catch((e) => {
-              if (e && e.message) {
-                e.message = `flat error: ${e?.message}, not loaded from scoreId, score: ${JSON.stringify(score)}`;
-                if (debugMsg){
-                  e.message = `${e?.message}, debugMsg: ${debugMsg}`;
-                }
-              } else if(debugMsg) {
-                console.error('debugMsg', debugMsg);
-                if (score){console.error('score', score);}
-              }
-              console.error('score not loaded from scoreId');
-              console.error('score', score);
-              throw e;
-            })
-      );
-    }, [embed]);
+    const embed = new Embed(editorRef.current, allParams)
+
+    embed.ready()
+      .then(() => embed.loadFlatScore(loadParams))
+      .then(() => embed.getJSON())
+      .then((jsonData) => onLoad && onLoad(JSON.stringify(jsonData)))
+      .catch((e) => {
+        if (e && e.message) {
+          e.message = `flat error: ${e?.message}, not loaded from scoreId, score: ${JSON.stringify(score)}`;
+          if (debugMsg){
+            e.message = `${e?.message}, debugMsg: ${debugMsg}`;
+          }
+        } else if(debugMsg) {
+          console.error('debugMsg', debugMsg);
+          if (score){console.error('score', score);}
+        }
+        console.error('score not loaded from scoreId');
+        console.error('score', score);
+        throw e;
+      })
+    }, [editorRef.current]);
 
   return (
     <>
