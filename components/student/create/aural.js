@@ -120,51 +120,52 @@ export default function CreativityAuralActivity() {
     <>
       <FlatMelodyViewer score={scoreJSON} onLoad={setJson} />
       { json && (
-        <Row>
-          <Col md={4}>
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={json}
-              chordScaleBucket="tonic"
-              colors='tonic'
-              instrumentName={currentAssignment?.instrument}
-            />
-          </Col>
-          <Col md={4}>
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={json}
-              chordScaleBucket="subdominant"
-              colors='subdominant'
-              instrumentName={currentAssignment?.instrument}
-            />
-          </Col>
-          <Col md={4}>
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={json}
-              chordScaleBucket="dominant"
-              colors='dominant'
-              instrumentName={currentAssignment?.instrument}
-            />
-          </Col>
-        </Row>
-      ) && (
-      /* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */
-        <FlatEditor
-          edit
-          score={{
-            scoreId: 'blank',
-          }}
-          // onSubmit={setJsonWrapper}
-          submittingStatus={mutation.status}
-          onUpdate={(data) => {
-            composition.current = data;
-            console.log('composition updated', data)
-          }}
-          orig={json}
-          colors={currentAssignment?.part?.chord_scale_pattern}
-        />
+        <>
+          <Row>
+            <Col md={4}>
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={json}
+                chordScaleBucket="tonic"
+                colors='tonic'
+                instrumentName={currentAssignment?.instrument}
+              />
+            </Col>
+            <Col md={4}>
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={json}
+                chordScaleBucket="subdominant"
+                colors='subdominant'
+                instrumentName={currentAssignment?.instrument}
+              />
+            </Col>
+            <Col md={4}>
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={json}
+                chordScaleBucket="dominant"
+                colors='dominant'
+                instrumentName={currentAssignment?.instrument}
+              />
+            </Col>
+          </Row>
+          /* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */
+          <FlatEditor
+            edit
+            score={{
+              scoreId: 'blank',
+            }}
+            // onSubmit={setJsonWrapper}
+            submittingStatus={mutation.status}
+            onUpdate={(data) => {
+              composition.current = data;
+              console.log('composition updated', data)
+            }}
+            orig={json}
+            colors={currentAssignment?.part?.chord_scale_pattern}
+          />
+        </>
       )}
       <Recorder
         submit={submitCreativity}
