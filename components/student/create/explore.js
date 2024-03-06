@@ -157,10 +157,7 @@ export default function CreativityActivity() {
     dominantJson.current = data;
   }
 
-  const handleMelodyLoad = useCallback((data) => {
-    setMelodyJson(data)
-  }, [setMelodyJson])
-
+ 
   function generateVariations() {
     if (startedVariationGeneration) return;
     setStartedVariationGeneration(true); 
@@ -168,7 +165,7 @@ export default function CreativityActivity() {
 
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
-      <FlatMelodyViewer score={scoreJSON} onLoad={handleMelodyLoad} />
+      <FlatMelodyViewer score={scoreJSON} onLoad={setMelodyJson} />
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
@@ -238,6 +235,7 @@ export default function CreativityActivity() {
       <Button variant="primary" onClick={generateVariations}>
         Begin Composing
       </Button>
+    
 
     {startedVariationGeneration && (
       <div>

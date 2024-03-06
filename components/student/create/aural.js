@@ -21,6 +21,10 @@ const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
+const FlatMelodyViewer = dynamic(() => import('../../flatMelodyViewer'), {
+  ssr: false,
+})
+
 const ChordScaleBucketScore = dynamic(() => import('../../chordScaleBucketScore'), {
   ssr: false,
 });
@@ -112,42 +116,40 @@ export default function CreativityAuralActivity() {
   }
   // console.log(scoreJSON)
   // const origJSON
-
   return flatIOScoreForTransposition ? (
     <>
-      <FlatEditor score={scoreJSON} giveJSON={setJson} />
-
-      {/**Testing row */}
-      <Row>
-        <Col md={4}>
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={json}
-            chordScaleBucket="tonic"
-            colors='tonic'
-            instrumentName={currentAssignment?.instrument}
-          />
-        </Col>
-        <Col md={4}>
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={json}
-            chordScaleBucket="subdominant"
-            colors='subdominant'
-            instrumentName={currentAssignment?.instrument}
-          />
-        </Col>
-        <Col md={4}>
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={json}
-            chordScaleBucket="dominant"
-            colors='dominant'
-            instrumentName={currentAssignment?.instrument}
-          />
-        </Col>
-      </Row>
-
+      <FlatMelodyViewer score={scoreJSON} onLoad={setJson} />
+      { json && (
+        <Row>
+          <Col md={4}>
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={json}
+              chordScaleBucket="tonic"
+              colors='tonic'
+              instrumentName={currentAssignment?.instrument}
+            />
+          </Col>
+          <Col md={4}>
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={json}
+              chordScaleBucket="subdominant"
+              colors='subdominant'
+              instrumentName={currentAssignment?.instrument}
+            />
+          </Col>
+          <Col md={4}>
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={json}
+              chordScaleBucket="dominant"
+              colors='dominant'
+              instrumentName={currentAssignment?.instrument}
+            />
+          </Col>
+        </Row>
+      )}
       {/* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */}
       <FlatEditor
         edit

@@ -86,4 +86,4 @@ function FlatMelodyViewer({
 }
 
 
-export default FlatMelodyViewer
+export default React.memo(FlatMelodyViewer)
