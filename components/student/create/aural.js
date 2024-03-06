@@ -149,22 +149,23 @@ export default function CreativityAuralActivity() {
             />
           </Col>
         </Row>
+      ) && (
+      /* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */
+        <FlatEditor
+          edit
+          score={{
+            scoreId: 'blank',
+          }}
+          // onSubmit={setJsonWrapper}
+          submittingStatus={mutation.status}
+          onUpdate={(data) => {
+            composition.current = data;
+            console.log('composition updated', data)
+          }}
+          orig={json}
+          colors={currentAssignment?.part?.chord_scale_pattern}
+        />
       )}
-      {/* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */}
-      <FlatEditor
-        edit
-        score={{
-          scoreId: 'blank',
-        }}
-        // onSubmit={setJsonWrapper}
-        submittingStatus={mutation.status}
-        onUpdate={(data) => {
-          composition.current = data;
-          console.log('composition updated', data)
-        }}
-        orig={json}
-        colors={currentAssignment?.part?.chord_scale_pattern}
-      />
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
