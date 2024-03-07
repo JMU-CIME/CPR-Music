@@ -22,6 +22,10 @@ const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
+const FlatMelodyViewer = dynamic(() => import('../../flatMelodyViewer'), {
+  ssr: false,
+})
+
 const ChordScaleBucketScore = dynamic(
   () => import('../../chordScaleBucketScore'),
   {
@@ -153,6 +157,7 @@ export default function CreativityActivity() {
     dominantJson.current = data;
   }
 
+ 
   function generateVariations() {
     if (startedVariationGeneration) return;
     setStartedVariationGeneration(true); 
@@ -160,7 +165,7 @@ export default function CreativityActivity() {
 
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
-      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='explore melody flat editor' />
+      <FlatMelodyViewer score={scoreJSON} onLoad={setMelodyJson} />
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
@@ -230,6 +235,7 @@ export default function CreativityActivity() {
       <Button variant="primary" onClick={generateVariations}>
         Begin Composing
       </Button>
+    
 
     {startedVariationGeneration && (
       <div>
