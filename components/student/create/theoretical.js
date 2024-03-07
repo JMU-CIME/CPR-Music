@@ -17,11 +17,16 @@ import {
 import { UploadStatusEnum } from '../../../types';
 import { Col, Row } from 'react-bootstrap';
 
+
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
 const ExploratoryCompose = dynamic(() => import('../../exploratoryCompose'), {
+  ssr: false,
+})
+
+const FlatMelodyViewer = dynamic(() => import('../../flatMelodyViewer'), {
   ssr: false,
 })
 
@@ -148,52 +153,53 @@ export default function CreativityActivity() {
 
   return flatIOScoreForTransposition ? (
     <>
-      <FlatEditor score={scoreJSON} giveJSON={setMelodyJson} debugMsg='error in rendering the melody score in create: theoretical'/>
-      <Row>
-        <Col md={4}>
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={melodyJson}
-            chordScaleBucket="tonic"
-            colors='tonic'
-            instrumentName={currentAssignment?.instrument}
-          />
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={melodyJson}
-            chordScaleBucket="subdominant"
-            colors='subdominant'
-            instrumentName={currentAssignment?.instrument}
-          />
-          <ChordScaleBucketScore
-            height={150}
-            referenceScoreJSON={melodyJson}
-            chordScaleBucket="dominant"
-            colors='dominant'
-            instrumentName={currentAssignment?.instrument}
-          />
-        </Col>
-        <Col md>
-          {
-            subScores && subScores.map((subScore, idx) => {
-              return (
-                <div key={idx}>
-                  <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
-                  <ExploratoryCompose 
-                    referenceScoreJSON={subScore}
-                    colors={subColors[idx]}
-                    onUpdate={handleSubmit(idx)}
-                  /> 
-                </div>
-              );
-            })
-          }
-          <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
-          <h2>Step {subScores.length + 1} - Combined</h2>
-          {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
-        </Col>
-      </Row>
-
+      <FlatMelodyViewer score={scoreJSON} onLoad={setMelodyJson} debugMsg={"Failed to load in theoretical"} />
+      {melodyJson && ( 
+        <Row>
+          <Col md={4}>
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={melodyJson}
+              chordScaleBucket="tonic"
+              colors='tonic'
+              instrumentName={currentAssignment?.instrument}
+            />
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={melodyJson}
+              chordScaleBucket="subdominant"
+              colors='subdominant'
+              instrumentName={currentAssignment?.instrument}
+            />
+            <ChordScaleBucketScore
+              height={150}
+              referenceScoreJSON={melodyJson}
+              chordScaleBucket="dominant"
+              colors='dominant'
+              instrumentName={currentAssignment?.instrument}
+            />
+          </Col>
+          <Col md>
+            {
+              subScores && subScores.map((subScore, idx) => {
+                return (
+                  <div key={idx}>
+                    <h2 id={`step-${idx + 1}`}>Step {idx + 1}</h2>
+                    <ExploratoryCompose 
+                      referenceScoreJSON={subScore}
+                      colors={subColors[idx]}
+                      onUpdate={handleSubmit(idx)}
+                    /> 
+                  </div>
+                );
+              })
+            }
+            <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
+            <h2>Step {subScores.length + 1} - Combined</h2>
+            {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
+          </Col>
+        </Row>
+      )}
       <Recorder
         submit={submitCreativity}
         accompaniment={currentAssignment?.part?.piece?.accompaniment}
