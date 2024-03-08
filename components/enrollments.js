@@ -16,6 +16,7 @@ import { getEnrollments } from "../api";
 // import { fetchEnrollments } from "../actions";
 
 export default function Enrollments({ children }) {
+  const {loaded: userLoaded, groups } = useSelector(state => state.currentUser)
   const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
   if (isLoading) return 'Loading...'
   if (error) return `An error has occurred: ${  error.message}`
@@ -68,7 +69,7 @@ export default function Enrollments({ children }) {
             </a>
           </Link>
         ))}
-      <Link href="/courses/new">
+      { groups && groups.some(gName=>gName==="Teacher") && <Link href="/courses/new">
         <a className="course-item">
           <Card>
             <Card.Img variant="top" as="div" className="card-color" />
@@ -92,7 +93,7 @@ export default function Enrollments({ children }) {
             </Card.Footer> */}
           </Card>
         </a>
-      </Link>
+      </Link> }
     </div>
   );
 }
