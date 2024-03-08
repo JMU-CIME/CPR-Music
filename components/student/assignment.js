@@ -14,6 +14,7 @@ import Layout from '../layout';
 import Instructions from './instructions';
 import { getMySubmissionsForAssignment } from '../../api';
 import RecentSubmission from './recentSubmission';
+import ActivityPicker from './activityPicker';
 
 export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
@@ -50,97 +51,7 @@ export default function StudentAssignment({ children, assignment }) {
             {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
             <h2>{pieceName}</h2>
             {/* Piece Activities */}
-            <Tab.Container
-              id="list-group-tabs-example"
-              defaultActiveKey="#link1"
-            >
-              <Row>
-                <Col>
-                  <ListGroup>
-                    <Link
-                      href={`/courses/${slug}/${piece}/Perform/Melody`}
-                      passHref
-                    >
-                      <ListGroup.Item
-                        action
-                        eventKey="Melody"
-                        href={`/courses/${slug}/${piece}/Perform/Melody`}
-                        active={
-                          actCategory === 'Perform' && partType === 'Melody'
-                        }
-                        as="a"
-                      >
-                        <span>
-                          <FaGuitar /> Melody
-                        </span>
-                      </ListGroup.Item>
-                    </Link>
-                    <Link
-                      href={`/courses/${slug}/${piece}/Perform/Bassline`}
-                      passHref
-                    >
-                      <ListGroup.Item
-                        action
-                        eventKey="Bassline"
-                        href={`/courses/${slug}/${piece}/Perform/Bassline`}
-                        active={
-                          actCategory === 'Perform' && partType === 'Bassline'
-                        }
-                        as="a"
-                      >
-                        <span>
-                          <FaDrum /> Bassline
-                        </span>
-                      </ListGroup.Item>
-                    </Link>
-                    <Link href={`/courses/${slug}/${piece}/Create`} passHref>
-                      <ListGroup.Item
-                        action
-                        eventKey="Create"
-                        href={`/courses/${slug}/${piece}/Create`}
-                        active={actCategory === 'Create'}
-                        as="a"
-                      >
-                        <span>
-                          <FaPenFancy /> Create
-                        </span>
-                      </ListGroup.Item>
-                    </Link>
-                    <Link href={`/courses/${slug}/${piece}/Respond`} passHref>
-                      <ListGroup.Item
-                        action
-                        eventKey="Respond"
-                        href={`/courses/${slug}/${piece}/Respond`}
-                        active={actCategory === 'Respond'}
-                        as="a"
-                      >
-                        <span>
-                          <FaBook /> Reflect
-                        </span>
-                      </ListGroup.Item>
-                    </Link>
-                    {hasCompose && (
-                      <Link
-                        href={`/courses/${slug}/${piece}/${connectLink}`}
-                        passHref
-                      >
-                        <ListGroup.Item
-                          action
-                          eventKey="Connect"
-                          href={`/courses/${slug}/${piece}/${connectLink}`}
-                          active={actCategory === 'Connect'}
-                          as="a"
-                        >
-                          <span>
-                            <FaLink /> Connect
-                          </span>
-                        </ListGroup.Item>
-                      </Link>
-                    )}
-                  </ListGroup>
-                </Col>
-              </Row>
-            </Tab.Container>
+            <ActivityPicker assignment={assignment}/>
           </Col>
           <Col>
             <h1>

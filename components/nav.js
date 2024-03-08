@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import LoginOut from './loginout';
 import { getEnrollments } from '../api';
+import CourseSelector from './courseSelector';
 
 function Navigation() {
   const router = useRouter();
@@ -23,14 +24,14 @@ function Navigation() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Link href="/courses" passHref>
+            { enrollments ? <CourseSelector /> : <Link href="/courses" passHref>
               <Nav.Link>Courses</Nav.Link>
-            </Link>
-            {currentEnrollment && (
+            </Link> }
+            {/* {currentEnrollment && (
               <Link href={`/courses/${slug}`} passHref>
                 <Nav.Link>Assignments</Nav.Link>
               </Link>
-            )}
+            )} */}
             {/* <NavDropdown title="Courses" id="basic-nav-dropdown">
               <Link href="/courses" passHref>
                 <NavDropdown.Item>All</NavDropdown.Item>
