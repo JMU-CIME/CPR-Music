@@ -26,6 +26,19 @@ export function getEnrollments() {
 }
 
 export function getStudentAssignments(slug) {
+  const activitySort = (a, b) => {
+    const ordering = {
+      Melody: 1,
+      Bassline: 2,
+      Creativity: 3,
+      Reflection: 4,
+      Connect: 5,
+    };
+    // console.log(a, b)
+    const c = a.activity_type_name.split(' ')[0];
+    const d = b.activity_type_name.split(' ')[0];
+    return ordering[c] - ordering[d];
+  };
   return () =>
     getSession()
       .then((session) => {
@@ -41,13 +54,10 @@ export function getStudentAssignments(slug) {
         );
       })
       .then((response) => response.json())
-      // .then((results) => {
-      //   // console.log('results', results);
-      //   return results;
-      // })
       .then((results) => {
         const grouped = results.reduce((acc, obj) => {
-          const key = obj.piece_name;
+          // const key = obj.piece_name;
+          const key = obj.piece_slug;
           if (!acc[key]) {
             acc[key] = [];
           }
@@ -55,14 +65,10 @@ export function getStudentAssignments(slug) {
           acc[key].push(obj);
           return acc;
         }, {});
-        // for (let piece of Object.keys(grouped)) {
-        //   grouped[piece].sort((a, b) => {
-        //     return a.activity.activity_type.order - b.activity.activity_type.order;
-        //   });
-        // }
-        // console.log('grouped', grouped);
+        // FIXME: this should respect order from server/pieceplan and mayeb do this as a backup?
+        Object.values(grouped).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
+        console.log('grouped', grouped);
         return grouped;
-        // Object.keys(grouped).sort()
       });
 }
 
