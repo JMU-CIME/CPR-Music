@@ -150,7 +150,6 @@ export default function CreativityAuralActivity() {
               />
             </Col>
           </Row>
-          /* TODO: if the student has already submitted this, do we show their submission here? if so how would they start over? */
           <FlatEditor
             edit
             score={{
@@ -179,6 +178,7 @@ export default function CreativityAuralActivity() {
       size="sm"
       role="status"
       aria-hidden="true"
+      variant="primary"
     >
       <span className="visually-hidden">Loading...</span>
     </Spinner>

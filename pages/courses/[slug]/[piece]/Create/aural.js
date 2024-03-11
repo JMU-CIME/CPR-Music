@@ -53,6 +53,7 @@ export default function CreateAuralActivityPage() {
       size="sm"
       role="status"
       aria-hidden="true"
+      variant="primary"
     >
       <span className="visually-hidden">Loading...</span>
     </Spinner>

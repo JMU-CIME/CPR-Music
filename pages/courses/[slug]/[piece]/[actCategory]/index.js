@@ -92,6 +92,7 @@ export default function PerformMelody() {
       size="sm"
       role="status"
       aria-hidden="true"
+      variant="primary"
     >
       <span className="visually-hidden">Loading...</span>
     </Spinner>

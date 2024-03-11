@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import Spinner from 'react-bootstrap/Spinner';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -123,15 +122,4 @@ export default function PerformMelody() {
       {/* <RecentSubmission assn={assignment} /> */}
     </StudentAssignment>
   );
-  // ) : (
-  //   <Spinner
-  //     as="span"
-  //     animation="border"
-  //     size="sm"
-  //     role="status"
-  //     aria-hidden="true"
-  //   >
-  //     <span className="visually-hidden">Loading...</span>
-  //   </Spinner>
-  // );
 }

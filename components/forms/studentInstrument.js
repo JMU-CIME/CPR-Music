@@ -56,6 +56,7 @@ function StudentInstrument({ enrollment, token, options: instruments }) {
             size="sm"
             role="status"
             aria-hidden="true"
+            variant="primary"
           >
             <span className="visually-hidden">Loading...</span>
           </Spinner>

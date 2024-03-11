@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Navigation from './nav';
 import styles from './layout.module.css';
 import { getUserProfile, gotUser } from '../actions';
+import { Spinner } from 'react-bootstrap';
 
 const PUBLIC_PATHS = ['/', '/about', '/auth/signin', '/api/auth/signout'];
 
@@ -72,7 +73,16 @@ export default function Layout({ children }) {
           <main className={styles.container}>{children}</main>
         </Container>
       ) : (
-        <p>spinner</p>
+          <Spinner
+            as="span"
+            animation="border"
+            size="sm"
+            role="status"
+            aria-hidden="true"
+            variant="primary"
+          >
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
       )}
     </>
   );
