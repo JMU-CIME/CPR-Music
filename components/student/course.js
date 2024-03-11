@@ -10,6 +10,7 @@ import Spinner from 'react-bootstrap/Spinner';
 // import TranspositionBadge from '../transpositionBadge';
 import SubmissionStatusBadge from '../submissionStatusBadge';
 import { getStudentAssignments } from '../../api';
+import { PieceAssignments } from './pieceAssignments';
 // on the student's course view:
 // show the name of the course
 // show the assignments that still need to be completed
@@ -26,19 +27,20 @@ export default function StudentCourseView({ enrollment }) {
     enabled: !!slug,
   });
 
-  const activitySort = (a, b) => {
-    const ordering = {
-      Melody: 1,
-      Bassline: 2,
-      Creativity: 3,
-      Reflection: 4,
-      Connect: 5,
-    };
-    // console.log(a, b)
-    const c = a.activity_type_name.split(' ')[0];
-    const d = b.activity_type_name.split(' ')[0];
-    return ordering[c] - ordering[d];
-  };
+  // moved to api
+  // const activitySort = (a, b) => {
+  //   const ordering = {
+  //     Melody: 1,
+  //     Bassline: 2,
+  //     Creativity: 3,
+  //     Reflection: 4,
+  //     Connect: 5,
+  //   };
+  //   // console.log(a, b)
+  //   const c = a.activity_type_name.split(' ')[0];
+  //   const d = b.activity_type_name.split(' ')[0];
+  //   return ordering[c] - ordering[d];
+  // };
 
   return (
     <Row>
@@ -54,42 +56,13 @@ export default function StudentCourseView({ enrollment }) {
               size="sm"
               role="status"
               aria-hidden="true"
+              variant="primary"
             >
               <span className="visually-hidden">Loading...</span>
             </Spinner>
           ) : assignments && Object.keys(assignments).length > 0 ? (
-            Object.keys(assignments).map((pieceName) => (
-              <Card className="student-piece-activity-group" key={pieceName}>
-                <Card.Header className="fw-bold">{pieceName}</Card.Header>
-                <ListGroup>
-                  {assignments[pieceName]
-                    .sort(activitySort)
-                    .map((assignment) => (
-                      <ListGroupItem
-                        key={`assn-${assignment.id}`}
-                        className="d-flex justify-content-between"
-                      >
-                        <Link
-                          passHref
-                          href={`${enrollment.course.slug}/${
-                            assignment.piece_slug
-                          }/${assignment.activity_type_category}${
-                            assignment.activity_type_category === 'Perform'
-                              ? `/${assignment.part_type}`
-                              : ''
-                          }`}
-                        >
-                          <a>{assignment.activity_type_name.split(' ')[0]}</a>
-                        </Link>
-                        {/* <TranspositionBadge
-                          instrument={assignment.instrument}
-                          transposition={assignment.transposition}
-                        /> */}
-                        <SubmissionStatusBadge assn={assignment}></SubmissionStatusBadge>
-                      </ListGroupItem>
-                    ))}
-                </ListGroup>
-              </Card>
+            Object.keys(assignments).map((pieceSlug) => (
+              <PieceAssignments key={`${pieceSlug}-activities`} piece={pieceSlug} />
             ))
           ) : (
             <p>You have no assignments at this time.</p>
