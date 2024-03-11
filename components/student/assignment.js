@@ -47,12 +47,7 @@ export default function StudentAssignment({ children, assignment }) {
       {assignment && assignment?.id && pieceName ? (
         <Row>
           {/* piece subnav (navigate to next/other activity, else?) */}
-          <Col md={3}>
-            {/* <h2>{assignment?.part?.piece?.name} Activities</h2> */}
-            <h2>{pieceName}</h2>
-            {/* Piece Activities */}
-            <ActivityPicker assignment={assignment}/>
-          </Col>
+          {/* moved to navbar */}
           <Col>
             <h1>
               {(actCategory == 'Perform' || actCategory == 'Create') &&
@@ -86,6 +81,7 @@ export default function StudentAssignment({ children, assignment }) {
           size="sm"
           role="status"
           aria-hidden="true"
+          variant="primary"
         >
           <span className="visually-hidden">Loading...</span>
         </Spinner>
