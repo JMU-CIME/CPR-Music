@@ -96,7 +96,7 @@ function NavActivityPicker (assignment) {
     </Spinner></Nav.Item>
   }
 
-  return pieceAssignments ? <Nav.Item><Form inline><Form.Select onChange={changeActivity} defaultValue={currentRouteSuffix}>
+  return pieceAssignments ? <Nav.Item><Form><Form.Select onChange={changeActivity} defaultValue={currentRouteSuffix}>
     <option value="">Choose an activity</option>
   {pieceAssignments.map((assn) =>  (<option key={assnToKey(assn)} value={assnToKey(assn)}>{assnToContent(assn)}</option>) )}
   </Form.Select></Form></Nav.Item> : null

@@ -47,10 +47,12 @@ function PiecePicker() {
   }
 
   return <Nav.Item className="me-1">
-    <Form.Select onChange={onPieceChange} defaultValue={piece}>
-      <option value="">Choose music</option>
-      {pieces.map(piece => <option key={piece.pieceSlug} value={piece.pieceSlug}>{piece.pieceName}</option>)}
-    </Form.Select>
+    <Form>
+      <Form.Select onChange={onPieceChange} defaultValue={piece}>
+        <option value="">Choose music</option>
+        {pieces.map(piece => <option key={piece.pieceSlug} value={piece.pieceSlug}>{piece.pieceName}</option>)}
+      </Form.Select>
+    </Form>
   </Nav.Item>
 }
 
