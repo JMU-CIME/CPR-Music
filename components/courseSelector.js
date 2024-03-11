@@ -34,6 +34,11 @@ function CourseSelector() {
     </Spinner></Nav.Item>
   }
   
+  // if they aren't logged in, or have no enrollments
+  if (enrollments && (enrollments.length === 0 || JSON.stringify(enrollments) === '{}')) {
+    return null;
+  }
+  
   // if the user has only one enrollment, don't show the dropdown
   if (enrollments && enrollments.length === 1) {
     return <Nav.Item><Link href={`/courses/${enrollments[0].course.slug}`} passHref>
