@@ -26,18 +26,23 @@ export function getEnrollments() {
 }
 
 export function getStudentAssignments(slug) {
-  const activitySort = (a, b) => {
+  const activitySort = (a, b) => { // FIXME: this is a disaster. 
     const ordering = {
       Melody: 1,
       Bassline: 2,
       Creativity: 3,
       Reflection: 4,
       Connect: 5,
+      Aural: 3,
+      Exploratory: 3,
+      Theoretical: 3,
+      MelodyPost: 3.1,
+      BasslinePost: 3.2,
     };
-    // console.log(a, b)
     const c = a.activity_type_name.split(' ')[0];
     const d = b.activity_type_name.split(' ')[0];
-    return ordering[c] - ordering[d];
+    const result = ordering[c] - ordering[d];
+    return result;
   };
   return () =>
     getSession()
@@ -127,45 +132,7 @@ export function getAssignedPieces(assignments) {
       console.log('pieces', pieces);
     }
     return pieces;
-    // console.log('foreach', Object.values(assignments));
-    // Object.values(assignments).forEach((assignment, i) => {
-    //   const pieceSlug = assignment?.part?.piece?.slug;
-    //   console.log('pieceslug', pieceSlug);
-    //   if (pieceSlug === undefined) {
-    //     console.log(assignments, assignment, i)
-    //   }
-    //   if (!(pieceSlug in pieces)) {
-    //     pieces[pieceSlug] = {
-    //       ...assignment.part.piece,
-    //       activities: {},
-    //     };
-    //   }
-    //   const act_type = assignment.activity.activity_type;
-    //   pieces[pieceSlug].activities[`${act_type.category}-${act_type.name}`] =
-    //     act_type;
-    // });
-    return pieces;
   };
-  /**
-   * {
-    "air-for-band": {
-      actvities: {
-        "Perform-Melody":{
-          category: "Perform",​​
-          name: "Melody"
-        }
-      },
-      accompaniment: "http://localhost:8000/media/accompaniments/Air_for_Band_Accompaniment.mp3",
-      audio: ""​​​​.
-      composer: Object { name: "Frank Erickson", url: "" }​​​​.
-      date_composed: null​​​​.
-      ensemble_type: 1​​​​.
-      id: 1​​​​.
-      name: "Air for Band"​​​​.
-      slug: "air-for-band"​​​​.
-      video: "".
-    }
-   */
 }
 
 export function mutateAssignPiece(slug) {

@@ -91,6 +91,7 @@ return <ListGroup>
       </span>
     </ListGroup.Item>
   </Link>
+  {/* FIXME: why isn't this hasCompose doc'ed?! this should be solved better */}
   {hasCompose && (
     <Link
       href={`/courses/${slug}/${piece}/${connectLink}`}

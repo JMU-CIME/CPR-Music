@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import Embed from 'flat-embed';
 import { colorNotes, getChordScaleInKey, keyFromScoreJSON, colorMap} from '../lib/flat';
 
@@ -10,13 +8,11 @@ function ChordScaleBucketScore({
   referenceScoreJSON,
   chordScaleBucket,
   instrumentName,
+  className,
 }) {
   // console.log('flat io embed log', scoreJSON, orig);
-  const [json, setJson] = useState('');
   const [embed, setEmbed] = useState();
-  const [refId, setRefId] = useState('0');
   const editorRef = React.createRef();
-  const [addingNote, setAddingNote] = useState(false);
 
   // *FIX* Need to get rid of arrow, make it a normal function as we did with keyFromScoreJSON, and getChordScaleInKey below.
   function embedTransposed (
@@ -205,11 +201,7 @@ function ChordScaleBucketScore({
   }, [referenceScoreJSON, chordScaleBucket, embed]);
 
   return (
-    <Row>
-      <Col>
-        <div ref={editorRef} />
-      </Col>
-    </Row>
+    <div className={className} ref={editorRef} />
   );
 }
 
