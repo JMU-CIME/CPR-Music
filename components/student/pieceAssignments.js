@@ -4,6 +4,7 @@ import { Card, ListGroup, ListGroupItem, Spinner } from "react-bootstrap";
 import { useQuery } from "react-query";
 import Link from "next/link";
 import SubmissionsStatusBadge from "../submissionStatusBadge";
+import { assnToContent, assnToKey } from "./navActivityPicker";
 
 function PieceAssignments({piece}) {
   const router = useRouter();
@@ -14,8 +15,8 @@ function PieceAssignments({piece}) {
     isLoading,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
 
   if (isLoading) {
@@ -31,14 +32,10 @@ function PieceAssignments({piece}) {
     </Spinner>
   }
 
-  if (assignmentsError || !assignments || !assignments[piece]) {
+  if (!slug || assignmentsError || !assignments || !assignments[piece]) {
     if (assignmentsError) {
       console.error(assignmentsError)
     }
-    console.log('assignments', assignments)
-    console.log('piece', piece)
-    console.log('assignments[piece]', assignments[piece])
-
     return <p>You have no assignments for this piece at this time.</p>
   }
 
@@ -54,13 +51,10 @@ function PieceAssignments({piece}) {
           >
             <Link
               passHref
-              href={`${slug}/${assignment.piece_slug
-                }/${assignment.activity_type_category}${assignment.activity_type_category === 'Perform'
-                  ? `/${assignment.part_type}`
-                  : ''
-                }`}
+              href={`/courses/${slug}/${assignment.piece_slug
+                }/${assnToKey(assignment, 'debug str this is from pieceAssignments')}`}
             >
-              <a>{assignment.activity_type_name.split(' ')[0]}</a>
+              <a>{assnToContent(assignment)}</a>
             </Link>
             <SubmissionsStatusBadge assn={assignment} />
           </ListGroupItem>
