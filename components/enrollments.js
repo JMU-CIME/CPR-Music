@@ -17,7 +17,7 @@ import { getEnrollments } from "../api";
 
 export default function Enrollments({ children }) {
   const {loaded: userLoaded, groups } = useSelector(state => state.currentUser)
-  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
+  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments, {staleTime: 5 * 60 * 1000})
   if (isLoading) return 'Loading...'
   if (error) return `An error has occurred: ${  error.message}`
 

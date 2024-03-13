@@ -12,7 +12,7 @@ import TeacherCourseView from '../../../components/teacher/course';
 // student vs the teacher, notice the branch in the rendering
 
 export default function CourseDetails() {
-  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
+  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments, {staleTime: 5 * 60 * 1000})
   const router = useRouter();
   const { slug } = router.query;
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]

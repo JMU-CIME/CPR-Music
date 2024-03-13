@@ -16,7 +16,7 @@ function CourseSelector() {
     router.push(`/courses/${ev.target.value}`)
   }
   const { slug } = router.query;
-  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments)
+  const { isLoading, error, data: enrollments } = useQuery('enrollments', getEnrollments, {staleTime: 5 * 60 * 1000})
 
   const currentEnrollment = slug &&
     enrollments ? enrollments.filter((elem) => elem.course.slug === slug)[0] : null;

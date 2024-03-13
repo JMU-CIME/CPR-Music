@@ -35,7 +35,7 @@ export default function TeacherCourseView() {
     isLoading,
     error,
     data: allPieces,
-  } = useQuery('allPieces', getAllPieces(slug), {
+  } = useQuery(['allPieces', slug], getAllPieces(slug), {
     enabled: !!slug,
   });
   const {
@@ -44,8 +44,8 @@ export default function TeacherCourseView() {
     data: assignments,
     refetch: refetchStudentAssns, // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property,
     // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
   const {
     isLoadingAssignedActs,
@@ -53,7 +53,7 @@ export default function TeacherCourseView() {
     data: assignedPieces,
     refetch: refetchAssignedPieces, // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property,
     // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
-  } = useQuery('assignedPieces', getAssignedPieces(assignments), {
+  } = useQuery(['assignedPieces', slug], getAssignedPieces(assignments), {
     enabled: !!assignments,
   });
   const unassignMutation = useMutation(mutateUnassignPiece(slug), {
@@ -61,11 +61,11 @@ export default function TeacherCourseView() {
       console.log('unassignMutation - onMutate');
       console.log('unassignedPiece', unassignedPiece);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries('assignedPieces');
+      await queryClient.cancelQueries(['assignedPieces', slug]);
       // Snapshot the previous value
-      const previousAssigned = queryClient.getQueryData('assignedPieces');
+      const previousAssigned = queryClient.getQueryData(['assignedPieces', slug]);
       // Optimistically update to the new value
-      queryClient.setQueryData('assignedPieces', (old) => {
+      queryClient.setQueryData(['assignedPieces', slug], (old) => {
         console.log('old', old);
         const updated = old;
         delete updated[unassignedPiece.slug];
@@ -77,14 +77,14 @@ export default function TeacherCourseView() {
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, unassignedPiece, context) => {
       console.log('unassignMutation - onError');
-      queryClient.setQueryData('assignedPieces', context.previousAssigned);
+      queryClient.setQueryData(['assignedPieces', slug], context.previousAssigned);
     },
     // Always refetch after error or success:
     onSettled: async () => {
       console.log('unassignMutation - onSettled');
       await queryClient.invalidateQueries('assignments');
       await refetchStudentAssns();
-      await queryClient.invalidateQueries('assignedPieces');
+      await queryClient.invalidateQueries(['assignedPieces', slug]);
       refetchAssignedPieces(); // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property,
       // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
     },
@@ -96,11 +96,11 @@ export default function TeacherCourseView() {
       console.log('assignMutation - onMutate');
       console.log('newPiece', newPiece);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries('assignedPieces');
+      await queryClient.cancelQueries(['assignedPieces', slug]);
       // Snapshot the previous value
-      const previousAssigned = queryClient.getQueryData('assignedPieces');
+      const previousAssigned = queryClient.getQueryData(['assignedPieces', slug]);
       // Optimistically update to the new value
-      queryClient.setQueryData('assignedPieces', (old) => {
+      queryClient.setQueryData(['assignedPieces', slug], (old) => {
         console.log('old', old);
         console.log('optimistic', { ...old, [newPiece.slug]: newPiece });
         return { ...old, [newPiece.slug]: newPiece };
@@ -114,14 +114,14 @@ export default function TeacherCourseView() {
       console.log(err);
       // assume this is because they haven't assigned instruments yet?
       setAssignError(err);
-      queryClient.setQueryData('assignedPieces', context.previousAssigned);
+      queryClient.setQueryData(['assignedPieces', slug], context.previousAssigned);
     },
     // Always refetch after error or success:
     onSettled: async () => {
       console.log('assignMutation - onSettled');
       await queryClient.invalidateQueries('assignments');
       await refetchStudentAssns();
-      await queryClient.invalidateQueries('assignedPieces');
+      await queryClient.invalidateQueries(['assignedPieces', slug]);
       refetchAssignedPieces(); // per https://react-query-v3.tanstack.com/guides/disabling-queries when the query has the enabled property,
       // The query will ignore query client invalidateQueries and refetchQueries calls that would normally result in the query refetching.
     },

@@ -23,8 +23,8 @@ export default function StudentCourseView({ enrollment }) {
     isLoading,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
 
   // moved to api

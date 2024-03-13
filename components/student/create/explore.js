@@ -94,8 +94,8 @@ export default function CreativityActivity() {
     isLoading: loaded,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
   
   const mutation = useMutation(mutateCreateSubmission({ slug }));
@@ -114,6 +114,8 @@ export default function CreativityActivity() {
           assn.activity_type_category === actCategory
         );
       })?.[0];
+
+  console.log('currentAssignment', currentAssignment)
   const currentTransposition = currentAssignment?.transposition;
   // console.log('currentAssignment', currentAssignment);
   // console.log('currentTransposition', currentTransposition);
@@ -166,6 +168,7 @@ export default function CreativityActivity() {
   return flatIOScoreForTransposition ? (
     <div className="cpr-create">
       <FlatMelodyViewer score={scoreJSON} onLoad={setMelodyJson} />
+      <h2>Motive 1 - Tonic</h2>
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
@@ -188,6 +191,7 @@ export default function CreativityActivity() {
         </div>
       </div>
       
+      <h2>Motive 2 - Subdominant</h2>
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
@@ -210,6 +214,7 @@ export default function CreativityActivity() {
         </div>
       </div>
       
+      <h2>Motive 3 - Dominant</h2>
       <div className="row">
         <div className="col-md-6">
           Create a melody one measure in length using only these 5 pitches. You
@@ -239,6 +244,7 @@ export default function CreativityActivity() {
 
     {startedVariationGeneration && (
       <div>
+        <h2>Variations on your motives</h2>
         <Tabs
           defaultActiveKey="tonic-palette"
           id="justify-tab-example"
@@ -276,6 +282,7 @@ export default function CreativityActivity() {
           </Tab>
           
         </Tabs>
+        <h2>Final Composition</h2>
         <FlatEditor
           edit
           score={{

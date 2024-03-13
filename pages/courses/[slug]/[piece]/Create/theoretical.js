@@ -15,8 +15,8 @@ export default function CreateExploratoryActivityPage() {
     isLoading: loaded,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
   // console.log('assingments', assignments , piece, actCategory)
   const currentAssignment =

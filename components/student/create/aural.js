@@ -54,8 +54,8 @@ export default function CreativityAuralActivity() {
     isLoading: loaded,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
 
   // const assignment = useSelector((state) => state.selectedAssignment);
@@ -91,8 +91,6 @@ export default function CreativityAuralActivity() {
         );
       })?.[0];
   const currentTransposition = currentAssignment?.transposition;
-  // console.log('currentAssignment', currentAssignment);
-  // console.log('currentTransposition', currentTransposition);
   const flatIOScoreForTransposition =
     currentAssignment?.part?.transpositions?.filter(
       (partTransposition) =>

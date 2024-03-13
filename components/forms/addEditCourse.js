@@ -24,7 +24,7 @@ export default function AddEditCourse() {
     isLoading,
     error,
     data: enrollments,
-  } = useQuery('enrollments', getEnrollments);
+  } = useQuery('enrollments', getEnrollments, {staleTime: 5 * 60 * 1000});
   // const router = useRouter();
   // const { slug } = router.query;
   

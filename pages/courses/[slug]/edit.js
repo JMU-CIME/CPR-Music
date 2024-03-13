@@ -16,7 +16,7 @@ export default function EditCourse() {
     isLoading,
     error,
     data: enrollments,
-  } = useQuery('enrollments', getEnrollments);
+  } = useQuery('enrollments', getEnrollments, {staleTime: 5 * 60 * 1000});
   const currentEnrollment =
     enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0];
 
