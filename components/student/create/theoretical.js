@@ -74,8 +74,8 @@ export default function CreativityActivity() {
     isLoading: loaded,
     error: assignmentsError,
     data: assignments,
-  } = useQuery('assignments', getStudentAssignments(slug), {
-    enabled: !!slug,
+  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5*60*1000
   });
 
   //only when melodyJson is updated, calculate the steps
@@ -157,27 +157,29 @@ export default function CreativityActivity() {
       {melodyJson && ( 
         <Row>
           <Col md={4}>
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={melodyJson}
-              chordScaleBucket="tonic"
-              colors='tonic'
-              instrumentName={currentAssignment?.instrument}
-            />
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={melodyJson}
-              chordScaleBucket="subdominant"
-              colors='subdominant'
-              instrumentName={currentAssignment?.instrument}
-            />
-            <ChordScaleBucketScore
-              height={150}
-              referenceScoreJSON={melodyJson}
-              chordScaleBucket="dominant"
-              colors='dominant'
-              instrumentName={currentAssignment?.instrument}
-            />
+            <div className="all-buckets position-sticky top-0">
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={melodyJson}
+                chordScaleBucket="tonic"
+                colors='tonic'
+                instrumentName={currentAssignment?.instrument}
+              />
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={melodyJson}
+                chordScaleBucket="subdominant"
+                colors='subdominant'
+                instrumentName={currentAssignment?.instrument}
+              />
+              <ChordScaleBucketScore
+                height={150}
+                referenceScoreJSON={melodyJson}
+                chordScaleBucket="dominant"
+                colors='dominant'
+                instrumentName={currentAssignment?.instrument}
+              />
+            </div>  
           </Col>
           <Col md>
             {
@@ -197,13 +199,13 @@ export default function CreativityActivity() {
             <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
             <h2>Step {subScores.length + 1} - Combined</h2>
             {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
+            <Recorder
+              submit={submitCreativity}
+              accompaniment={currentAssignment?.part?.piece?.accompaniment}
+            />
           </Col>
         </Row>
       )}
-      <Recorder
-        submit={submitCreativity}
-        accompaniment={currentAssignment?.part?.piece?.accompaniment}
-      />
     </>
   ) : (
     <Spinner
