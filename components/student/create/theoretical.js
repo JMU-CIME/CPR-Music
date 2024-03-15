@@ -1,26 +1,17 @@
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import dynamic from 'next/dynamic';
 import Button from 'react-bootstrap/Button';
-import { FaCheck, FaFrownOpen } from 'react-icons/fa';
 import Spinner from 'react-bootstrap/Spinner';
-import Accordion from 'react-bootstrap/Accordion';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 import { getStudentAssignments, mutateCreateSubmission } from '../../../api';
 import Recorder from '../../recorder';
 import {
   postRecording,
 } from '../../../actions';
-import { UploadStatusEnum } from '../../../types';
 import { Col, Row } from 'react-bootstrap';
 
-
-const FlatEditor = dynamic(() => import('../../flatEditor'), {
-  ssr: false,
-});
 
 const ExploratoryCompose = dynamic(() => import('../../exploratoryCompose'), {
   ssr: false,
@@ -42,12 +33,6 @@ const ChordScaleBucketScore = dynamic(
 );
 
 const MEASURES_PER_STEP = 4;
-
-const bucketColors = {
-  tonic: '#E75B5C',
-  subdominant: '#265C5C',
-  dominant: '#4390E2',
-};
 
 export default function CreativityActivity() {
   const dispatch = useDispatch();
@@ -196,7 +181,7 @@ export default function CreativityActivity() {
                 );
               })
             }
-            <Button onClick={()=>{console.log('clicked done', isDoneComposing); setIsDoneComposing(true)}}>Done Composing</Button>
+            <Button onClick={()=>{setIsDoneComposing(true)}}>Done Composing</Button>
             <h2>Step {subScores.length + 1} - Combined</h2>
             {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
             <Recorder
@@ -219,6 +204,4 @@ export default function CreativityActivity() {
       <span className="visually-hidden">Loading...</span>
     </Spinner>
   );
-
-  // return <p>Creativity</p>
 }

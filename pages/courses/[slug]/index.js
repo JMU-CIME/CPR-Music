@@ -24,9 +24,7 @@ export default function CourseDetails() {
         <>
           <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
           {currentEnrollment.role === 'Student' ? (
-            <StudentCourseView
-              enrollment={currentEnrollment}
-            />
+            <StudentCourseView />
           ) : (
             <div>
               <Link href={`/courses/${slug}/edit`}>

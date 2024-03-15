@@ -6,9 +6,7 @@ import {
   fetchActivities,
   fetchSingleStudentAssignment,
   postConnect,
-  postRespond,
 } from '../../actions';
-import RTE from '../teacher/grade/rte';
 
 export default function ConnectActivity() {
   const router = useRouter();
@@ -18,18 +16,14 @@ export default function ConnectActivity() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    console.log('ConnectActivity::may fetch activities', slug, userInfo.token);
     if (slug && userInfo.token) {
-      console.log('ConnectActivity::will fetch activities', slug, userInfo.token);
       dispatch(fetchActivities({ slug }));
     }
   }, [slug, userInfo.token]);
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
-  console.log('ConnectActivity::activities', activities);
   const currentAssignment = useSelector((state) => state.selectedAssignment);
-  console.log('ConnectActivity::currentAssignment', currentAssignment);
   const assignment =
     loadedActivities &&
     activities &&
@@ -40,12 +34,8 @@ export default function ConnectActivity() {
         assn.activity_type_category.startsWith(actCategory)
     )?.[0];
   const assignmentId = assignment?.id;
-  console.log('ConnectActivity::assignmentid', assignmentId);
   useEffect(() => {
-    // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
     if (loadedActivities && assignmentId) {
-      // console.log('activities', activities)
-      // console.log('piece, partType, actCategory', piece, partType, actCategory)
       dispatch(
         fetchSingleStudentAssignment({
           slug,

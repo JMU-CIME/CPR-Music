@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { FaPlus, FaMarker, FaTrash } from 'react-icons/fa';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
@@ -8,7 +7,6 @@ import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import Row from 'react-bootstrap/Row';
 import { useRouter } from 'next/router';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-// import { assignPiece, unassignPiece } from '../../actions';
 import Link from 'next/link';
 import Alert from 'react-bootstrap/Alert';
 import { useState } from 'react';
@@ -58,15 +56,12 @@ export default function TeacherCourseView() {
   });
   const unassignMutation = useMutation(mutateUnassignPiece(slug), {
     onMutate: async (unassignedPiece) => {
-      console.log('unassignMutation - onMutate');
-      console.log('unassignedPiece', unassignedPiece);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(['assignedPieces', slug]);
       // Snapshot the previous value
       const previousAssigned = queryClient.getQueryData(['assignedPieces', slug]);
       // Optimistically update to the new value
       queryClient.setQueryData(['assignedPieces', slug], (old) => {
-        console.log('old', old);
         const updated = old;
         delete updated[unassignedPiece.slug];
         return updated;
@@ -76,12 +71,10 @@ export default function TeacherCourseView() {
     },
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, unassignedPiece, context) => {
-      console.log('unassignMutation - onError');
       queryClient.setQueryData(['assignedPieces', slug], context.previousAssigned);
     },
     // Always refetch after error or success:
     onSettled: async () => {
-      console.log('unassignMutation - onSettled');
       await queryClient.invalidateQueries('assignments');
       await refetchStudentAssns();
       await queryClient.invalidateQueries(['assignedPieces', slug]);
@@ -93,16 +86,12 @@ export default function TeacherCourseView() {
 
   const assignMutation = useMutation(mutateAssignPiece(slug), {
     onMutate: async (newPiece) => {
-      console.log('assignMutation - onMutate');
-      console.log('newPiece', newPiece);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(['assignedPieces', slug]);
       // Snapshot the previous value
       const previousAssigned = queryClient.getQueryData(['assignedPieces', slug]);
       // Optimistically update to the new value
       queryClient.setQueryData(['assignedPieces', slug], (old) => {
-        console.log('old', old);
-        console.log('optimistic', { ...old, [newPiece.slug]: newPiece });
         return { ...old, [newPiece.slug]: newPiece };
       });
       // Return a context object with the snapshotted value
@@ -110,15 +99,14 @@ export default function TeacherCourseView() {
     },
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, newPiece, context) => {
-      console.log('assignMutation - onError');
-      console.log(err);
+      console.error('assignMutation - onError');
+      console.error(err);
       // assume this is because they haven't assigned instruments yet?
       setAssignError(err);
       queryClient.setQueryData(['assignedPieces', slug], context.previousAssigned);
     },
     // Always refetch after error or success:
     onSettled: async () => {
-      console.log('assignMutation - onSettled');
       await queryClient.invalidateQueries('assignments');
       await refetchStudentAssns();
       await queryClient.invalidateQueries(['assignedPieces', slug]);
@@ -133,8 +121,6 @@ export default function TeacherCourseView() {
     return `An error has occurred: ${
       error?.message ?? errorAssignedActs?.message
     }`;
-
-  console.log('assigned', assignedPieces);
 
   return (
     <>
@@ -190,7 +176,6 @@ export default function TeacherCourseView() {
               alwaysOpen
             >
               {Object.values(assignedPieces).map((piece) => {
-                console.log('piece', piece);
                 return (
                   <Accordion.Item eventKey={piece.id} key={piece.id}>
                     <Accordion.Header>{piece.name}</Accordion.Header>
@@ -215,9 +200,6 @@ export default function TeacherCourseView() {
                                         Grade <FaMarker />
                                       </a>
                                     </Link>
-                                    {/* <Button variant="danger" onClick={() => {console.log('unassign click', piece);unassign(piece)}}>
-                                  Delete
-                                </Button> */}
                                   </ListGroupItem>
                                 )
                               )}
@@ -227,7 +209,6 @@ export default function TeacherCourseView() {
                           <Button
                             variant="danger"
                             onClick={() => {
-                              console.log('unassign click', piece);
                               unassign(piece);
                             }}
                           >

@@ -37,7 +37,6 @@ export default function Recorder({ submit, accompaniment }) {
   }, [partType]);
 
   const startRecording = (ev) => {
-    // console.log('startRecording', ev);
     if (isBlocked) {
       console.error('cannot record, microphone permissions are blocked');
     } else {
@@ -46,16 +45,12 @@ export default function Recorder({ submit, accompaniment }) {
         .start()
         .then(()=>{
           setIsRecording(true);
-          console.log('tracks', recorder.activeStream.getAudioTracks());
-          console.log(recorder.activeStream.getAudioTracks()[0].getConstraints());
-          console.log(recorder.activeStream.getAudioTracks()[0].getSettings());
         })
         .catch((err) => console.error('problem starting recording', err));
     }
   };
 
   const stopRecording = (ev) => {
-    // console.log('stopRecording', ev);
     accompanimentRef.current.pause();
     accompanimentRef.current.load();
     
@@ -97,11 +92,9 @@ export default function Recorder({ submit, accompaniment }) {
       navigator &&
       navigator.mediaDevices.getUserMedia
     ) {
-      // console.log('navigator available');
       navigator.mediaDevices
         .getUserMedia({ audio: {echoCancellation:false, noiseSuppression: false} })
         .then(() => {
-          // console.log('Permission Granted');
           setIsBlocked(false);
         })
         .catch(() => {

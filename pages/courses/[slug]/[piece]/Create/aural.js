@@ -9,7 +9,6 @@ export default function CreateAuralActivityPage() {
   const router = useRouter();
   const { slug, piece } = router.query;
   const actCategory = 'Create';
-  console.log('got into aural page', slug, piece, actCategory);
   // I think this should show the melody for the current piece, but in the student's transposition
   // need to get the student's current assignment
   const {
@@ -24,21 +23,11 @@ export default function CreateAuralActivityPage() {
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter((assn) => {
-        // console.log('assn', assn);
-        // console.log(
-        //   'assn.piece_slug === piece && assn.activity_type_category === actCategory',
-        //   assn.piece_slug === piece &&
-        //     assn.activity_type_category === actCategory
-        // );
         return (
           assn.piece_slug === piece &&
           assn.activity_type_category === actCategory
         );
       })?.[0];
-
-  if (currentAssignment) {
-    console.log('have current assn', currentAssignment);
-  }
 
   // TODO: branch on actCategory
 

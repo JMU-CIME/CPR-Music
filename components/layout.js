@@ -14,30 +14,11 @@ const PUBLIC_PATHS = ['/', '/about', '/auth/signin', '/api/auth/signout'];
 export default function Layout({ children }) {
   const router = useRouter();
 
-  useEffect(() => {
-    const handleRouteChange = (url, { shallow }) => {
-      console.log(
-        `App is changing to ${url} ${
-          shallow ? 'with' : 'without'
-        } shallow routing`
-      );
-    };
-
-    router.events.on('routeChangeStart', handleRouteChange);
-
-    // If the component is unmounted, unsubscribe
-    // from the event with the `off` method:
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange);
-    };
-  }, []);
-
   const { status, data } = useSession({
     required: !PUBLIC_PATHS.includes(router.pathname),
   });
   const dispatch = useDispatch()
   useEffect(() => {
-    // console.log('status', status, data)
     if (status === "authenticated") {
       dispatch(gotUser({user:data.user, token: data.djangoToken}))
       dispatch(getUserProfile({token: data.djangoToken}))

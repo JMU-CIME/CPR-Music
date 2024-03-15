@@ -36,12 +36,6 @@ export default NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize({ csrfToken, username, password }, req) {
-        console.log(
-          'called credentialsprovider.authorize!',
-          username,
-          password,
-          req
-        );
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -49,8 +43,6 @@ export default NextAuth({
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
 
-        console.log('url to fetch credentials:');
-        console.log(config[backend].url);
         const res = await fetch(config[backend].url, {
           method: 'POST',
           body: JSON.stringify({
@@ -60,8 +52,6 @@ export default NextAuth({
           headers: { 'Content-Type': 'application/json' },
         });
         const userToken = await res.json();
-        console.log('\n\n\n\nuserToken from server');
-        console.log(userToken);
         // If no error and we have user data, return it
         if (res.ok && !userToken.error) {
           return {
@@ -120,60 +110,25 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/callbacks
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log(
-        '===========================\n',
-        'signin callback',
-        user,
-        account,
-        profile,
-        email,
-        credentials
-      );
       return user !== null;
     },
     async redirect({ url, baseUrl }) {
       let returnVal = url;
-      console.log(
-        '===========================\n',
-        'called callbacks.redirect',
-        url,
-        baseUrl
-      );
-
       if (url.startsWith(baseUrl)) {
         // something
       }
       // Allows relative callback URLs
       else if (url.startsWith('/')) {
-        console.log('relative');
         const absUrl = new URL(url, baseUrl).toString();
         returnVal = absUrl;
       }
       // maybe this was blocking me from reaching auth??
-      console.log('returning from redirect:');
-      console.log(returnVal);
       return returnVal;
     },
     async session({ session, token, user }) {
-      console.log(
-        '===========================\n',
-        'called callbacks.session',
-        session,
-        token,
-        user
-      );
       return { ...session, djangoToken: token.djangoToken };
     },
     async jwt({ token, user, account, profile, isNewUser }) {
-      console.log(
-        '===========================\n',
-        'called callbacks.jwt',
-        token,
-        user,
-        account,
-        profile,
-        isNewUser
-      );
       if (user) {
         token.name = user.username;
         token.djangoToken = user.djangoToken;

@@ -72,13 +72,11 @@ export function getStudentAssignments(slug) {
         }, {});
         // FIXME: this should respect order from server/pieceplan and mayeb do this as a backup?
         Object.values(grouped).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
-        console.log('grouped', grouped);
         return grouped;
       });
 }
 
 export function getAllPieces(courseSlug) {
-  // console.log('begin: getAllPieces')
   return () =>
     getSession().then((session) => {
       const token = session.djangoToken;
@@ -96,7 +94,6 @@ export function getAllPieces(courseSlug) {
         .then(assertResponse)
         .then((response) => response.json())
         .then((json) => {
-          // console.log('end: getAllPieces')
           const result = json;
           return result.map((r) => ({...r.piece, piece_plan_id: r.id}));
         });
@@ -104,10 +101,8 @@ export function getAllPieces(courseSlug) {
 }
 export function getAssignedPieces(assignments) {
   return () => {
-    console.log('getAssignedPieces', assignments);
     const pieces = {};
     if (Object.values(assignments).length > 0) {
-      console.log('assignments', assignments);
       for (const pieceKey of Object.keys(assignments)) {
         for (const pieceAssignment of assignments[pieceKey]) {
           //   pieces[pieceAssignment.part.piece.id] = pieceAssignment.part.piece;
@@ -120,7 +115,6 @@ export function getAssignedPieces(assignments) {
               slug: pieceAssignment.piece_slug,
             };
           }
-          console.log('pieceAssignment', pieceAssignment);
           const actType = pieceAssignment.activity_type_name;
           const actCat = pieceAssignment.activity_type_category;
           pieces[pieceKey].activities[`${actCat}-${actType}`] = {
@@ -129,7 +123,6 @@ export function getAssignedPieces(assignments) {
           };
         }
       }
-      console.log('pieces', pieces);
     }
     return pieces;
   };
@@ -139,7 +132,6 @@ export function mutateAssignPiece(slug) {
   return (piecePlanId) =>
     getSession().then((session) => {
       const token = session.djangoToken;
-      // console.log('assignpiece now', token, slug, piece)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assign_piece_plan/`,
         {
@@ -160,7 +152,6 @@ export function mutateUnassignPiece(slug) {
   return (piece) =>
     getSession().then((session) => {
       const token = session.djangoToken;
-      // console.log('unassignpiece now', token, slug, piece)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/unassign/`,
         {
@@ -179,7 +170,6 @@ export function getRecentSubmissions({ slug, piece, partType }) {
   return () =>
     getSession().then((session) => {
       const token = session.djangoToken;
-      // console.log('fetch submissions: slug, piece, partType: ', slug, piece, partType)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/submissions/recent/?piece_slug=${piece}&activity_name=${partType}`,
         {
@@ -191,41 +181,13 @@ export function getRecentSubmissions({ slug, piece, partType }) {
       )
         .then(assertResponse)
         .then((response) => response.json())
-        .then((data) => {
-          console.log('gotRecentSubmissions', data);
-          return data;
-        });
     });
-  // const p = new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     console.log('received gradable submissions for slug, piece, actCategory, partType', slug, piece, actCategory, partType)
-  //     resolve([
-  //       {
-  //         id: 1,
-  //         submitted: '2022-02-01 23:35:59.088114-05',
-  //         content: 'hello'
-  //       },
-  //       {
-  //         id: 2,
-  //         submitted: '2022-02-04 23:35:59.088114-05',
-  //         content: 'there'
-  //       }
-  //     ])
-  //   }, 2000)
-  // })
-  // return p
-  // })
 }
 
 export function mutateGradeSubmission(slug) {
   return ({ student_submission, rhythm, tone, expression, grader }) =>
     getSession().then((session) => {
       const token = session.djangoToken;
-      // console.log('grade submission now', token, slug, submission,
-      //   rhythm,
-      //   tone,
-      //   expression,
-      //   grader)
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/grades/`,
         {
@@ -251,12 +213,10 @@ export function mutateGradeSubmission(slug) {
 }
 // should i make this mutator optionally have a recording or??
 export function mutateCreateSubmission({ slug }) {
-  // console.log('mutateCreateSubmission, slug, assignmentid', slug, assignmentId)
   return (submission, assignmentId) =>
     getSession()
       .then((session) => {
         const token = session.djangoToken;
-        // console.log('mutateCreateSubmission, session, submission', session, submission)
         return fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/${assignmentId}/submissions/`,
           {
@@ -274,7 +234,6 @@ export function mutateCreateSubmission({ slug }) {
 }
 
 export function getMySubmissionsForAssignment({ slug, assignmentId }) {
-  // console.log('getMySubmissionsForAssignment', assignmentId);
   return getSession()
     .then((session) => {
       const token = session.djangoToken;
@@ -290,22 +249,12 @@ export function getMySubmissionsForAssignment({ slug, assignmentId }) {
     })
     .then(assertResponse)
     .then((response) => response.json())
-    // .then((resultsJson) => {
-    //   // console.log(
-    //   //   'end: getMySubmissionsForAssignment',
-    //   //   resultsJson,
-    //   //   resultsJson.length
-    //   // );
-    //   return resultsJson;
-    // });
 }
 
 export function mutateCourse(slug) {
   // expecting params to be any subset of name, start_date, end_date, slug
   return (params) => {
-    console.log('params', params);
     return getSession().then((session) => {
-      console.log('session', session);
       const token = session.djangoToken;
       return fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/`,

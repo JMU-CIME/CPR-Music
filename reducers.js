@@ -9,7 +9,6 @@ const mockAssignments = {
 const assignmentsReducer = (state = mockAssignments, { type, payload }) => {
   switch (type) {
     case types.Action.GotAssignments:
-      // console.log('got assignments', payload);
       return {
         loaded: true,
         items: payload,
@@ -43,7 +42,6 @@ const assignedPiecesReducer = (
       return { ...state, items: { ...state.items, [payload.slug]: pieces } };
 
     case types.Action.AssignedPiece:
-      // console.log('AssignedPiece', payload)
       return {
         ...state,
         items: {
@@ -53,7 +51,6 @@ const assignedPiecesReducer = (
       };
 
     case types.Action.UnassignedPiece:
-      // console.log('UnassignedPiece', payload)
       return {
         ...state,
         items: {
@@ -77,7 +74,6 @@ const initialActivities = {
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
     case types.Action.GotActivities:
-      // console.log('got activities', payload); // TODO: this reducer doesn't map
       return { loaded: true, items: { [payload.slug]: payload.activities } };
   }
   return state;
@@ -88,7 +84,6 @@ const initialPieces = { loaded: false, items: [] };
 const piecesReducer = (state = initialPieces, { type, payload }) => {
   switch (type) {
     case types.Action.GotPieces:
-      // console.log('got pieces', payload);
       return { loaded: true, items: payload };
   }
   return state;
@@ -101,10 +96,8 @@ const enrollmentsReducer = (state = mockEnrollments, { type, payload }) => {
     case types.Action.AddedRoster:
       return { ...state, shouldInstrument: true };
     case types.Action.GotEnrollments:
-      // console.log('GotEnrollments', payload);
       return { loaded: true, items: payload, shouldInstrument: false };
     case types.Action.DidInstrument:
-      console.log('updating shouldInstrument');
       return { ...state, shouldInstrument: false };
   }
   return state;
@@ -115,7 +108,6 @@ const mockRoster = { loaded: false, items: [] };
 const rosterReducer = (state = mockRoster, { type, payload }) => {
   switch (type) {
     case types.Action.GotRoster:
-      // console.log('GotRoster', payload);
       const items = {};
       payload.enrollments.forEach((item) => {
         items[item.id] = {
@@ -125,7 +117,6 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
       });
       return { loaded: true, items, courseSlug: payload.courseSlug };
     case types.Action.UpdatedEnrollmentInstrument:
-      // console.log('UpdatedEnrollmentInstrument', payload);
       return {
         ...state,
         items: {
@@ -138,7 +129,6 @@ const rosterReducer = (state = mockRoster, { type, payload }) => {
         },
       };
     case types.Action.SetInstrumentActive:
-      // console.log('SetInstrumentActive', payload);
       return {
         ...state,
         items: {
@@ -158,7 +148,6 @@ const initialCurrentUser = { loaded: false };
 const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
   switch (type) {
     case types.Action.HaveUser:
-      // console.log('have user in reducer', payload);
       return {
         ...state,
         loaded: true,
@@ -166,13 +155,11 @@ const currentUserReducer = (state = initialCurrentUser, { type, payload }) => {
         token: payload.token,
       };
     case types.Action.GotProfile:
-      // console.log('types.Action.GotProfile', payload);
       return {
         ...state,
         ...payload,
       };
     case types.Action.LoggedOut:
-      // console.log('LoggedOut', payload);
       return { loaded: false };
   }
   return state;
@@ -183,7 +170,6 @@ const mockInstruments = { loaded: false, items: [] };
 const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
   switch (type) {
     case types.Action.GotInstruments:
-      // console.log('GotInstruments', payload);
       const items = {};
       payload.forEach((instrument) => {
         items[instrument.id] = instrument;
@@ -196,7 +182,6 @@ const instrumentsReducer = (state = mockInstruments, { type, payload }) => {
 const selectedEnrollmentReducer = (state = {}, { type, payload }) => {
   switch (type) {
     case types.Action.SelectedEnrollment:
-      // console.log('SelectedEnrollment payload', payload);
       if (payload) {
         return payload;
       }
@@ -210,7 +195,6 @@ const selectedAssignmentReducer = (
 ) => {
   switch (type) {
     case types.Action.SelectedAssignment:
-      console.log('SelectedAssignment payload', payload);
       return payload;
     // case types.Action.BeginUpload:
     //   return { ...state, uploadStatus: types.UploadStatusEnum.Active };
@@ -228,8 +212,6 @@ const submitStatusReducer = (
 ) => {
   switch (type) {
     case types.Action.BeginUpload:
-      // console.log("state", state);
-      // console.log("payload", payload);
       return {
         ...state,
         submissions: {

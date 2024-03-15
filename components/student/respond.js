@@ -17,21 +17,13 @@ export default function RespondActivity() {
   const dispatch = useDispatch();
   const userInfo = useSelector((state) => state.currentUser);
   useEffect(() => {
-    console.log('RespondActivity::may fetch activities', slug, userInfo.token);
     if (slug && userInfo.token) {
-      console.log(
-        'RespondActivity::will fetch activities',
-        slug,
-        userInfo.token
-      );
       dispatch(fetchActivities({ slug }));
     }
   }, [slug, userInfo.token]);
   const { items: activities, loaded: loadedActivities } = useSelector(
     (state) => state.activities
   );
-  console.log('RespondActivity::activities', activities);
-  // const assignment = useSelector((state) => state.selectedAssignment);
   const assignmentId =
     loadedActivities &&
     activities &&
@@ -40,12 +32,8 @@ export default function RespondActivity() {
       (assn) =>
         assn.piece_slug === piece && assn.activity_type_category === actCategory
     )?.[0]?.id;
-  console.log('RespondActivity::assignmentid', assignmentId);
   useEffect(() => {
-    // console.log('useeffect: slug, userInfo, activities, loadedActivities', slug, userInfo, activities, loadedActivities)
     if (loadedActivities && assignmentId) {
-      // console.log('activities', activities)
-      // console.log('piece, partType, actCategory', piece, partType, actCategory)
       dispatch(
         fetchSingleStudentAssignment({
           slug,

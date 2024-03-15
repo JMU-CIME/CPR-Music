@@ -214,7 +214,7 @@ function FlatEditor({
         colorNotes(bucket, colors);
       }
 
-      //console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
+      // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
       embedTransposed(bucket, embed, keySignature, instrumentName);
     }
   }, [referenceScoreJSON, chordScaleBucket]);
@@ -245,7 +245,6 @@ function FlatEditor({
       width: width,
       embedParams,
     };
-    // console.log('allParams', allParams);
     setEmbed(new Embed(editorRef.current, allParams));
   }, [edit, height]);
 
@@ -288,7 +287,6 @@ function FlatEditor({
                 colors
               );
             }
-            console.log('flat editor result', result)
             return (
               // if a user adds a note that is black or does not have a color assigned to it, then we apply the color from the chord scale pattern to match.
               score.scoreId === 'blank' &&
@@ -296,23 +294,16 @@ function FlatEditor({
                 embed.off('cursorPosition');
                 embed.on('cursorPosition', (ev) => {
                   // FIXME probably we need to debounce this event. when the paste has succeeded, don't notice that resulting change of cursor and try to do this again.
-                  console.log('cursorPos', ev)
                   // selectedMeasure
-                  console.log('json.current', json.current)
                   if (json.current && selectedMeasure && selectedMeasure.current && JSON.stringify(selectedMeasure.current)!== '{}' && json.current !== '{}') {
-                    console.log('selectedMeasure.current', selectedMeasure.current)
                     const scoreData = JSON.parse(json.current);
                     const correctedSelection = correctMeasure(JSON.parse(JSON.stringify(selectedMeasure.current)));
-                    console.log('correctedSelection', correctedSelection)
                     if (Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'harmony')){
                       correctedSelection.harmony = scoreData['score-partwise'].part[0].measure[ev.measureIdx].harmony
                     }
-                    console.log('target paste measure before paste', JSON.stringify(scoreData['score-partwise'].part[0].measure[ev.measureIdx]))
                     scoreData['score-partwise'].part[0].measure[ev.measureIdx] =  correctedSelection
-                    console.log('target paste measure AFTER paste', JSON.stringify(scoreData['score-partwise'].part[0].measure[ev.measureIdx]))
                     //FIXME
                     if (!Object.hasOwn(scoreData['score-partwise'].part[0].measure[ev.measureIdx], 'attributes')) {
-                      console.log('no attributes', scoreData['score-partwise'].part[0].measure[ev.measureIdx])
                       scoreData['score-partwise'].part[0].measure[ev.measureIdx].attributes = [{}];
 
                     }
@@ -333,16 +324,11 @@ function FlatEditor({
                     }
                     selectedMeasure.current = {};
                     const toLoad = JSON.stringify(scoreData);
-                    console.log('erroneous toLoad', toLoad);
-                    // const correctedScore = correctScore(scoreData);
-                    // console.log('correctedScore', correctedScore)
-                    // embed.loadJSON(correctedScore).catch(onFlatEditorError);
                     embed.loadJSON(toLoad).catch(onFlatEditorError);
                   }
                 });
                 embed.off('noteDetails');
                 embed.on('noteDetails', (info) => {
-                  // console.log('noteDetails', info);
                   embed.getJSON().then((jd) => {
                     const jsonData = jd;
                     //try to let the outer context know when this thing has data
@@ -420,7 +406,6 @@ function FlatEditor({
       embed
         .loadJSON(scoreJSON)
         .then(() => {
-          // console.log('score loaded from json')
           setRefId(score.scoreId);
           if (edit) {
             embed.off('noteDetails');

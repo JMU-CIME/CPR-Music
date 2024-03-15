@@ -13,7 +13,6 @@ import { getEnrollments, mutateCourse } from '../../api';
 export default function AddEditCourse() {
   const router = useRouter();
   const { slug } = router.query;
-  console.log('add/edit slug', slug);
 
   const dispatch = useDispatch();
 
@@ -33,7 +32,6 @@ export default function AddEditCourse() {
 
   // const selectedEnrollment = enrollments.items.filter((enrollment) => enrollment.course.slug === slug)[0];
   const selectedCourse = currentEnrollment?.course;
-  console.log('selectedCourse', selectedCourse);
 
   const today = new Date();
   const sampleEnd = new Date();
@@ -71,14 +69,12 @@ export default function AddEditCourse() {
   const queryClient = useQueryClient();
   const courseMutation = useMutation(mutateCourse(slug), {
     onMutate: async (updatedCourse) => {
-      console.log('updatedCourse', updatedCourse);
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries('enrollments');
       // Snapshot the previous value
       const previousEnrollments = queryClient.getQueryData('enrollments');
       // Optimistically update to the new value
       queryClient.setQueryData('enrollments', (old) => {
-        // console.log('old', old);
         if (old) {
           return [
             ...old.map((enrollment) =>
@@ -131,10 +127,8 @@ export default function AddEditCourse() {
     ev.stopPropagation();
     if (slug) {
       // we're editing!
-      console.log('editing course');
       return editCourse(ev);
     }
-    console.log('addCourse ev', ev);
 
     return dispatch(
       newCourse({
@@ -162,7 +156,6 @@ export default function AddEditCourse() {
               placeholder="Course name"
               value={name}
               onChange={(ev) => {
-                console.log('setName');
                 setName(ev.target.value);
               }}
             />
@@ -178,7 +171,6 @@ export default function AddEditCourse() {
               placeholder="Start Date"
               value={startDate}
               onChange={(ev) => {
-                console.log('setStartDate');
                 setStartDate(ev.target.value);
               }}
             />
@@ -194,7 +186,6 @@ export default function AddEditCourse() {
               placeholder="End Date"
               value={endDate}
               onChange={(ev) => {
-                console.log('setEndDate');
                 setEndDate(ev.target.value);
               }}
             />

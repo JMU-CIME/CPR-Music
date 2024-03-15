@@ -12,7 +12,6 @@ function CourseSelector() {
   const { loaded: userLoaded, groups } = useSelector(state => state.currentUser)
   const router = useRouter();
   const changeCourse = (ev) => {
-    console.log('courseSelector::ev.target.value:', ev.target.value)
     router.push(`/courses/${ev.target.value}`)
   }
   const { slug } = router.query;

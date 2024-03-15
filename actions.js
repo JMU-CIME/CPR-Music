@@ -500,7 +500,6 @@ export function selectAssignment(assignment) {
 }
 
 export function beginUpload(id) {
-  console.log('begin upload', id);
   return {
     type: types.Action.BeginUpload,
     payload: {id}
@@ -536,15 +535,6 @@ export function postRecording({
   submissionId,
   index=0
 }) {
-  console.log(
-    'postRecording',
-    slug,
-    assignmentId,
-    audio,
-    composition,
-    submissionId,
-    index
-  );
   return (dispatch, getState) => {
     const {
       currentUser: { token },
@@ -625,10 +615,6 @@ export function postRespond({ slug, assignmentId, response }) {
     )
       .then(assertResponse)
       .then((res) => res.json())
-      .then((submission) => {
-        console.log('new submission', submission);
-      })
-
       .then(() => {
         // success case
         dispatch(uploadSucceeded(assignmentId));
@@ -666,9 +652,6 @@ export function postConnect({ slug, assignmentId, response }) {
     )
       .then(assertResponse)
       .then((res) => res.json())
-      .then((submission) => {
-        console.log('new submission', submission);
-      })
       .then(() => {
         // success case
         dispatch(uploadSucceeded(assignmentId));
@@ -715,7 +698,6 @@ export function fetchSingleStudentAssignment({ slug, assignmentId }) {
 }
 
 export function didInstrument() {
-  console.log('action didInstrument');
   return {
     type: types.Action.DidInstrument,
   };

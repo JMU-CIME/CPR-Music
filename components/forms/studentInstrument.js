@@ -13,15 +13,11 @@ function StudentInstrument({ enrollment, token, options: instruments }) {
     enrollment?.instrument?.id ?? ''
   );
   const dispatch = useDispatch();
-  console.log('instruments in studentinstrument', instruments);
 
   const updateInstrument = (ev) => {
-    // console.log('update instrument to ')
-    console.log(typeof ev.target.value, typeof instruments[0].id);
     const instrumentObj = instruments.find((instr) => instr.id == ev.target.value);
 
     if (instrumentObj) {
-      console.log('update instrument to ', instrumentObj.name);
     dispatch(
       updateEnrollmentInstrument({
         djangoToken: token,
@@ -63,27 +59,6 @@ function StudentInstrument({ enrollment, token, options: instruments }) {
         )}
       </Col>
       <Col>
-        {/* <FaSpinner
-          className={
-            enrollment.activityState === types.ActivityState.Active
-              ? 'show-out fa-spin'
-              : 'hiding'
-          }
-        />
-        <FaTimesCircle
-          className={
-            enrollment.activityState === types.ActivityState.Erroneous
-              ? 'show-out'
-              : 'hiding'
-          }
-        />
-        <FaCheck
-          className={
-            enrollment.activityState === types.ActivityState.Success
-              ? 'show-out'
-              : 'hiding'
-          }
-        /> */}
         {/* eslint-disable no-nested-ternary */}
         {enrollment.activityState === types.ActivityState.Active ? (
           <FaSpinner

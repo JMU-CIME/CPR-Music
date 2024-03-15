@@ -12,9 +12,6 @@ function StudentsWithInstruments() {
   const { items: instruments, loaded: instrumentsLoaded } = useSelector(
     (state) => state.instruments
   );
-  const sortedIntruments = instrumentsLoaded
-    ? Object.values(instruments).sort((A, B) => A.name > B.name)
-    : [];
   const roster = useSelector((state) => state.roster);
   const router = useRouter();
   const { slug } = router.query;
@@ -34,7 +31,6 @@ function StudentsWithInstruments() {
 
   // FIXME the greater than 1 here is a bit of a hack. because the course will already have the teacher enrollment, simply checking for any enrollment is insufficient to hide this section when there are no students
 
-  console.log('roster', roster)
   return roster?.items && Object.values(roster.items).length > 1 ? (
     <div>
       <h2>Current Students</h2>

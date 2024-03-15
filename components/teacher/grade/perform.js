@@ -1,29 +1,16 @@
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import { Card, Col, Row } from 'react-bootstrap';
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
-import { useMutation, useQueryClient } from 'react-query';
 import RTE from './rte';
-import { mutateGradeSubmission } from '../../../api';
 
 const FlatEditor = dynamic(() => import('../../flatEditor'), {
   ssr: false,
 });
 
 export default function GradePerform({ submissions }) {
-  const router = useRouter();
-  const { slug } = router.query;
-  // console.log('submission', submission, autoFocus)
-  // console.log('passed in okd', onKeyDown)
   const [isFormFocused, setFormFocus] = useState(false);
-  const [rhythm, setRhythm] = useState(0);
-  const [tone, setTone] = useState(0);
-  const [expression, setExpression] = useState(0);
   const audioRef = useRef();
   const gradeKeyDown = (ev) => {
     if (ev.key === ' ') {
@@ -32,66 +19,6 @@ export default function GradePerform({ submissions }) {
       } else {
         audioRef?.current?.pause();
       }
-    }
-  };
-  // console.log('document.activeElement', document.activeElement)
-  //  onMutate: async newTodo => {
-  //      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-  //      await queryClient.cancelQueries('todos')
-  //      // Snapshot the previous value
-  //      const previousTodos = queryClient.getQueryData('todos')
-  //      // Optimistically update to the new value
-  //      queryClient.setQueryData('todos', old => [...old, newTodo])
-  //      // Return a context object with the snapshotted value
-  //      return { previousTodos }
-  //    },
-  const queryClient = useQueryClient();
-  const gradeMutation = useMutation(mutateGradeSubmission(slug), {
-    onMutate: async (newGrade) => {
-      // console.log('newGrade', newGrade)
-      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-      await queryClient.cancelQueries('gradeableSubmissions');
-      // Snapshot the previous value
-      const previousSubmissions = queryClient.getQueryData(
-        'gradeableSubmissions'
-      );
-      // Optimistically update to the new value
-      queryClient.setQueryData('gradeableSubmissions', (old) => {
-        // console.log('old', old);
-        if (old) {
-          return [
-            ...old.map((sub) =>
-              sub.id === newGrade.sub
-                ? { ...sub, grades: [...sub.grades, newGrade] }
-                : sub
-            ),
-          ];
-        }
-        return [];
-      });
-      // Return a context object with the snapshotted value
-      return { previousSubmissions };
-    },
-    // If the mutation fails, use the context returned from onMutate to roll back
-    onError: (err, newGrade, context) => {
-      queryClient.setQueryData(
-        'gradeableSubmissions',
-        context.previousSubmissions
-      );
-    },
-    // Always refetch after error or success:
-    onSettled: () => {
-      queryClient.invalidateQueries('gradeableSubmissions');
-    },
-  });
-
-  // should show:
-  //    piece name, piece score, audio object, grading scales
-  const pressedKey = (idx) => (ev) => {
-    if (ev.key === 'Enter') {
-      // console.log(ev.key, ' is enter')
-    } else {
-      // console.log(ev.key, " ain't enter")
     }
   };
 
@@ -111,9 +38,7 @@ export default function GradePerform({ submissions }) {
         {/* <FlatEditor height={200} /> */}
         {submissions &&
           submissions.map((submission, submissionIdx) => {
-            let reflection;
             let rte;
-            console.log('submission');
             if (
               submission?.assignment?.activity?.activity_type?.category ===
                 'Respond' &&

@@ -5,7 +5,6 @@ import { getStudentAssignments } from "../../api";
 
 function PiecePicker() {
   function onPieceChange(ev) {
-    console.log('onpiecechange', ev.target.value)
     router.push(`/courses/${slug}/${ev.target.value}`)
   }
   const router = useRouter();

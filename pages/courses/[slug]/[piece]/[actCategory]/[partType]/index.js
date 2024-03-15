@@ -2,21 +2,14 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-// import ListGroup from 'react-bootstrap/ListGroup';
-// import ListGroupItem from 'react-bootstrap/ListGroupItem';
-import Row from 'react-bootstrap/Row';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchActivities,
   fetchSingleStudentAssignment,
   postRecording,
 } from '../../../../../../actions';
-import Layout from '../../../../../../components/layout';
 import Recorder from '../../../../../../components/recorder';
 import StudentAssignment from '../../../../../../components/student/assignment';
-import RecentSubmission from '../../../../../../components/student/recentSubmission';
 
 const FlatEditor = dynamic(
   () => import('../../../../../../components/flatEditor'),
@@ -46,7 +39,6 @@ export default function PerformMelody() {
   );
   useEffect(() => {
     if (loadedActivities) {
-      console.log('dispatch', activities);
       dispatch(
         fetchSingleStudentAssignment({
           slug,
@@ -67,7 +59,6 @@ export default function PerformMelody() {
         partTransposition.transposition.name ===
         assignment?.instrument?.transposition
     )?.[0]?.flatio;
-    // console.log('assignment no score', assignment);
     if (score) {
       setParsedScore(JSON.parse(score));
     }
@@ -119,7 +110,6 @@ export default function PerformMelody() {
           }
         />
       )}
-      {/* <RecentSubmission assn={assignment} /> */}
     </StudentAssignment>
   );
 }

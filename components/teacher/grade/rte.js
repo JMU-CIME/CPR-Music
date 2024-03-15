@@ -1,11 +1,6 @@
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useRouter } from 'next/router';
@@ -13,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { mutateGradeSubmission } from '../../../api';
 import {
   beginUpload,
-  postRecording,
   uploadFailed,
   uploadSucceeded,
 } from '../../../actions';
@@ -29,15 +23,6 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
   const [expression, setExpression] = useState(0);
   const audioRef = useRef();
   const dispatch = useDispatch();
-  const gradeKeyDown = (ev) => {
-    if (ev.key === ' ') {
-      if (audioRef.current.paused) {
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  };
   const queryClient = useQueryClient();
   const gradeMutation = useMutation(mutateGradeSubmission(slug), {
     onMutate: async (newGrade) => {

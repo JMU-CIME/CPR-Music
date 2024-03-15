@@ -21,20 +21,6 @@ export default function Enrollments({ children }) {
   if (isLoading) return 'Loading...'
   if (error) return `An error has occurred: ${  error.message}`
 
-  // const dispatch = useDispatch();
-  // const { items: enrollments, loaded } = useSelector(
-  //   (state) => state.enrollments
-  // );
-
-  // useEffect(() => {
-  //   if (!loaded) {
-  //     dispatch(fetchEnrollments());
-  //   } else {
-  //     console.log('enrollments dont need to be fetched', enrollments)
-  //   }
-  // }, [dispatch]);
-
-  console.log('enrollmentsenrollments', enrollments)
   return (
     <div className="course-list">
       {enrollments &&

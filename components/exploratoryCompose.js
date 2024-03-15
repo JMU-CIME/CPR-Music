@@ -69,8 +69,6 @@ function ExploratoryCompose({
           embed.loadJSON(result).then(() => {
             embed.off('noteDetails');
             embed.on('noteDetails', (ev) => {
-              console.log('noteDetails', ev);
-              console.log('should color?', colors);
               embed.getJSON().then((jd) => {
                 const jsonData = jd;
                 if (

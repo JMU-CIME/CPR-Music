@@ -18,14 +18,12 @@ export default function CreateExploratoryActivityPage() {
   } = useQuery(['assignments',slug], getStudentAssignments(slug), {
     enabled: !!slug, staleTime: 5*60*1000
   });
-  // console.log('assingments', assignments , piece, actCategory)
   const currentAssignment =
     assignments &&
     Object.values(assignments)
       .reduce((prev, current) => [...prev, ...current], [])
       .filter(
         (assn) =>{
-          // console.log('assn', assn);
           return assn.piece_slug === piece &&
           assn.activity_type_category === actCategory}
       )?.[0];
@@ -49,5 +47,4 @@ export default function CreateExploratoryActivityPage() {
       <span className="visually-hidden">Loading...</span>
     </Spinner>
   );
-  // return <h1>hiiiii</h1>
 }

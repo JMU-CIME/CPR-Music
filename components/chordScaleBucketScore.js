@@ -10,7 +10,6 @@ function ChordScaleBucketScore({
   instrumentName,
   className,
 }) {
-  // console.log('flat io embed log', scoreJSON, orig);
   const [embed, setEmbed] = useState();
   const editorRef = React.createRef();
 
@@ -131,7 +130,6 @@ function ChordScaleBucketScore({
         };
       });
     }
-    // console.log('chord scale bucket generated json scoure output', template)
     const resultTransposed = transposeEmbed
       .ready()
       .then(() => transposeEmbed.loadJSON(template));
@@ -184,7 +182,6 @@ function ChordScaleBucketScore({
       }
 
       if (colors) {
-        console.log('colors', colors);
         let mappedColors = colors;
         if(Array.isArray(colors) && colors.length > 0) {
           mappedColors = colors.map(colorMap);
@@ -194,8 +191,7 @@ function ChordScaleBucketScore({
         colorNotes(bucket, mappedColors);
       }
 
-      // console.log('current JSON', copyJSON);
-      // console.log('bucket', bucket); // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
+      // current issue: our octaves are all defaulted to 0; however, to fix this issue if we comment out our else statement in our keyFromScoreJSON it fixes.
       embedTransposed(bucket, embed, keySignature, instrumentName);
     }
   }, [referenceScoreJSON, chordScaleBucket, embed]);

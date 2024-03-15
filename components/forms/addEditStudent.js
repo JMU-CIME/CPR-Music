@@ -9,7 +9,6 @@ function AddEditStudent() {
   const [grade, setGrade] = useState();
 
   const addStudent = (ev) => {
-    console.log('add student ev', ev);
 
     // TODO: actually dispatch action to add a student here
 
@@ -31,7 +30,6 @@ function AddEditStudent() {
               placeholder="James Madison"
               value={name}
               onChange={(ev) => {
-                console.log('setName');
                 setName(ev.target.value);
               }}
             />
@@ -47,7 +45,6 @@ function AddEditStudent() {
               placeholder="6"
               value={grade}
               onChange={(ev) => {
-                console.log('setGrade');
                 setGrade(ev.target.value);
               }}
             />

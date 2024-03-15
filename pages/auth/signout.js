@@ -10,7 +10,6 @@ function SignOut() {
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const logout = (ev) => {
-    console.log('loggingout', ev, session);
     dispatch(logoutUser(session.djangoToken));
     signOut({ callbackUrl: '/' });
   };

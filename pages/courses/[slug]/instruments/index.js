@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import { useDispatch, useSelector } from 'react-redux';
 import Spinner from 'react-bootstrap/Spinner';
@@ -17,27 +16,21 @@ function Instruments() {
   );
   const sortedIntruments = instrumentsLoaded ? Object.values(instruments).sort((A, B) => A.name > B.name): [];
   const roster = useSelector((state) => state.roster);
-  // console.log('roster', roster);
   const router = useRouter();
   const { slug } = router.query;
-  // console.log('instruments', instruments);
-  // console.log('slug', slug);
   const dispatch = useDispatch();
   useEffect(() => {
     if ('token' in userInfo) {
       if (!instrumentsLoaded) {
         dispatch(fetchInstruments(userInfo.token));
       }
-      // if (session) {
       if ((!roster.loaded && slug) || (roster.loaded && slug && slug !== roster.courseSlug)) {
-        // console.log('userInfo', userInfo);
         dispatch(
           fetchRoster({ djangoToken: userInfo.token, courseSlug: slug })
         );
       }
     }
   }, [dispatch, slug, userInfo]);
-  const updateInstruments = (ev) => {};
   return (
     <Layout>
       <h1>Instruments</h1>
@@ -47,7 +40,7 @@ function Instruments() {
         only for a specific assignment on an assignment's edit page.
       </p>
       <p>Changes made below will be automatically saved.</p>
-      <Form onSubmit={updateInstruments}>
+      <Form>
         {roster?.items && Object.values(roster.items).length ? (
           Object.values(roster.items)
             .filter((e) => e.role !== 'Teacher')
@@ -58,7 +51,6 @@ function Instruments() {
                 options={sortedIntruments}
                 token={userInfo.token}
               />
-              // <p key={enrollment.id}>{enrollment.user.name}</p>
             ))
         ) : (
           <Spinner

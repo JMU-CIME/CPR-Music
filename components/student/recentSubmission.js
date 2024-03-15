@@ -1,6 +1,5 @@
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { FaCalendarDay } from 'react-icons/fa';
 import dynamic from 'next/dynamic'
@@ -9,41 +8,18 @@ const FlatEditor = dynamic(() => import('../flatEditor'), {
 });
 
 export default function RecentSubmission(assn) {
-  // console.log('recent sub::', submitted, content, attachments);
   const {
     assn: { activity_type_category = null, submissions, activity = null },
   } = assn;
-  // console.log('RecentSubmission::assn:', assn);
-  // console.log('RecentSubmission::submissions:', submissions);
   if (!submissions || submissions.length === 0) return '';
   const mostRecent = submissions?.reduce((recent, current) =>
     new Date(recent.submitted) > new Date(current.submitted) ? recent : current
   );
   const { submitted, content, attachments } = mostRecent;
   const ctgy = activity_type_category ?? activity.activity_type.category;
-  // console.log('activity ctgy', ctgy);
-  // eg assn.submissions:
-  // [
-  //   {
-  //     id: 3,
-  //     submitted: '2023-10-18T14:37:58.708689-04:00',
-  //     content:
-  //       '{"score-partwise":{...}',
-  //     grade: null,
-  //     self_grade: null,
-  //     attachments: [
-  //       {
-  //         id: 3,
-  //         file: 'http://localhost:8000/media/student-recoding_qsgQlnR.mp3',
-  //         submitted: '2023-10-18T14:37:59.016536-04:00',
-  //       },
-  //     ],
-  //   },
-  // ];
 
   return (
     <Card>
-      {/* <Card.Img variant="top" as='div'>idk</Card.Img> */}
       <Card.Body>
         <Card.Title>Your Most Recent Submission</Card.Title>
         <Card.Text>
@@ -89,8 +65,6 @@ export default function RecentSubmission(assn) {
         </Card.Body>
       )}
       <Card.Body>
-        {/* <Row>
-            <Col> */}
         <time dateTime={submitted}>
           <FaCalendarDay />{' '}
           {new Date(submitted).toLocaleString(undefined, {
@@ -102,9 +76,6 @@ export default function RecentSubmission(assn) {
             month: 'short',
           })}
         </time>
-        {/* </Col>
-            <Col>else</Col>
-          </Row> */}
       </Card.Body>
     </Card>
   );

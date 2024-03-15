@@ -21,7 +21,6 @@ function UploadStudents() {
   );
 
   if (shouldInstrument && router.asPath.endsWith('/edit')) {
-    console.log('shouldInstrument', shouldInstrument);
     router.push(router.asPath.replace('/edit', '/instruments'));
     dispatch(didInstrument())
   }
@@ -29,7 +28,6 @@ function UploadStudents() {
   const uploadStudents = async (ev) => {
     ev.preventDefault();
     setLoading(true);
-    console.log('add student ev', ev);
 
     const formData = new FormData();
 
@@ -37,7 +35,6 @@ function UploadStudents() {
     formData.append('file', file, file.name);
 
     // Details of the uploaded file
-    console.log(file);
 
     // don't refresh the page
     ev.preventDefault();
@@ -86,7 +83,6 @@ function UploadStudents() {
               type="file"
               placeholder="Roster CSV"
               onChange={(ev) => {
-                console.log('setFile', ev);
                 setFile(ev.target.files[0]);
               }}
             />
