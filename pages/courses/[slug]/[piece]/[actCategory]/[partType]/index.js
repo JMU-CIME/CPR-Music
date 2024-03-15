@@ -39,15 +39,23 @@ export default function PerformMelody() {
   );
   useEffect(() => {
     if (loadedActivities) {
+      let comparablePartType = partType;
+      if (comparablePartType.startsWith('Melody')) {
+        comparablePartType = comparablePartType.substring(0, 'Melody'.length)
+      } else if (comparablePartType.startsWith('Bassline')) {
+        comparablePartType = comparablePartType.substring(0, 'Bassline'.length)
+      }
+      const assignmentId = activities[slug].filter(
+        (assn) =>
+          {
+            return assn.piece_slug === piece &&
+          assn.part_type === comparablePartType &&
+          assn.activity_type_category === actCategory}
+      )?.[0]?.id
       dispatch(
         fetchSingleStudentAssignment({
           slug,
-          assignmentId: activities[slug].filter(
-            (assn) =>
-              assn.piece_slug === piece &&
-              assn.part_type === partType &&
-              assn.activity_type_category === actCategory
-          )?.[0]?.id,
+          assignmentId,
         })
       );
     }

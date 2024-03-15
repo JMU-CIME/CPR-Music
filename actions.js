@@ -678,6 +678,10 @@ export function gotSingleStudentAssignment(assignment) {
 }
 
 export function fetchSingleStudentAssignment({ slug, assignmentId }) {
+  if (!assignmentId) {
+    console.error('assignmentId is required');
+    return;
+  }
   return (dispatch, getState) => {
     const {
       currentUser: { token },

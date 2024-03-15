@@ -31,14 +31,15 @@ export default function PerformMelody() {
   );
   useEffect(() => {
     if (loadedActivities) {
+      const assignmentId = activities[slug].filter(
+        (assn) =>
+          assn.piece_slug === piece &&
+          (assn.activity_type_category === actCategory || assn.activity_type_category.split(' ')[0] === actCategory)
+      )?.[0]?.id;
       dispatch(
         fetchSingleStudentAssignment({
           slug,
-          assignmentId: activities[slug].filter(
-            (assn) =>
-              assn.piece_slug === piece &&
-              assn.activity_type_category === actCategory
-          )?.[0]?.id,
+          assignmentId,
         })
       );
     }
