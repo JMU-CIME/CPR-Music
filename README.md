@@ -20,7 +20,7 @@
     * cd /home/ec2-user/fe-dev-versions
     * rm live
     * ln -s /home/ec2-user/fe-dev-versions/<v0.2.2> live
-1. cd /home/ec2-user/fe-dev-versions/live
+1. cd /home/ec2-user/fe-dev-versions/live #WARNING: you must have cd'ed into the current version first because the start script is just running `next start` which expects to find package.json and etc in the current dir.
 1. `pm2 start npm --name "fe-dev" -- start`
     `pm2 start npm --name "fe-prod" -- start``
 1. `pm2 save`
