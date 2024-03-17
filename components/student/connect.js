@@ -7,6 +7,7 @@ import {
   fetchSingleStudentAssignment,
   postConnect,
 } from '../../actions';
+import StatusIndicator from '../statusIndicator';
 
 export default function ConnectActivity() {
   const router = useRouter();
@@ -80,7 +81,7 @@ export default function ConnectActivity() {
           }}
           style={{ width: '100%' }}
         />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">Submit</Button> <StatusIndicator statusId={assignmentId ?? 'connect'} />
       </Form>
     </>
   );

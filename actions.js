@@ -656,7 +656,7 @@ export function postConnect({ slug, assignmentId, response }) {
         // success case
         dispatch(uploadSucceeded(assignmentId));
         const p = new Promise((resolve) => {
-          setTimeout(() => resolve, 1000);
+          setTimeout(() => resolve, 1000); // FIXME: this is a kludge
         });
         return p;
       })
