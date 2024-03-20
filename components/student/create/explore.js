@@ -146,6 +146,7 @@ export default function CreativityActivity() {
             trim={1}
             onUpdate={handleTonicUpdate}
             colors='tonic'
+            instrumentName={currentAssignment?.instrument}
           />    
         </div>
       </div>
@@ -169,6 +170,7 @@ export default function CreativityActivity() {
             trim={1}
             onUpdate={handleSubdominantUpdate}
             colors='subdominant'
+            instrumentName={currentAssignment?.instrument}
           />
         </div>
       </div>
@@ -192,6 +194,7 @@ export default function CreativityActivity() {
             trim={1}
             onUpdate={handleDominantUpdate}
             colors='dominant'
+            instrumentName={currentAssignment?.instrument}
           />
         </div>
       </div>
@@ -255,6 +258,7 @@ export default function CreativityActivity() {
           colors={currentAssignment?.part?.chord_scale_pattern}
           selectedMeasure={selectedMeasure}
           debugMsg='final explore composition flateditor instance'
+          instrumentName={currentAssignment?.instrument}
         />
         <Recorder
           submit={submitCreativity}

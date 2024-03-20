@@ -183,7 +183,7 @@ export default function CreativityActivity() {
             }
             <Button onClick={()=>{setIsDoneComposing(true)}}>Done Composing</Button>
             <h2>Step {subScores.length + 1} - Combined</h2>
-            {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} />}
+            {scoreDataRef.current && scoreDataRef.current.length > 0 && isDoneComposing && <MergingScore giveJSON={onMerged} scores={scoreDataRef} instrumentName={currentAssignment?.instrument} />}
             <Recorder
               submit={submitCreativity}
               accompaniment={currentAssignment?.part?.piece?.accompaniment}

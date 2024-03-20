@@ -122,6 +122,7 @@ export default function CreativityAuralActivity() {
             }}
             orig={json}
             colors={currentAssignment?.part?.chord_scale_pattern}
+            instrumentName={currentAssignment?.instrument}
           />
         </>
       )}
