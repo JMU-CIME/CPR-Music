@@ -60,19 +60,9 @@ export function getStudentAssignments(slug) {
       })
       .then((response) => response.json())
       .then((results) => {
-        const grouped = results.reduce((acc, obj) => {
-          // const key = obj.piece_name;
-          const key = obj.piece_slug;
-          if (!acc[key]) {
-            acc[key] = [];
-          }
-          // Add object to list for given key's value
-          acc[key].push(obj);
-          return acc;
-        }, {});
         // FIXME: this should respect order from server/pieceplan and mayeb do this as a backup?
-        Object.values(grouped).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
-        return grouped;
+        Object.values(results).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
+        return results;
       });
 }
 
