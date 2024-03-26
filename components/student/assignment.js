@@ -2,6 +2,7 @@ import Nav from 'react-bootstrap/Nav';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import Container from 'react-bootstrap/Container'; 
 import { FaBook, FaDrum, FaGuitar, FaLink, FaPenFancy } from 'react-icons/fa';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Spinner from 'react-bootstrap/Spinner';
@@ -20,7 +21,7 @@ export default function StudentAssignment({ children, assignment }) {
   const router = useRouter();
 
   const { slug, piece, actCategory = 'Create', partType } = router.query;
-  
+
   const {
     isLoading,
     isIdle,
@@ -34,7 +35,6 @@ export default function StudentAssignment({ children, assignment }) {
     }
   );
 
-  // const
   const composer = assignment?.part?.piece?.composer?.name;
   const composerCheat = composer?.split(' ').pop();
   const connectLink = `Connect ${composerCheat}`;
@@ -43,49 +43,41 @@ export default function StudentAssignment({ children, assignment }) {
   const pieceName = assignment?.piece_name ?? assignment?.part?.piece?.name;
 
   return (
-    <Layout>
-      {assignment && assignment?.id && pieceName ? (
-        <Row>
-          {/* piece subnav (navigate to next/other activity, else?) */}
-          {/* moved to navbar */}
-          <Col>
-            <h1>
-              {(actCategory == 'Perform' || actCategory == 'Create') &&
-                `${actCategory} `}
-              {assignment?.activity?.activity_type?.name} Activity
-            </h1>
-            <Instructions body={assignment?.activity_body} />
-            {assignment.submissions.length > 0 ? (
-              <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header>Current Submission</Accordion.Header>
-                  <Accordion.Body>
-                    <RecentSubmission assn={assignment} />
-                  </Accordion.Body>
-                </Accordion.Item>
-                {/* tasks */}
-                <Accordion.Item eventKey="1">
-                  <Accordion.Header>Submit Again?</Accordion.Header>
-                  <Accordion.Body>{children}</Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-            ) : (
-              children
-            )}
-          </Col>
-        </Row>
-      ) : (
-        <Spinner
-          as="span"
-          animation="border"
-          size="sm"
-          role="status"
-          aria-hidden="true"
-          variant="primary"
-        >
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      )}
+    <Layout className="mb-3">
+      <Container>
+        {assignment && assignment.id && pieceName ? (
+          <Row>
+            <Col>
+              <h1>
+                {(actCategory == 'Perform' || actCategory == 'Create') &&
+                  `${actCategory} `}
+                {assignment?.activity?.activity_type?.name} Activity
+              </h1>
+              <Instructions body={assignment?.activity_body} />
+              {assignment.submissions.length > 0 ? (
+                <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
+                  <Accordion.Item eventKey="0">
+                    <Accordion.Header>Current Submission</Accordion.Header>
+                    <Accordion.Body>
+                      <RecentSubmission assn={assignment} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="1">
+                    <Accordion.Header>Submit Again?</Accordion.Header>
+                    <Accordion.Body>{children}</Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
+              ) : (
+                children
+              )}
+            </Col>
+          </Row>
+        ) : (
+          <Spinner animation="border" size="sm" role="status" aria-hidden="true" variant="primary">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        )}
+      </Container>
     </Layout>
   );
 }
