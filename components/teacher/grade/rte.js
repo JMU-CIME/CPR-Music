@@ -18,15 +18,15 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
   const userInfo = useSelector((state) => state.currentUser);
   const { slug } = router.query;
   const [isFormFocused, setFormFocus] = useState(false);
-  const [rhythm, setRhythm] = useState(0);
-  const [tone, setTone] = useState(0);
-  const [expression, setExpression] = useState(0);
+  const [rhythm, setRhythm] = useState(submission?.grade?.rhythm ?? 0);
+  const [tone, setTone] = useState(submission?.grade?.tone ?? 0);
+  const [expression, setExpression] = useState(submission?.grade?.expression ?? 0);
   const audioRef = useRef();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const gradeMutation = useMutation(mutateGradeSubmission(slug), {
     onMutate: async (newGrade) => {
-      dispatch(beginUpload('grade'));
+      dispatch(beginUpload(`grade-${submission.id}`));
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries('gradeableSubmissions');
       // Snapshot the previous value
@@ -51,14 +51,14 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
     },
     // If the mutation fails, use the context returned from onMutate to roll back
     onError: (err, newGrade, context) => {
-      dispatch(uploadFailed('grade'));
+      dispatch(uploadFailed(`grade-${submission.id}`));
       queryClient.setQueryData(
         'gradeableSubmissions',
         context.previousSubmissions
       );
     },
     onSuccess: () => {
-      dispatch(uploadSucceeded('grade'));
+      dispatch(uploadSucceeded(`grade-${submission.id}`));
     },
     // Always refetch after error or success:
     onSettled: () => {
@@ -105,6 +105,7 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
         >
           <Form.Control
             type="number"
+            defaultValue={rhythm}
             onChange={(ev) => {
               setRhythm(ev.target.value);
             }}
@@ -121,6 +122,7 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
         <FloatingLabel controlId="floatingInput" label="Tone" className="mb-3">
           <Form.Control
             type="number"
+            defaultValue={tone}
             onChange={(ev) => {
               setTone(ev.target.value);
             }}
@@ -140,6 +142,7 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
         >
           <Form.Control
             type="number"
+            defaultValue={expression}
             onChange={(ev) => {
               setExpression(ev.target.value);
             }}
@@ -154,7 +157,7 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
       <Button variant="primary" type="submit" className="mb-3">
         Submit
       </Button>{' '}
-      <StatusIndicator statusId={submission?.id ?? 'respond'} />
+      <StatusIndicator statusId={(!!submitAction ? submission?.id : `grade-${submission.id}`) ?? 'respond'} />
     </Form>
   );
 }
