@@ -22,6 +22,7 @@ export default function SignIn({ csrfToken }) {
       username,
       password,
     })
+    router.push('/courses')
 
   }
 
