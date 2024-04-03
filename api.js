@@ -26,24 +26,6 @@ export function getEnrollments() {
 }
 
 export function getStudentAssignments(slug) {
-  const activitySort = (a, b) => { // FIXME: this is a disaster. 
-    const ordering = {
-      Melody: 1,
-      Bassline: 2,
-      Creativity: 3,
-      Reflection: 4,
-      Connect: 5,
-      Aural: 3,
-      Exploratory: 3,
-      Theoretical: 3,
-      MelodyPost: 3.1,
-      BasslinePost: 3.2,
-    };
-    const c = a.activity_type_name.split(' ')[0];
-    const d = b.activity_type_name.split(' ')[0];
-    const result = ordering[c] - ordering[d];
-    return result;
-  };
   return () =>
     getSession()
       .then((session) => {
