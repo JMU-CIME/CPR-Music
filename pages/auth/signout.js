@@ -5,13 +5,17 @@ import { signOut, useSession } from 'next-auth/react';
 import { useDispatch } from 'react-redux';
 import Layout from '../../components/layout';
 import { logoutUser } from '../../actions';
+import { useRouter } from 'next/router';
 
 function SignOut() {
+  const router = useRouter();
+
   const { data: session } = useSession();
   const dispatch = useDispatch();
   const logout = (ev) => {
     dispatch(logoutUser(session.djangoToken));
-    signOut({ callbackUrl: '/' });
+    signOut();
+    router.push('/')
   };
   return (
     <Layout>

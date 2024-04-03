@@ -1,4 +1,4 @@
-import { getCsrfToken } from 'next-auth/react';
+import { getCsrfToken, signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -6,15 +6,31 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Layout from '../../components/layout';
 import { Alert } from 'react-bootstrap';
+import { useState } from 'react';
 
 export default function SignIn({ csrfToken }) {
+  const router = useRouter();
   const { error } = useRouter().query;
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signIn('credentials', {
+      redirect: false,
+      username,
+      password,
+    })
+    router.push('/courses')
+
+  }
+
   return (
     <Layout>
       <Form
-        method="post"
-        action="/api/auth/callback/credentials"
         className="mt-3"
+        onSubmit={handleSubmit}
       >
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <Form.Group as={Row} className="mb-3" controlId="formUsername">
@@ -22,7 +38,7 @@ export default function SignIn({ csrfToken }) {
             Username
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text" name="username" placeholder="Username" />
+            <Form.Control type="text" name="username" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="mb-3" controlId="formPassword">
@@ -34,6 +50,7 @@ export default function SignIn({ csrfToken }) {
               type="password"
               name="password"
               placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </Col>
         </Form.Group>
@@ -67,6 +84,7 @@ const errors = {
   CredentialsSignin: 'Sign in failed. Check your login credentials.',
   default: 'Unable to sign in.',
 };
+
 function SignInError({ error = errors.default }) {
   const errorMessage = error && (errors[error] ?? errors.default);
   return (
