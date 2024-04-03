@@ -26,24 +26,6 @@ export function getEnrollments() {
 }
 
 export function getStudentAssignments(slug) {
-  const activitySort = (a, b) => { // FIXME: this is a disaster. 
-    const ordering = {
-      Melody: 1,
-      Bassline: 2,
-      Creativity: 3,
-      Reflection: 4,
-      Connect: 5,
-      Aural: 3,
-      Exploratory: 3,
-      Theoretical: 3,
-      MelodyPost: 3.1,
-      BasslinePost: 3.2,
-    };
-    const c = a.activity_type_name.split(' ')[0];
-    const d = b.activity_type_name.split(' ')[0];
-    const result = ordering[c] - ordering[d];
-    return result;
-  };
   return () =>
     getSession()
       .then((session) => {
@@ -58,11 +40,8 @@ export function getStudentAssignments(slug) {
           }
         );
       })
-      .then((response) => response.json())
-      .then((results) => {
-        // FIXME: this should respect order from server/pieceplan and mayeb do this as a backup?
-        Object.values(results).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
-        return results;
+      .then((response) => {
+        return response.json()
       });
 }
 
