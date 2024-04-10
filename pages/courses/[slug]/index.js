@@ -16,7 +16,6 @@ export default function CourseDetails() {
   const router = useRouter();
   const { slug } = router.query;
   const currentEnrollment = enrollments && enrollments.filter((elem) => elem.course.slug === slug)[0]
-
   return (
     <Layout>
       {
@@ -24,7 +23,9 @@ export default function CourseDetails() {
         <>
           <h1>{currentEnrollment?.course?.name ?? 'Details'}</h1>
           {currentEnrollment.role === 'Student' ? (
-            <StudentCourseView />
+            <StudentCourseView 
+              canEditInstruments={currentEnrollment?.course?.can_edit_instruments}
+            />
           ) : (
             <div>
               <Link href={`/courses/${slug}/edit`}>

@@ -5,8 +5,9 @@ import { useQuery } from "react-query";
 import Link from "next/link";
 import SubmissionsStatusBadge from "../submissionStatusBadge";
 import { assnToContent, assnToKey } from "./navActivityPicker";
+import InstrumentSelector from "../instrumentSelector"
 
-function PieceAssignments({piece}) {
+function PieceAssignments({piece, canEditInstruments}) {
   const router = useRouter();
 
   const { slug } = router.query;
@@ -18,6 +19,7 @@ function PieceAssignments({piece}) {
   } = useQuery(['assignments',slug], getStudentAssignments(slug), {
     enabled: !!slug, staleTime: 5*60*1000
   });
+
 
   if (isLoading) {
     return <Spinner
@@ -31,17 +33,17 @@ function PieceAssignments({piece}) {
       <span className="visually-hidden">Loading...</span>
     </Spinner>
   }
-
   if (!slug || assignmentsError || !assignments || !assignments[piece]) {
     if (assignmentsError) {
       console.error(assignmentsError)
     }
     return <p>You have no assignments for this piece at this time.</p>
   }
-
-
   return <Card className="student-piece-activity-group">
-    <Card.Header className="fw-bold">{assignments[piece][0].piece_name}</Card.Header>
+    <Card.Header className="fw-bold">
+      {assignments[piece][0].piece_name}
+      <InstrumentSelector defaultInstrument={assignments[piece][0].instrument}/>
+    </Card.Header>
     <ListGroup>
       {assignments[piece]
         .map((assignment) => (
