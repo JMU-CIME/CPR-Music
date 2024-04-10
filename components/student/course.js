@@ -10,7 +10,7 @@ import { PieceAssignments } from './pieceAssignments';
 // show the assignments that still need to be completed
 // show the assignments that have already been completed
 
-export default function StudentCourseView() {
+export default function StudentCourseView({canEditInstruments=False}) {
   const router = useRouter();
   const { slug } = router.query;
   const {
@@ -20,7 +20,7 @@ export default function StudentCourseView() {
   } = useQuery(['assignments',slug], getStudentAssignments(slug), {
     enabled: !!slug, staleTime: 5*60*1000
   });
-
+  
   return (
     <Row>
       <Col>
@@ -40,7 +40,11 @@ export default function StudentCourseView() {
             </Spinner>
           ) : assignments && Object.keys(assignments).length > 0 ? (
             Object.keys(assignments).map((pieceSlug) => (
-              <PieceAssignments key={`${pieceSlug}-activities`} piece={pieceSlug} />
+              <PieceAssignments 
+                key={`${pieceSlug}-activities`} 
+                piece={pieceSlug} 
+                canEditInstruments={canEditInstruments}
+              />
             ))
           ) : (
             <p>You have no assignments at this time.</p>
