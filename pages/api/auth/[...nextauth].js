@@ -113,9 +113,9 @@ export default NextAuth({
       return user !== null;
     },
     async redirect({ url, baseUrl }) {
-      let returnVal = url;
-      if (url.startsWith(baseUrl)) {
-        // something
+      let returnVal = baseUrl;
+      if (new URL(url).origin === baseUrl) {
+        returnVal = url;
       }
       // Allows relative callback URLs
       else if (url.startsWith('/')) {
