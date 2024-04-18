@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { getStudentAssignments } from "../../api";
+import { getStudentAssignments, mutateAssignmentInstrument } from "../../api";
 import { Card, ListGroup, ListGroupItem, Spinner } from "react-bootstrap";
 import { useQuery } from "react-query";
 import Link from "next/link";
@@ -7,7 +7,8 @@ import SubmissionsStatusBadge from "../submissionStatusBadge";
 import { assnToContent, assnToKey } from "./navActivityPicker";
 import InstrumentSelector from "../instrumentSelector"
 
-function PieceAssignments({piece, canEditInstruments}) {
+
+function PieceAssignments({ piece, canEditInstruments }) {
   const router = useRouter();
 
   const { slug } = router.query;
@@ -16,9 +17,14 @@ function PieceAssignments({piece, canEditInstruments}) {
     isLoading,
     error: assignmentsError,
     data: assignments,
-  } = useQuery(['assignments',slug], getStudentAssignments(slug), {
-    enabled: !!slug, staleTime: 5*60*1000
+  } = useQuery(['assignments', slug], getStudentAssignments(slug), {
+    enabled: !!slug, staleTime: 5 * 60 * 1000
   });
+
+  const updateInstrument = (newInstrument) => {
+    const pieceId = assignments[piece][0].piece_id;
+    mutateAssignmentInstrument(slug, pieceId, newInstrument);
+  }
 
 
   if (isLoading) {
@@ -39,10 +45,14 @@ function PieceAssignments({piece, canEditInstruments}) {
     }
     return <p>You have no assignments for this piece at this time.</p>
   }
+
   return <Card className="student-piece-activity-group">
     <Card.Header className="fw-bold">
       {assignments[piece][0].piece_name}
-      <InstrumentSelector defaultInstrument={assignments[piece][0].instrument}/>
+      {canEditInstruments && (<InstrumentSelector
+        defaultInstrument={assignments[piece][0].instrument}
+        onChange={updateInstrument}
+      />)}
     </Card.Header>
     <ListGroup>
       {assignments[piece]

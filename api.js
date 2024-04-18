@@ -259,3 +259,23 @@ export function mutateCourse(slug) {
     });
   };
 }
+
+
+export async function mutateAssignmentInstrument(slug, pieceId, instrument) {
+  const session = await getSession();
+  const token = session.djangoToken;
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/change_piece_instrument/`,
+    {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'PATCH',
+      body: JSON.stringify({piece_id: pieceId ,instrument_id: instrument.id})
+    }
+  );
+  
+  assertResponse(response);
+}
+
