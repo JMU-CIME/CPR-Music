@@ -8,7 +8,6 @@ function assertResponse(response) {
   throw new Error(`${response.status}: ${response.statusText}`);
 }
 
-const API = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api`;
 
 async function getDjangoToken() {
   const session = await getSession();
@@ -26,6 +25,9 @@ async function makeRequest(url, method="GET", body=null, headers={}) {
     'Content-Type': 'application/json',
   }
 
+  const API = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api`;
+  url = `${API}/${url}` 
+
   const response = await fetch(url, {
     method,
     headers: requestHeaders,
@@ -40,14 +42,14 @@ async function makeRequest(url, method="GET", body=null, headers={}) {
 
 
 export async function getEnrollments() {
-  const url = `${API}/enrollments/`;
+  const url = "enrollments/";
   const json = await makeRequest(url);
   return json;
 }
 
 
 export async function getStudentAssignments(slug) {
-  const url = `${API}/courses/${slug}/assignments/`;
+  const url = `courses/${slug}/assignments/`;
   const json = await makeRequest(url);
   return json
 }
