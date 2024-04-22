@@ -7,42 +7,49 @@ function assertResponse(response) {
   }
   throw new Error(`${response.status}: ${response.statusText}`);
 }
-export function getEnrollments() {
-  return getSession().then((session) => {
-    if (!session || !session.djangoToken) {
-      return {};
-    }
-    const token = session.djangoToken;
-    return fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/enrollments/`, {
-      headers: {
-        Authorization: `Token ${token}`,
-        'Content-Type': 'application/json',
-      },
-    }).then((response, ...rest) => {
-      const results = response.json();
-      return results;
-    });
-  });
+
+const API = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api`;
+
+async function getDjangoToken() {
+  const session = await getSession();
+  if (!session || !session.djangoToken) return;
+  return session.djangoToken
 }
 
-export function getStudentAssignments(slug) {
-  return () =>
-    getSession()
-      .then((session) => {
-        const token = session.djangoToken;
-        return fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/courses/${slug}/assignments/`,
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-      })
-      .then((response) => {
-        return response.json()
-      });
+async function makeRequest(url, method="GET", body=null, headers={}) {
+  const token = await getDjangoToken();
+  if (!token) return {};
+
+  const requestHeaders = {
+    ...headers,
+    Authorization: `Token ${token}`,
+    'Content-Type': 'application/json',
+  }
+
+  const response = await fetch(url, {
+    method,
+    headers: requestHeaders,
+    body: body ? JSON.stringify(body) : null
+  })
+
+  assertResponse(response);
+
+  const data = await response.json();
+  return data;
+}
+
+
+export async function getEnrollments() {
+  const url = `${API}/enrollments/`;
+  const json = await makeRequest(url);
+  return json;
+}
+
+
+export async function getStudentAssignments(slug) {
+  const url = `${API}/courses/${slug}/assignments/`;
+  const json = await makeRequest(url);
+  return json
 }
 
 export function getAllPieces(courseSlug) {
