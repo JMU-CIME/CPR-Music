@@ -48,10 +48,12 @@ export async function getEnrollments() {
 }
 
 
-export async function getStudentAssignments(slug) {
-  const url = `courses/${slug}/assignments/`;
-  const json = await makeRequest(url);
-  return json
+export function getStudentAssignments(slug) {
+  return async () => {
+    const url = `courses/${slug}/assignments/`;
+    const json = await makeRequest(url);
+    return json
+  }
 }
 
 export function getAllPieces(courseSlug) {
