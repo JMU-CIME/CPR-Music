@@ -30,7 +30,7 @@ export default function TeacherCourseView() {
   const { slug } = router.query;
   const [assignError, setAssignError] = useState(null);
   const {
-    isLoading,
+    isLoadingPieces,
     error,
     data: allPieces,
   } = useQuery(['allPieces', slug], getAllPieces(slug), {
@@ -115,7 +115,7 @@ export default function TeacherCourseView() {
     },
   });
   const assign = (piecePlan) => assignMutation.mutate(piecePlan);
-  if (isLoading || isLoadingAssignedActs || !assignedPieces)
+  if (isLoadingPieces || isLoadingAssignedActs)
     return 'Loading...';
   if (error || errorAssignedActs)
     return `An error has occurred: ${
