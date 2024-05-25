@@ -148,15 +148,21 @@ export default function TeacherCourseView() {
             {allPieces &&
               allPieces
                 .filter(
-                  (piece) =>
-                    assignedPieces &&
+                  (piece) =>{
+                    let reslt = true
+                    if (assignedPieces &&
                     Object.values(assignedPieces).findIndex(
                       (assignedPiece) => assignedPiece.id === piece.id
-                    ) === -1
+                    ) !== -1) {
+                      reslt = false;
+                    }
+                    return reslt;
+                  }
+                    
                 )
-                .map((piece) => (
+                .map((piece, pidx) => (
                   <ListGroupItem
-                    key={piece.id}
+                    key={`${piece.id}-${pidx}`}
                     className="d-flex justify-content-between align-items-center"
                   >
                     <div>{piece.name}</div>

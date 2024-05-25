@@ -60,7 +60,7 @@ export function getStudentAssignments(slug) {
       })
       .then((response) => response.json())
       .then((results) => {
-        const grouped = results.reduce((acc, obj) => {
+        const grouped = results && results.reduce && results.reduce((acc, obj) => {
           // const key = obj.piece_name;
           const key = obj.piece_slug;
           if (!acc[key]) {
@@ -71,7 +71,11 @@ export function getStudentAssignments(slug) {
           return acc;
         }, {});
         // FIXME: this should respect order from server/pieceplan and mayeb do this as a backup?
-        Object.values(grouped).forEach(pieceAssignments=>pieceAssignments.sort(activitySort));
+        if (grouped) {
+          Object.values(grouped).forEach(pieceAssignments => pieceAssignments.sort(activitySort));
+        } else {
+          return results
+        }
         return grouped;
       });
 }
@@ -95,14 +99,14 @@ export function getAllPieces(courseSlug) {
         .then((response) => response.json())
         .then((json) => {
           const result = json;
-          return result.map((r) => ({...r.piece, piece_plan_id: r.id}));
+          return result.map((r) => ({ ...r.piece, piece_plan_id: r.id }));
         });
     });
 }
 export function getAssignedPieces(assignments) {
   return () => {
     const pieces = {};
-    if (Object.values(assignments).length > 0) {
+    if (assignments && Object.values(assignments).length > 0) {
       for (const pieceKey of Object.keys(assignments)) {
         for (const pieceAssignment of assignments[pieceKey]) {
           //   pieces[pieceAssignment.part.piece.id] = pieceAssignment.part.piece;
