@@ -18,9 +18,9 @@ export default function RTE({ submission, submitAction, autoFocus = false }) {
   const userInfo = useSelector((state) => state.currentUser);
   const { slug } = router.query;
   const [isFormFocused, setFormFocus] = useState(false);
-  const [rhythm, setRhythm] = useState(submission?.grade?.rhythm ?? 0);
-  const [tone, setTone] = useState(submission?.grade?.tone ?? 0);
-  const [expression, setExpression] = useState(submission?.grade?.expression ?? 0);
+  const [rhythm, setRhythm] = useState(submission?.grade?.rhythm ?? '');
+  const [tone, setTone] = useState(submission?.grade?.tone ?? '');
+  const [expression, setExpression] = useState(submission?.grade?.expression ?? '');
   const audioRef = useRef();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
