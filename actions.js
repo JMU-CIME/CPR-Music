@@ -600,6 +600,10 @@ export function postRespond({ slug, assignmentId, response }) {
     const {
       currentUser: { token },
     } = getState();
+    if (!slug || !assignmentId || !response) {
+      console.error('missing requirements to submit', slug, assignmentId, response)
+      return;
+    }
     dispatch(beginUpload(assignmentId));
     const body = JSON.stringify({ content: JSON.stringify(response) });
     return fetch(
