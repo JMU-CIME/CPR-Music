@@ -194,7 +194,7 @@ export default function TeacherCourseView() {
                                     <span className="me-auto">{`${piece.activities[activityKey].category} ${piece.activities[activityKey].name}`}</span>
                                     <Link
                                       href={`/courses/${slug}/${piece.slug}/${piece.activities[activityKey].category}/${piece.activities[activityKey].name}/grade`}
-                                      passHref
+                                      passHref legacyBehavior
                                     >
                                       <a className="btn btn-primary">
                                         Grade <FaMarker />

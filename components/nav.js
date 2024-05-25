@@ -28,7 +28,7 @@ function Navigation() {
           <Nav className="me-auto">
             {enrollments ? <CourseSelector /> : 
               <Nav.Item>
-                <Link href="/courses" passHref>
+                <Link href="/courses" passHref legacyBehavior>
                   <Nav.Link>Courses</Nav.Link>
                 </Link>
               </Nav.Item>
@@ -37,7 +37,7 @@ function Navigation() {
             {piece && <NavActivityPicker />}
           </Nav>
           <Nav>
-            <Link href="/about" passHref>
+            <Link href="/about" passHref legacyBehavior>
               <Nav.Link>About</Nav.Link>
             </Link>
             <LoginOut />
