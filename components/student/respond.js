@@ -27,8 +27,8 @@ export default function RespondActivity() {
   const assignmentId =
     loadedActivities &&
     activities &&
-    activities?.[slug] &&
-    activities?.[slug].filter(
+    activities?.[piece] &&
+    activities?.[piece].filter(
       (assn) =>
         assn.piece_slug === piece && assn.activity_type_category === actCategory
     )?.[0]?.id;
