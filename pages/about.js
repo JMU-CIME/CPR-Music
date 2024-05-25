@@ -1,3 +1,4 @@
+'use client';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import Layout from '../components/layout';
 

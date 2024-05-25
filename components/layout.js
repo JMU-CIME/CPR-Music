@@ -1,3 +1,4 @@
+'use client';
 import Container from 'react-bootstrap/Container';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
