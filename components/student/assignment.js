@@ -54,7 +54,7 @@ export default function StudentAssignment({ children, assignment }) {
                 `${actCategory} `}
               {assignment?.activity?.activity_type?.name} Activity
             </h1>
-            <Instructions body={assignment?.activity_body} />
+            <Instructions body={assignment?.activity_body ?? assignment?.activity?.body} />
             {assignment.submissions.length > 0 ? (
               <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
                 <Accordion.Item eventKey="0">
