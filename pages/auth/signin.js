@@ -1,4 +1,4 @@
-import { getCsrfToken } from 'next-auth/react';
+import { getCsrfToken, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -6,9 +6,44 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Layout from '../../components/layout';
 import { Alert } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+
+// https://github.com/nextauthjs/next-auth/issues/2426#issuecomment-1141406105
+// try this instead?
+function getCookie(name) {
+  let cookieValue = null;
+
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+
+      // Does this cookie string begin with the name we want?
+      if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+
+        break;
+      }
+    }
+  }
+
+  return cookieValue;
+}
 
 export default function SignIn({ csrfToken }) {
+  const session = useSession();
+  const [csrf, setCsrf] = useState(csrfToken);
   const { error } = useRouter().query;
+
+  useEffect(() => {
+    async function fetchCsrf() {
+      const token = await getCsrfToken();
+      setCsrf(token);
+    }
+    if(session.status !== 'loading') {
+      fetchCsrf();
+    }
+  }, [session.status]);
   return (
     <Layout>
       <Form
@@ -16,7 +51,7 @@ export default function SignIn({ csrfToken }) {
         action="/api/auth/callback/credentials"
         className="mt-3"
       >
-        <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+        <input name="csrfToken" type="hidden" defaultValue={csrf} />
         <Form.Group as={Row} className="mb-3" controlId="formUsername">
           <Form.Label column sm={2}>
             Username
@@ -45,14 +80,14 @@ export default function SignIn({ csrfToken }) {
 }
 
 // This is the recommended way for Next.js 9.3 or newer
-export async function getServerSideProps(context) {
-  const token = await getCsrfToken(context);
-  return {
-    props: {
-      csrfToken: token ?? null,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const token = await getCsrfToken(context);
+//   return {
+//     props: {
+//       csrfToken: token ?? null,
+//     },
+//   };
+// }
 
 const errors = {
   Signin: 'Try signing with a different account.',
