@@ -282,7 +282,7 @@ export function logoutUser() {
     const {
       currentUser: { token },
     } = getState();
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token/`, {
       method: 'DELETE',
       headers: {
         Authorization: `Token ${token}`,
