@@ -1,3 +1,7 @@
+# THIS REPO IS ARCHIVED
+Find the current repo at https://github.com/Lab-Lab-Lab/CPR-Music
+<br><br><br><br><br><br><br><br><br><br><br>
+
 # Deploying
 1. tag the version `git tag <whatever, e.g. v0.2.2>`
 1. push the tag `git push origin <whatever, e.g. v0.2.2>`
