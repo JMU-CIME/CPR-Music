@@ -113,8 +113,10 @@ export default NextAuth({
       return user !== null;
     },
     async redirect({ url, baseUrl }) {
+      
       console.log('\n\n\n=================\ncallbacks::redirect\n=================\n\n\n')
       let returnVal = url;
+      
       // Allows relative callback URLs
       if (url.startsWith('/')) {
         const absUrl = new URL(url, baseUrl).toString();

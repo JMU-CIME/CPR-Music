@@ -72,7 +72,7 @@ export function mutateAssignPiece(slug) {
 
 export function mutateUnassignPiece(slug) {
   return async (piece) => {
-    const endpoint = `courses/${slug}/unassign/` 
+    const endpoint = `courses/${slug}/unassign/`
     const json = await makeRequest(endpoint, 'POST', {piece_id: piece.id});
     return json
   }
@@ -97,7 +97,9 @@ export function mutateGradeSubmission(slug) {
       expression,
       grader
     };
+    
     const json = await makeRequest(endpoint, 'POST', body);
+    
     return json;
   }
 }
@@ -106,7 +108,9 @@ export function mutateGradeSubmission(slug) {
 export function mutateCreateSubmission({ slug }) {
   return async (submission, assignmentId) => {
     const endpoint = `courses/${slug}/assignments/${assignmentId}/submissions/`
+    
     const json = await makeRequest(endpoint, 'POST', submission)
+    
     return json;
   }
 }
@@ -121,7 +125,9 @@ export function mutateCourse(slug) {
   // expecting params to be any subset of name, start_date, end_date, slug
   return async (params) => {
     const endpoint = `courses/${slug}/`
+    
     const json = await makeRequest(endpoint, 'PATCH', params);
+    
     return json;
   }
 }
@@ -129,7 +135,9 @@ export function mutateCourse(slug) {
 export async function mutateAssignmentInstrument(slug, pieceId, instrument) {
   const endpoint = `courses/${slug}/change_piece_instrument/`;
   const body = {piece_id: pieceId, instrument_id: instrument.id};
+  
   const json = await makeRequest(endpoint, 'PATCH', body);
+  
   return json;
 }
 
