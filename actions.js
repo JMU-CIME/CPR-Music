@@ -282,7 +282,7 @@ export function logoutUser() {
     const {
       currentUser: { token },
     } = getState();
-    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token`, {
+    fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/auth-token/`, {
       method: 'DELETE',
       headers: {
         Authorization: `Token ${token}`,
@@ -600,6 +600,10 @@ export function postRespond({ slug, assignmentId, response }) {
     const {
       currentUser: { token },
     } = getState();
+    if (!slug || !assignmentId || !response) {
+      console.error('missing requirements to submit', slug, assignmentId, response)
+      return;
+    }
     dispatch(beginUpload(assignmentId));
     const body = JSON.stringify({ content: JSON.stringify(response) });
     return fetch(

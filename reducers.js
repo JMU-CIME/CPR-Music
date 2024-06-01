@@ -22,20 +22,44 @@ const initialAssignedPieces = {
   items: {},
 };
 
+// TODO what is this reducer for? it looks like it's to handle when the teacher
+// assigns pieces, but it seems to also happen when the student needs to see
+// their list of activities for a single piece?
+// maybe any time either of the following bits of state are used from redux?
+// activities
+// assignedPieces
 const assignedPiecesReducer = (
   state = initialAssignedPieces,
   { type, payload }
 ) => {
   switch (type) {
     case types.Action.GotActivities:
-      let pieces = payload.activities.map(
-        (assignment) => ({id: assignment.piece_id,
-           name: assignment.piece_name})
-      );
-      pieces.sort((a, b) => (a.id < b.id ? -1 : 1));
+      // we have to make some changes here. the response is now already grouped.
+      // the response will be an object with each key being a piece slug whose
+      // value is an array of activities
+      const pieceSlugsKeys = Object.keys(payload.activities)
+      let pieces = pieceSlugsKeys.map((k) => {
+        return {
+          id: payload.activities[k][0].piece_id,
+          slug: k,
+          name: payload.activities[k][0].piece_name,
+        }
+      })
+      // payload.activities.map(
+      //   (assignment) => ({
+      //     id: assignment.piece_id,
+      //     name: assignment.piece_name
+      //   })
+      // );
+      pieces.sort((a, b) => (a.id < b.id ? -1 : 1)); // FIXME how should the pieces be sorted? this assumes by the piece's id, but perhaps it should be by the order property of the piece_plan if it's available?
+
+      // what does this next step do??
+      // it looks like it says to only keep the first piece with a given id // thanks copilot for finishing my sentence 
       pieces = pieces.filter((piece, i, arr) =>
         i === 0 ? true : piece.id !== arr[i - 1].id
       );
+
+      // FIXME again, as above, how do we want pieces sorted?
       pieces.sort((a, b) => (a.name < b.name ? -1 : 1));
 
       // return { loaded: true, items: pieces };
@@ -74,7 +98,8 @@ const initialActivities = {
 const activitiesReducer = (state = initialActivities, { type, payload }) => {
   switch (type) {
     case types.Action.GotActivities:
-      return { loaded: true, items: { [payload.slug]: payload.activities } };
+      console.log('payload', payload)
+      return { loaded: true, items: payload.activities };
   }
   return state;
 };

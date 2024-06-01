@@ -44,8 +44,7 @@ export default function RecentSubmission(assn) {
           ) : ctgy === 'Respond' ? (
             <Row>
               <Col md={9}>
-                <textarea rows={5} readOnly className="respond-preview">
-                  {JSON.parse(content).reflection}
+                  <textarea rows={5} readOnly className="respond-preview" value={JSON.parse(content).reflection} disabled>
                 </textarea>
               </Col>
               <Col>

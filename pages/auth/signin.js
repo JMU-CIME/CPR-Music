@@ -1,4 +1,4 @@
-import { getCsrfToken, signIn } from 'next-auth/react';
+import { getCsrfToken, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
@@ -6,39 +6,39 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Layout from '../../components/layout';
 import { Alert } from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+// https://github.com/nextauthjs/next-auth/issues/2426#issuecomment-1141406105
+// try this instead?
 
 export default function SignIn({ csrfToken }) {
-  const router = useRouter();
+  const session = useSession();
+  const [csrf, setCsrf] = useState(csrfToken);
   const { error } = useRouter().query;
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await signIn('credentials', {
-      redirect: false,
-      username,
-      password,
-    })
-    router.push('/courses')
-
-  }
-
+  useEffect(() => {
+    async function fetchCsrf() {
+      const token = await getCsrfToken();
+      setCsrf(token);
+    }
+    if(session.status !== 'loading') {
+      fetchCsrf();
+    }
+  }, [session.status]);
   return (
     <Layout>
       <Form
+        method="post"
+        action="/api/auth/callback/credentials"
         className="mt-3"
-        onSubmit={handleSubmit}
       >
-        <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+        <input name="csrfToken" type="hidden" defaultValue={csrf} />
         <Form.Group as={Row} className="mb-3" controlId="formUsername">
           <Form.Label column sm={2}>
             Username
           </Form.Label>
           <Col sm={10}>
-            <Form.Control type="text" name="username" placeholder="Username" onChange={(e) => setUsername(e.target.value)} />
+            <Form.Control type="text" name="username" placeholder="Username" />
           </Col>
         </Form.Group>
         <Form.Group as={Row} className="mb-3" controlId="formPassword">
@@ -50,7 +50,6 @@ export default function SignIn({ csrfToken }) {
               type="password"
               name="password"
               placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
             />
           </Col>
         </Form.Group>
@@ -62,14 +61,14 @@ export default function SignIn({ csrfToken }) {
 }
 
 // This is the recommended way for Next.js 9.3 or newer
-export async function getServerSideProps(context) {
-  const token = await getCsrfToken(context);
-  return {
-    props: {
-      csrfToken: token ?? null,
-    },
-  };
-}
+// export async function getServerSideProps(context) {
+//   const token = await getCsrfToken(context);
+//   return {
+//     props: {
+//       csrfToken: token ?? null,
+//     },
+//   };
+// }
 
 const errors = {
   Signin: 'Try signing with a different account.',
@@ -84,7 +83,6 @@ const errors = {
   CredentialsSignin: 'Sign in failed. Check your login credentials.',
   default: 'Unable to sign in.',
 };
-
 function SignInError({ error = errors.default }) {
   const errorMessage = error && (errors[error] ?? errors.default);
   return (

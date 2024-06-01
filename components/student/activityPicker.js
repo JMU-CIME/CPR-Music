@@ -31,7 +31,7 @@ function ActivityPicker (assignment) {
 return <ListGroup>
   <Link
     href={`/courses/${slug}/${piece}/Perform/Melody`}
-    passHref
+    passHref legacyBehavior
   >
     <ListGroup.Item
       action
@@ -49,7 +49,7 @@ return <ListGroup>
   </Link>
   <Link
     href={`/courses/${slug}/${piece}/Perform/Bassline`}
-    passHref
+    passHref legacyBehavior
   >
     <ListGroup.Item
       action
@@ -65,7 +65,7 @@ return <ListGroup>
       </span>
     </ListGroup.Item>
   </Link>
-  <Link href={`/courses/${slug}/${piece}/Create`} passHref>
+  <Link href={`/courses/${slug}/${piece}/Create`} passHref legacyBehavior>
     <ListGroup.Item
       action
       eventKey="Create"
@@ -78,7 +78,7 @@ return <ListGroup>
       </span>
     </ListGroup.Item>
   </Link>
-  <Link href={`/courses/${slug}/${piece}/Respond`} passHref>
+  <Link href={`/courses/${slug}/${piece}/Respond`} passHref legacyBehavior>
     <ListGroup.Item
       action
       eventKey="Respond"
@@ -95,7 +95,7 @@ return <ListGroup>
   {hasCompose && (
     <Link
       href={`/courses/${slug}/${piece}/${connectLink}`}
-      passHref
+      passHref legacyBehavior
     >
       <ListGroup.Item
         action

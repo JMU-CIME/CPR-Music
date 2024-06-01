@@ -30,7 +30,7 @@ export default function TeacherCourseView() {
   const { slug } = router.query;
   const [assignError, setAssignError] = useState(null);
   const {
-    isLoading,
+    isLoadingPieces,
     error,
     data: allPieces,
   } = useQuery(['allPieces', slug], getAllPieces(slug), {
@@ -115,7 +115,7 @@ export default function TeacherCourseView() {
     },
   });
   const assign = (piecePlan) => assignMutation.mutate(piecePlan);
-  if (isLoading || isLoadingAssignedActs || !assignedPieces)
+  if (isLoadingPieces || isLoadingAssignedActs)
     return 'Loading...';
   if (error || errorAssignedActs)
     return `An error has occurred: ${
@@ -148,15 +148,21 @@ export default function TeacherCourseView() {
             {allPieces &&
               allPieces
                 .filter(
-                  (piece) =>
-                    assignedPieces &&
+                  (piece) =>{
+                    let reslt = true
+                    if (assignedPieces &&
                     Object.values(assignedPieces).findIndex(
                       (assignedPiece) => assignedPiece.id === piece.id
-                    ) === -1
+                    ) !== -1) {
+                      reslt = false;
+                    }
+                    return reslt;
+                  }
+                    
                 )
-                .map((piece) => (
+                .map((piece, pidx) => (
                   <ListGroupItem
-                    key={piece.id}
+                    key={`${piece.id}-${pidx}`}
                     className="d-flex justify-content-between align-items-center"
                   >
                     <div>{piece.name}</div>
@@ -194,7 +200,7 @@ export default function TeacherCourseView() {
                                     <span className="me-auto">{`${piece.activities[activityKey].category} ${piece.activities[activityKey].name}`}</span>
                                     <Link
                                       href={`/courses/${slug}/${piece.slug}/${piece.activities[activityKey].category}/${piece.activities[activityKey].name}/grade`}
-                                      passHref
+                                      passHref legacyBehavior
                                     >
                                       <a className="btn btn-primary">
                                         Grade <FaMarker />

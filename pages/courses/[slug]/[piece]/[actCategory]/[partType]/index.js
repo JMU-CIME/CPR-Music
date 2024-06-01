@@ -45,7 +45,7 @@ export default function PerformMelody() {
       } else if (comparablePartType.startsWith('Bassline')) {
         comparablePartType = comparablePartType.substring(0, 'Bassline'.length)
       }
-      const assignmentId = activities[slug].filter(
+      const assignmentId = activities[piece].filter(
         (assn) =>
           {
             return assn.piece_slug === piece &&

@@ -8,7 +8,7 @@ function LoginOut() {
   const currentUserInfo = useSelector((state) => state.currentUser);
   // const loginStatus = useSelector((state) => state.loginStatus);
   return session ? (
-    <Link href="/api/auth/signout" passHref>
+    <Link href="/api/auth/signout" passHref legacyBehavior>
       <Nav.Link>Logout
         {
           currentUserInfo.loaded ? ` ${currentUserInfo.username}` : ""
@@ -16,7 +16,7 @@ function LoginOut() {
       </Nav.Link>
     </Link>
   ) : (
-    <Link href="/auth/signin?callbackUrl=/courses" passHref>
+    <Link href="/auth/signin?callbackUrl=/courses" passHref legacyBehavior>
       <Nav.Link>Login</Nav.Link>
     </Link>
   );

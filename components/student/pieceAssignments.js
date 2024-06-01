@@ -62,7 +62,7 @@ function PieceAssignments({ piece, canEditInstruments }) {
             className="d-flex justify-content-between"
           >
             <Link
-              passHref
+              passHref legacyBehavior
               href={`/courses/${slug}/${assignment.piece_slug
                 }/${assnToKey(assignment, 'debug str this is from pieceAssignments')}`}
             >

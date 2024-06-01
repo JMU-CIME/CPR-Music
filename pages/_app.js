@@ -1,3 +1,4 @@
+'use client';
 import { SessionProvider } from 'next-auth/react';
 // Importing the Bootstrap CSS
 import 'bootstrap/dist/css/bootstrap.min.css';

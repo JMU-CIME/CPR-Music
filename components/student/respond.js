@@ -27,8 +27,8 @@ export default function RespondActivity() {
   const assignmentId =
     loadedActivities &&
     activities &&
-    activities?.[slug] &&
-    activities?.[slug].filter(
+    activities?.[piece] &&
+    activities?.[piece].filter(
       (assn) =>
         assn.piece_slug === piece && assn.activity_type_category === actCategory
     )?.[0]?.id;
@@ -66,7 +66,7 @@ export default function RespondActivity() {
       />
       <RTE submission={{ id: assignmentId }} submitAction={submitAction} />
       <h3>Rating Scales</h3>
-      <Accordion defaultActiveKey="0" alwaysOpen className="cpr-create">
+      <Accordion defaultActiveKey={["0", "1", "2"]} alwaysOpen className="cpr-create">
         <Accordion.Item eventKey="0">
           <Accordion.Header>Rhythm</Accordion.Header>
           <Accordion.Body>
